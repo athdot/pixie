@@ -61,7 +61,7 @@ public class Server implements Runnable {
 					//obj is similar to streamReader request
 					String request = obj.toString();
 					
-					String output = streamReader(request);
+					String output = requestTree(request);
 					
 					oos.writeObject(output);
 					oos.flush();
@@ -73,7 +73,7 @@ public class Server implements Runnable {
 	}
 	
 	//Returns a return stream
-	private String streamReader(String request) {
+	private String requestTree(String request) {
 		//Requests are
 		//login[dnsda,dansdnasn]
 		
