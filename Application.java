@@ -165,11 +165,11 @@ public class Application {
     //nvm, instructions say application should not crash under any circumstances
 
     Scanner scanner;
-    Backend server;
+    Client server;
 
     public Application() {
     	scanner = new Scanner(System.in);
-    	server = new Backend();
+    	server = new Client();
     }
 
     public void login() { //control the login section of the program

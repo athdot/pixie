@@ -1,27 +1,79 @@
 import java.util.ArrayList;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
 
 /**
  * Account - CS180 PJ04
  * This is a simple class to manage a user Account
  * @author Charles Graham
  * @version 07/17/2021
- *
  **/
 
-public class Backend {
-	DataManagement data;
-	Account loggedAccount;
+public class Server implements Runnable {
+	private static DataManagement data;
+	private Account loggedAccount;
+	private Socket connection;
+	private ObjectOutputStream oos;
+	private ObjectInputStream ois;
 	
-	public Backend() {
+	public static void main(String[] args) {
+		final int port = 1235;
+		ServerSocket socket = null;
 		data = new DataManagement();
+		
+		try {
+			socket = new ServerSocket(port);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		while (true) {
+			try {
+				Socket newConnection = socket.accept();
+				Server server = new Server(newConnection);
+				new Thread(server).start();
+			} catch (IOException e) {
+				e.printStackTrace();
+				try {
+					socket.close();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		}
 	}
 	
-	//How to call something
-	//Inside requests
-	//
+	public Server(Socket newClient) {
+		this.connection = newClient;
+	}
+	
+	@Override
+	public void run() {
+		try {
+			this.oos = new ObjectOutputStream(connection.getOutputStream());
+			this.ois = new ObjectInputStream(connection.getInputStream());
+			while (true) {
+				Object obj = ois.readObject();
+				if (obj instanceof String) {
+					//obj is similar to streamReader request
+					String request = obj.toString();
+					
+					String output = streamReader(request);
+					
+					oos.writeObject(output);
+					oos.flush();
+				}
+			}
+		} catch (IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	//Returns a return stream
-	public String streamReader(String request) {
+	private String streamReader(String request) {
 		//Requests are
 		//login[dnsda,dansdnasn]
 		
