@@ -235,8 +235,7 @@ public class DataManagement {
     	output.setBio(accountInput[3].replace("bio:", ""));
     	return output;
     }
-    
-    
+
     public Account getAccount(String accountName) {
     	ArrayList<String[]> profileList = readFile("profile.csv");
     	return toAccount(profileList.get(getAccountIndex(profileList, accountName)));
@@ -281,14 +280,14 @@ public class DataManagement {
     }
 
     //This function deletes an account from the database
-    public void deleteAccount(String accountName) {
+	public void deleteAccount(String accountName) {
     	ArrayList<String[]> profileList = readFile("profile.csv");
     	profileList.remove(getAccountIndex(profileList, accountName));
     	writeFile("profile.csv", profileList);
     }
     
     //This method reads a file and takes all object blocks and turns them into a list
-    public ArrayList<String[]> readFile(String fileName) {
+    public static synchronized ArrayList<String[]> readFile(String fileName) {
         //Search an ammount of blocks
         ArrayList<String[]> fileLines = new ArrayList<String[]>();
         try {
@@ -322,7 +321,7 @@ public class DataManagement {
     }
 
     //This method writes a list of object blocks to a file
-    public void writeFile(String fileName, ArrayList<String[]> fileLines) {
+	public static synchronized void writeFile(String fileName, ArrayList<String[]> fileLines) {
     	BufferedWriter bfw = null;
     	
         try {

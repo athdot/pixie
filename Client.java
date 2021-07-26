@@ -2,21 +2,32 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.Scanner;
+
+/**
+ * Client - PJ05
+ * Each user who has the app open also has a Client object that communicates with the Server class.
+ *
+ * @author G8 C. Graham, N. Yao, ...
+ * @version July 26, 2021
+ */
 
 public class Client {
-	private final static int port = 1235;
-	private final static String host = "localhost";
+
+	private final static int PORT = 31415; //pi port number
+	private final static String HOST = "localhost";
+
+	private Socket socket;
 	private ObjectOutputStream oos;
 	private ObjectInputStream ois;
-	private Socket socket;
-	
+
 	public Client() {
-		try  {
-			this.socket = new Socket(host, port);
+		try {
+			//for each client, instantiate a Client object
+			this.socket = new Socket(HOST, PORT);
+
 			this.oos = new ObjectOutputStream(socket.getOutputStream());
 			this.ois = new ObjectInputStream(socket.getInputStream());
-			oos.flush();
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -26,13 +37,15 @@ public class Client {
 		String returnedValue = "";
 		try {
 			oos.writeObject(request);
+			oos.flush();
 			returnedValue = ois.readObject().toString();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
+
+		} catch (IOException | ClassNotFoundException e) {
+			// TODO Auto-generated catch block - wat?
+			System.out.println("Client streamReader method error!");
 			e.printStackTrace();
 		}
+
 		return returnedValue;
 	}
 }

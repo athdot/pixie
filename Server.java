@@ -6,39 +6,52 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 /**
- * Account - CS180 PJ04
- * This is a simple class to manage a user Account
- * @author Charles Graham
- * @version 07/17/2021
- **/
+ * Server - PJ05
+ * Each client connects to Server. While Server is running, it is constantly open to new client connections. Server will
+ * initialize a thread for each client that is constantly listening for requests from that respective client. Server
+ * will write back requested information.
+ *
+ * @author G8 C. Graham, N. Yao, ...
+ * @version July 26, 2021
+ */
 
 public class Server implements Runnable {
-	private static DataManagement data;
-	private Account loggedAccount;
-	private Socket connection;
+
+	private static DataManagement data; //to use DataManagement methods
+	private Account loggedAccount; //account currently logged in
+	private Socket connection; //socket used by a client connection
+
 	private ObjectOutputStream oos;
 	private ObjectInputStream ois;
-	
+
+	private static final int PORT = 31415; //easy to remember: digits of pi
+
 	public static void main(String[] args) {
-		final int port = 1235;
-		ServerSocket socket = null;
+
 		data = new DataManagement();
-		
+		ServerSocket serverSocket = null; //declare outside to expand scope
+
 		try {
-			socket = new ServerSocket(port);
+			serverSocket = new ServerSocket(PORT);
+			System.out.println("Waiting for the client to connect...");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
 		while (true) {
 			try {
-				Socket newConnection = socket.accept();
+				Socket newConnection = serverSocket.accept(); //accept() waits until client connects
 				Server server = new Server(newConnection);
+				System.out.println("Client connected!");
+
+				//run a separate thread for each client to perform server operations (?)
 				new Thread(server).start();
+
 			} catch (IOException e) {
-				e.printStackTrace();
+				e.printStackTrace(); //connection failed
+
 				try {
-					socket.close();
+					serverSocket.close();
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -55,12 +68,13 @@ public class Server implements Runnable {
 		try {
 			this.oos = new ObjectOutputStream(connection.getOutputStream());
 			this.ois = new ObjectInputStream(connection.getInputStream());
-			while (true) {
+
+			while (true) { //if a client program is terminated, throws SocketException, a subclass of IOException
 				Object obj = ois.readObject();
 				if (obj instanceof String) {
-					//obj is similar to streamReader request
+
+					//obj is able to be passed into requestTree(String request) method
 					String request = obj.toString();
-					
 					String output = requestTree(request);
 					
 					oos.writeObject(output);
@@ -68,10 +82,16 @@ public class Server implements Runnable {
 				}
 			}
 		} catch (IOException | ClassNotFoundException e) {
-			e.printStackTrace();
+			try {
+				this.oos.close();
+				this.ois.close();
+				System.out.println("A server thread ended.");
+			} catch (IOException e1) {
+				e.printStackTrace();
+			}
 		}
 	}
-	
+
 	//Returns a return stream
 	private String requestTree(String request) {
 		//Requests are

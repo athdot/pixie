@@ -6,6 +6,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 public class ServerTest implements Runnable {
+
 	private Socket connection;
 	private ObjectOutputStream oos;
 	private ObjectInputStream ois;
@@ -13,11 +14,11 @@ public class ServerTest implements Runnable {
 	
 	public static void main(String[] args) {
 		changes = new ArrayList<String>();
-		final int port = 1235;
+		final int PORT = 1235;
 		ServerSocket socket = null;
 		
 		try {
-			socket = new ServerSocket(port);
+			socket = new ServerSocket(PORT);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -37,8 +38,7 @@ public class ServerTest implements Runnable {
 			}
 		}
 	}
-	
-	
+
 	public ServerTest(Socket newClient) {
 		this.connection = newClient;
 	}
@@ -51,7 +51,7 @@ public class ServerTest implements Runnable {
 			while (true) {
 				Object obj = ois.readObject();
 				if (obj instanceof String) {
-					oos.writeObject("Server recieved!");
+					oos.writeObject("Server received!");
 					changes.add(obj.toString());
 					oos.writeObject(String.join(", ", changes));
 					oos.flush();
