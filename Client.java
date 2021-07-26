@@ -48,4 +48,15 @@ public class Client {
 
 		return returnedValue;
 	}
+
+	public void end() {
+		try {
+			oos.close();
+			ois.close();
+			System.out.println("A user has ended the program.");
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }
