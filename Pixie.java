@@ -124,7 +124,4 @@ public class Pixie extends JComponent implements Runnable{
         SwingUtilities.invokeLater(new Pixie());
     }
 
-
-
-
 }
