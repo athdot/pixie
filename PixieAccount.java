@@ -4,6 +4,52 @@ import java.awt.event.*;
 
 
 public class PixieAccount extends JComponent implements Runnable {
+    JTextField userField;
+    JTextField passwordField;
+    JTextField confirmField;
+    JButton loginButton;
+    JButton createButton;
+    JButton newCreate;
+
+    PixieAccount go;
+
+    private Client client;
+
+    ActionListener actionListener = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (e.getSource() == loginButton) {
+                go.switchToLogIn();
+            }
+            if (e.getSource() == newCreate) {
+                go.create();
+            }
+        }
+    };
+
+    // Checks the validity of username and password in login page
+    public void create() {
+        String userCode = "createAccount[" + userField.getText().toLowerCase() + "," + passwordField.getText() + "]";
+        String evaluate = client.streamReader(userCode);
+
+        // If username is taken, show error message
+        if (evaluate.equals("false")) {
+            JOptionPane.showMessageDialog(null, "Username is taken.", "",
+                    JOptionPane.ERROR_MESSAGE);
+        // If valid, show Welcome page (having trouble adding Welcome class
+        // once button is clicked)
+        } else if (evaluate.equals("true") && passwordField.equals(confirmField)){
+        }
+
+    }
+
+    // Expects the screen to switch from the create account page to login page
+    // once the "Log In" button is clicked
+    // (Having trouble doing this)
+    public void switchToLogIn() {
+
+    }
+
     public void run() {
         /* set up new elements */
         JFrame frame = new JFrame("Create Account");
@@ -29,18 +75,18 @@ public class PixieAccount extends JComponent implements Runnable {
         grid.setBackground(new Color(94, 156, 156));
 
         // Log in and create account buttons
-        JButton login = new JButton("Log In");
-        JButton create = new JButton("Create Account");
+        loginButton = new JButton("Log In");
+        createButton = new JButton("Create Account");
 
         // Add buttons to grid
-        grid.add(login);
-        grid.add(create);
+        grid.add(loginButton);
+        grid.add(createButton);
 
         // Add grid to west panel
         sidePanel.add(grid);
 
         // Buttons and labels with main panel
-        JButton newCreate = new JButton("Create Account");
+        newCreate = new JButton("Create Account");
         JLabel username = new JLabel("Username ");
         JLabel password = new JLabel("Password ");
         JLabel confirm = new JLabel("Confirm Password ");
@@ -51,12 +97,11 @@ public class PixieAccount extends JComponent implements Runnable {
         confirm.setBounds(40, 157, 175, 30);
         invalid.setBounds(40, 157, 175, 30);
 
-
-
         // Text fields for username and password
-        JPasswordField passwordField = new JPasswordField(10);
-        JPasswordField confirmField = new JPasswordField(10);
-        JTextField userField = new JTextField(10);
+        passwordField = new JPasswordField(10);
+        confirmField = new JPasswordField(10);
+        userField = new JTextField(10);
+
         userField.setBounds(170, 105, 135, 20);
         passwordField.setBounds(170, 135, 135, 20);
         confirmField.setBounds(170, 165, 135, 20);
@@ -80,6 +125,4 @@ public class PixieAccount extends JComponent implements Runnable {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new PixieAccount());
     }
-
-
 }
