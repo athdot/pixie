@@ -47,7 +47,6 @@ public class PixieAccount extends JComponent implements Runnable {
     // once the "Log In" button is clicked
     // (Having trouble doing this)
     public void switchToLogIn() {
-
     }
 
     public void run() {
@@ -62,7 +61,7 @@ public class PixieAccount extends JComponent implements Runnable {
         frame.setLocation(450, 200);
         frame.add(panel);
 
-        // Main container
+        // Allows flexibility when adjusting components, texts, etc.
         panel.setLayout(null);
 
         // Side panel (on west) design
@@ -75,8 +74,10 @@ public class PixieAccount extends JComponent implements Runnable {
         grid.setBackground(new Color(94, 156, 156));
 
         // Log in and create account buttons
-        loginButton = new JButton("Log In");
-        createButton = new JButton("Create Account");
+        ImageIcon icon = new ImageIcon("icons8-create-24.png");
+        ImageIcon icon2 = new ImageIcon("icons8-account-24.png");
+        createButton = new JButton(icon);
+        loginButton = new JButton(icon2);
 
         // Add buttons to grid
         grid.add(loginButton);
@@ -92,20 +93,21 @@ public class PixieAccount extends JComponent implements Runnable {
         JLabel confirm = new JLabel("Confirm Password ");
         JLabel invalid = new JLabel("Hello");
 
-        username.setBounds(40, 97, 80, 30);
-        password.setBounds(40, 127, 80, 30);
-        confirm.setBounds(40, 157, 175, 30);
-        invalid.setBounds(40, 157, 175, 30);
+        // panel.setLayout(null) helps with .setBounds
+        username.setBounds(80, 97, 80, 30);
+        password.setBounds(80, 127, 80, 30);
+        confirm.setBounds(80, 157, 175, 30);
+        invalid.setBounds(80, 157, 175, 30);
 
         // Text fields for username and password
         passwordField = new JPasswordField(10);
         confirmField = new JPasswordField(10);
         userField = new JTextField(10);
 
-        userField.setBounds(170, 105, 135, 20);
-        passwordField.setBounds(170, 135, 135, 20);
-        confirmField.setBounds(170, 165, 135, 20);
-        newCreate.setBounds(110, 200, 135, 25);
+        userField.setBounds(200, 105, 135, 20);
+        passwordField.setBounds(200, 135, 135, 20);
+        confirmField.setBounds(200, 165, 135, 20);
+        newCreate.setBounds(140, 200, 135, 25);
 
         // Add all to main panel
         panel.add(username);
