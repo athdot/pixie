@@ -85,6 +85,7 @@ public class Pixie extends JComponent implements Runnable{
             } catch (InterruptedException ie) {
                 ie.printStackTrace();
             }
+            frame.dispose();
             welcome();
 
             }
