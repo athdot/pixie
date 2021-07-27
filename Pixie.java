@@ -8,7 +8,7 @@ import java.awt.event.*;
  * Opens "welcome" page once the username and password is confirmed
  *
  * <p>Purdue University -- CS18000 -- Summer 2021 -- Project 5 -- Group 8</p>
- * 
+ *
  */
 
 public class Pixie extends JComponent implements Runnable{
@@ -24,6 +24,8 @@ public class Pixie extends JComponent implements Runnable{
     Pixie go;
 
     JFrame frame = new JFrame("Pixie");
+    JFrame frame2 = new JFrame("Pixie");
+
     Container container = frame.getContentPane();
 
     JPanel panel1 = new JPanel();
@@ -37,28 +39,82 @@ public class Pixie extends JComponent implements Runnable{
             if (e.getSource() == createButton) {
                 switchToCreate(panel2);
             }
-            
+
             // Log In button
             if (e.getSource() == loginButton) {
                 switchToLog(panel1);
-
             }
-            if (e.getSource() == signInButton) {
-                String userCode = "login[" + userField.getText().toLowerCase() +
-                        "," + passwordField.getText() + "]";
-                String evaluate = client.streamReader(userCode);
 
-                // If invalid, show error message
-                if (evaluate.equals("false")) {
-                    JOptionPane.showMessageDialog(null, "Invalid username or password", "",
-                            JOptionPane.ERROR_MESSAGE);
-                }
+            if (e.getSource() == signInButton) {
+                acceptLogIn();
+            }
+
+            if (e.getSource() == newCreate) {
+                acceptCreate();
             }
 
         }
     };
 
+    // Button doesn't work yet
+    public void acceptLogIn() {
+        String userCode = "login[" + userField.getText().toLowerCase() +
+                "," + passwordField.getText() + "]";
+        String evaluate = client.streamReader(userCode);
+
+        // If invalid, show error message
+        if (evaluate.equals("false")) {
+            JOptionPane.showMessageDialog(null, "Invalid username or password", "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        // If valid, display welcome frame    
+        } else {
+            welcome();
+        }
+    }
+
+    // Button doesn't work yet
+    public void acceptCreate() {
+        String userCode = "createAccount[" + userField.getText().toLowerCase() +
+                "," + passwordField.getText() + "]";
+        String evaluate = client.streamReader(userCode);
+
+        // If invalid, show error message
+        if (evaluate.equals("false")) {
+            JOptionPane.showMessageDialog(null, "Invalid username or password", "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        // If valid, display welcome frame    
+        } else {
+            welcome();
+        }
+    }
+
+    // The welcome page layout
+    // Different frame
+    public void welcome() {
+        frame2.setSize(400, 450);
+        frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame2.setLocation(20, 0);
+
+        frame2.setBackground(new Color(255, 255, 255));
+
+        // Import png logo
+        ImageIcon icon = new ImageIcon("pixie_logo.png");
+        JLabel label = new JLabel(icon);
+        frame2.add(label);
+
+        // Planning to make this loading gif overlap with the pixie logo
+        // Work in progress
+        ImageIcon loading = new ImageIcon("ajax-loader.gif");
+        JLabel label2 = new JLabel(loading);
+
+        frame2.pack();
+
+        // Allow element to show
+        frame2.setVisible(true);
+    }
+
     // Switches to create account page
+    // Button works
     public void switchToCreate(JPanel newPanel) {
         // Remove all old elements in container
         container.removeAll();
@@ -127,9 +183,9 @@ public class Pixie extends JComponent implements Runnable{
         newPanel.add(userField);
 
         // Add button mechanics
-        signInButton.addActionListener(actionListener);
         createButton.addActionListener(actionListener);
         loginButton.addActionListener(actionListener);
+        newCreate.addActionListener(actionListener);
 
 
         //DEBUGGED: use repaint() and revalidate() to refresh and recalculate layout
@@ -138,6 +194,7 @@ public class Pixie extends JComponent implements Runnable{
     }
 
     // Switches back to log in page
+    // Button works
     public void switchToLog(JPanel firstPanel) {
         // Removes all elements in container
         container.removeAll();
@@ -205,7 +262,7 @@ public class Pixie extends JComponent implements Runnable{
         frame.revalidate();
     }
 
-    // The Log In page
+    // The OG log in page
     public void run() {
         /* set up new elements */
         JPanel sidePanel = new JPanel();
