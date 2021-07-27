@@ -104,16 +104,19 @@ public class Pixie extends JComponent implements Runnable{
         // Import png logo
         ImageIcon icon = new ImageIcon("pixie_logo.png");
         JLabel label = new JLabel(icon);
-        frame2.add(label);
 
-        // Planning to make this loading gif overlap with the pixie logo
-        // Work in progress
+        // Loading gif 
         ImageIcon loading = new ImageIcon("ajax-loader.gif");
         JLabel label2 = new JLabel(loading);
+        label2.setBounds(660, 800, 40, 40);
+
+        // Make sure loading gif overlaps logo
+        frame2.add(label2);
+        frame2.add(label);
 
         frame2.pack();
 
-        // Allow element to show
+        // Allow elements to show
         frame2.setVisible(true);
     }
 
