@@ -2,31 +2,45 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class Pixie extends JComponent implements Runnable{
-    Client client;
+/**
+ * Pixie.java - PJ05
+ * Apparently our app is branded as "Pixie". Pixes are mythical creatures in folklore and children's stories.
+ * This class ties the GUI together by allowing all panels of the application to work together. Panels are created
+ * within different classes for organization. Pixie.java creates an instance of all these panels to call them from
+ * their external classes. Also listens for all actions across the program.
+ *
+ * @author Group 8
+ * @version July 27, 2021
+ */
 
-    JTextField userField;
-    JTextField passwordField;
-    JButton loginButton;
-    JButton createButton;
-    JButton signInButton;
-    Pixie go;
+public class Pixie extends JComponent implements Runnable {
+
+    //each user who has the app open also has a Client object that communicates with the Server class.
+    private Client client;
+
+    //The entire app has 2 JFrames. One containing all login pages, another for the rest
+    JFrame loginFrame; //loginPageFrame
+    JFrame applicationFrame; //applicationFrame
+
+    //create an instance of the classes containing all panel layouts
+    PixieLoginPage pixieLoginPage = new PixieLoginPage();
 
     ActionListener actionListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (e.getSource() == createButton) {
-                JFrame frame = new JFrame();
+
+            if (e.getSource() == pixieLoginPage.createAccountButton) {
+                JFrame loginFrame = new JFrame();
                 Panel panel = new Panel();
                 JLabel confirm = new JLabel("Confirm Password ");
                 confirm.setBounds(40, 157, 175, 30);
                 panel.add(confirm);
-                frame.add(panel);
-
+                loginFrame.add(panel);
             }
-            if (e.getSource() == signInButton) {
-                String userCode = "login[" + userField.getText().toLowerCase() +
-                        "," + passwordField.getText() + "]";
+
+            if (e.getSource() == pixieLoginPage.signInButton) {
+                String userCode = "login[" + pixieLoginPage.usernameField.getText().toLowerCase() +
+                        "," + pixieLoginPage.passwordField.getText() + "]";
                 String evaluate = client.streamReader(userCode);
 
                 // If invalid, show error message
@@ -35,82 +49,61 @@ public class Pixie extends JComponent implements Runnable{
                             JOptionPane.ERROR_MESSAGE);
                 }
             }
-
         }
     };
 
-    // The Log In page
-    public void run() {
-        /* set up new elements */
-        JFrame frame = new JFrame("Pixie");
-        JPanel panel = new JPanel();
-        JPanel sidePanel = new JPanel();
-        JPanel grid = new JPanel();
+    /**
+     * Call this method when you want to switch from one panel to another on the given frame
+     * @param frame - frame you want to display on (loginPageFrame or applicationFrame)
+     * @param newPanel - panel you want to display on the frame
+     */
+    public void switchPanel(JFrame frame, JPanel newPanel) {
+        frame.removeAll();
+        frame.add(newPanel, BorderLayout.CENTER);
 
-        frame.setSize(500, 400);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLocation(450, 200);
-        frame.add(panel);
-
-        // Allows flexibility when adjusting components, texts, etc.
-        panel.setLayout(null);
-
-        // Side panel (on west) design
-        sidePanel.setLayout(new FlowLayout(4, 4, 4));
-        sidePanel.setBackground(new Color(94, 156, 156));
-        frame.add(sidePanel, BorderLayout.WEST);
-
-        // Grid layout within side panel
-        grid.setLayout(new GridLayout(4, 1, 5, 5));
-        grid.setBackground(new Color(94, 156, 156));
-
-        // Log in and create account buttons
-        ImageIcon icon = new ImageIcon("icons8-create-24.png");
-        ImageIcon icon2 = new ImageIcon("icons8-account-24.png");
-        createButton = new JButton(icon);
-        loginButton = new JButton(icon2);
-
-        // Add buttons to grid
-        grid.add(loginButton);
-        grid.add(createButton);
-
-        // Add grid to west panel
-        sidePanel.add(grid);
-
-        // Buttons and labels with main panel
-        signInButton = new JButton("Sign In");
-        JLabel username = new JLabel("Username ");
-        JLabel password = new JLabel("Password ");
-        username.setBounds(100, 117, 80, 30);
-        password.setBounds(100, 147, 80, 30);
-
-        // Text fields for username and password
-        passwordField = new JPasswordField(10);
-        userField = new JTextField(10);
-
-        // panel.setLayout(null) helps with .setBounds
-        userField.setBounds(180, 125, 100, 20);
-        passwordField.setBounds(180, 155, 100, 20);
-        signInButton.setBounds(150, 200, 100, 25);
-
-        signInButton.addActionListener(actionListener);
-
-
-        // Add all to main panel
-        panel.add(username);
-        panel.add(password);
-
-        panel.add(passwordField);
-        panel.add(userField);
-        panel.add(signInButton);
-
-        // Allow elements to show
-        frame.setVisible(true);
+        //DEBUGGED: use repaint() and revalidate() to refresh and recalculate layout
+        frame.repaint();
+        frame.revalidate();
     }
 
+    /**
+     * dispose of one frame and start the other (loginPageFrame or applicationFrame)
+     * @param oldFrame - frame you want to dispose of
+     * @param newFrame - frame you want to show
+     */
+    public void changeFrame(JFrame oldFrame, JFrame newFrame) {
+        oldFrame.dispose();
+        newFrame.setVisible(true);
+    }
+
+    /**
+     * idea: let there be 2 JFrames in total. One JFrame is for the login page, another for the app itself. The frame
+     * should be no more than a simple raw frame. Panel layouts are created in their respective classes and then added
+     * to the JFrames later on.
+     */
+    public void run() {
+        /*
+        Create the JFrame for the login page and create its basic set up.
+        */
+        loginFrame = new JFrame("Pixie Login");
+
+        loginFrame.setSize(500, 400);
+        loginFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //do not use JFrame.EXIT_ON_CLOSE
+        loginFrame.setLocationRelativeTo(null);
+
+        loginFrame.add(pixieLoginPage.signInPanel, BorderLayout.CENTER); //start off on the sign in panel
+        loginFrame.setVisible(true);
+
+        /*
+        Create the JFrame for the rest of the app (which will contain the main menu and all sub-menus)
+        */
+        applicationFrame = new JFrame("Pixie App");
+        applicationFrame.setSize(1200, 1000); //we will probably want the actual app to be larger
+        applicationFrame.setLocationRelativeTo(null);
+    }
 
     public static void main(String[] args) {
-        // Run class
+        //run application on event dispatch thread (EDT)
         SwingUtilities.invokeLater(new Pixie());
     }
 }
