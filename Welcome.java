@@ -3,6 +3,9 @@ import java.awt.*;
 
 
 
+import javax.swing.*;
+import java.awt.*;
+
 public class Welcome extends JComponent implements Runnable {
 
     public void run() {
@@ -14,10 +17,19 @@ public class Welcome extends JComponent implements Runnable {
         ImageIcon icon = new ImageIcon("pixie_logo.png");
         JLabel label = new JLabel(icon);
 
-        frame.setSize(700, 600);
+        ImageIcon loading = new ImageIcon("ajax-loader.gif");
+        JLabel label2 = new JLabel(loading);
+
+
+
+        frame.setBackground(Color.white);
+
+        frame.setSize(400, 450);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLocation(350, 100);
+        frame.setLocation(100, 100);
         frame.add(label);
+
+        frame.pack();
 
         // Allow element to show
         frame.setVisible(true);
