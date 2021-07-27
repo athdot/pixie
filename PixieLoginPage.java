@@ -11,32 +11,22 @@ import java.awt.*;
 
 public class PixieLoginPage extends JComponent {
 
-    //make these fields public because Pixie.java needs to reference them
+    //make these fields public because Pixie.java needs to access them
+    //creating getters and setters for larger pages would be extremely redundant
 
-    public JPanel signInPanel; //panel setup for user sign in
-    public JPanel createAccountPanel; //panel setup for creating new account
+    JPanel signInPanel;
+    JPanel createAccountPanel;
 
-    public JTextField usernameField; //text field to enter username
-    public JTextField passwordField; //text field to enter password
+    //username and password field for sign in option
+    public JTextField signInUsernameField;
+    public JTextField signInPasswordField;
+    public JButton signInConfirmButton;
+
+    //username and password field for create account option
+    public JTextField createAccountUsernameField;
+    public JTextField createAccountPasswordField;
     public JTextField confirmPasswordField; //only exists for creating new account
-
-    public JButton signInButton; //button to go to sign in page
-    public JButton createAccountButton; //button to go to create account page
-    public JButton confirmButton; //button confirming sign in or account creation
-
-//    // Checks the validity of username and password in login page
-//    public void create() {
-//        String userCode = "createAccount[" + usernameField.getText().toLowerCase() + "," + passwordField.getText() + "]";
-//        String evaluate = client.streamReader(userCode);
-//
-//        // If username is taken, show error message
-//        if (evaluate.equals("false")) {
-//            JOptionPane.showMessageDialog(null, "Username is taken.", "Username taken",
-//                    JOptionPane.ERROR_MESSAGE);
-//        // If valid, show Welcome page (having trouble adding Welcome class
-//        // once button is clicked)
-//        }
-//    }
+    public JButton createAccountConfirmButton;
 
     public PixieLoginPage() {
         getPanels();
@@ -46,71 +36,77 @@ public class PixieLoginPage extends JComponent {
      * Assign the bare minimum attributes for a panel that you're creating as part of the log in page. Additional items
      * can be added afterwards (e.g., such as a confirm password field for the createAccountPanel).
      */
+
     private void getPanels() {
 
-        //Local variables to be applied to both the sign in panel and create account panel
-        JLabel usernameLabel = new JLabel("Username");
-        JLabel passwordLabel = new JLabel("Password");
-        JLabel invalidLabel = new JLabel("Hello");
+        /*
+        Create the features on the sign in panel which can be displayed on the login frame
+         */
+        signInPanel = new JPanel(null); //null for better manipulation with setBounds
+
+        // Buttons and labels with main panel
+        signInConfirmButton = new JButton("Sign In");
+
+        JLabel usernameLabel1 = new JLabel("Username");
+        JLabel passwordLabel1 = new JLabel("Password");
+        usernameLabel1.setBounds(100, 117, 80, 30);
+        passwordLabel1.setBounds(100, 147, 80, 30);
+
+        // Text fields for username and password
+        signInPasswordField = new JPasswordField(10);
+        signInUsernameField = new JTextField(10);
 
         // panel.setLayout(null) helps with .setBounds
-        usernameLabel.setBounds(80, 97, 80, 30);
-        passwordLabel.setBounds(80, 127, 80, 30);
-        invalidLabel.setBounds(80, 157, 175, 30);
+        signInUsernameField.setBounds(180, 125, 100, 20);
+        signInPasswordField.setBounds(180, 155, 100, 20);
+        signInConfirmButton.setBounds(150, 200, 100, 25);
 
-        //initialize username and password text fields
-        passwordField = new JPasswordField(10);
-        passwordField.setBounds(200, 135, 135, 20);
-        usernameField = new JTextField(10);
-        usernameField.setBounds(200, 105, 135, 20);
+        // Add all to main panel
+        signInPanel.add(usernameLabel1);
+        signInPanel.add(passwordLabel1);
 
-        // Log in and create account buttons
-        createAccountButton = new JButton("Create Account");
-        signInButton = new JButton("Sign In");
-
-        // Grid layout within side panel
-        JPanel grid = new JPanel();
-        grid.setLayout(new GridLayout(4, 1, 5, 5));
-        grid.setBackground(new Color(94, 156, 156));
-
-        // Add buttons to grid
-        grid.add(signInButton);
-        grid.add(createAccountButton);
-
-        // Side panel (on west) design
-        JPanel sidePanel = new JPanel();
-        sidePanel.setLayout(new FlowLayout(4, 4, 4));
-        sidePanel.setBackground(new Color(94, 156, 156));
-        sidePanel.add(grid);
+        signInPanel.add(signInPasswordField);
+        signInPanel.add(signInUsernameField);
+        signInPanel.add(signInConfirmButton);
 
         /*
-        Create the features on the sign in panel which can be displayed on the loginFrame
+        Create the features on the create account panel that can be displayed on the login frame
+        DEBUG: Single JComponents can only be added to one panel and should not be reused.
          */
-        signInPanel = new JPanel();
-        signInPanel.setLayout(null); //null layout allows flexibility when adjusting components, texts, etc.
-        signInPanel.add(sidePanel, BorderLayout.WEST);
+        //set layout to null to use setBounds()
+        createAccountPanel = new JPanel(null);
 
-        signInPanel.add(usernameLabel);
-        signInPanel.add(passwordLabel);
+        // Buttons and labels with main panel
+        //only the create-new-account option has a confirm password field
+        createAccountConfirmButton = new JButton("Create Account");
 
-        signInPanel.add(passwordField);
-        signInPanel.add(usernameField);
+        JLabel usernameLabel2 = new JLabel("Username");
+        JLabel passwordLabel2 = new JLabel("Password");
+        JLabel confirmPasswordLabel = new JLabel("Confirm Password");
 
-        /*
-        Create the features on the "create account" panel that can be displayed on the login page
-         */
-        createAccountPanel = new JPanel();
-        createAccountPanel.setLayout(null);
-        createAccountPanel.add(sidePanel, BorderLayout.WEST);
+        usernameLabel2.setBounds(60, 117, 80, 30);
+        passwordLabel2.setBounds(60, 147, 80, 30);
+        confirmPasswordLabel.setBounds(60, 177, 175, 30);
 
-        createAccountPanel.add(usernameLabel);
-        createAccountPanel.add(passwordLabel);
+        // Text fields for username and password
+        createAccountUsernameField = new JTextField(10);
+        createAccountPasswordField = new JPasswordField(10);
+        confirmPasswordField = new JPasswordField(10);
 
-        createAccountPanel.add(passwordField);
-        createAccountPanel.add(usernameField);
+        // panel.setLayout(null) helps with .setBounds
+        createAccountUsernameField.setBounds(180, 125, 100, 20);
+        createAccountPasswordField.setBounds(180, 155, 100, 20);
+        confirmPasswordField.setBounds(180, 185, 100, 20);
+        createAccountConfirmButton.setBounds(140, 230, 135, 25);
 
-        JLabel confirmPasswordLabel = new JLabel("Confirm Password ");
-        confirmPasswordLabel.setBounds(80, 157, 175, 30);
+        // Add all to main panel
+        createAccountPanel.add(usernameLabel2);
+        createAccountPanel.add(passwordLabel2);
         createAccountPanel.add(confirmPasswordLabel);
+
+        createAccountPanel.add(createAccountPasswordField);
+        createAccountPanel.add(createAccountUsernameField);
+        createAccountPanel.add(confirmPasswordField);
+        createAccountPanel.add(createAccountConfirmButton);
     }
 }

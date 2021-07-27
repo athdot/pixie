@@ -19,36 +19,51 @@ public class Pixie extends JComponent implements Runnable {
     private Client client;
 
     //The entire app has 2 JFrames. One containing all login pages, another for the rest
-    JFrame loginFrame; //loginPageFrame
+    JFrame loginFrame; //loginFrame
     JFrame applicationFrame; //applicationFrame
+
+    //loginFrame baseline features
+    JButton createAccountButton;
+    JButton signInButton;
 
     //create an instance of the classes containing all panel layouts
     PixieLoginPage pixieLoginPage = new PixieLoginPage();
+    JButton signInConfirmButton = pixieLoginPage.signInConfirmButton;
+    JButton createAccountConfirmButton = pixieLoginPage.createAccountConfirmButton;
 
     ActionListener actionListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            if (e.getSource() == pixieLoginPage.createAccountButton) {
-                JFrame loginFrame = new JFrame();
-                Panel panel = new Panel();
-                JLabel confirm = new JLabel("Confirm Password ");
-                confirm.setBounds(40, 157, 175, 30);
-                panel.add(confirm);
-                loginFrame.add(panel);
+            if (e.getSource() == createAccountButton) {
+                switchPanel(loginFrame, pixieLoginPage.signInPanel, pixieLoginPage.createAccountPanel);
             }
+            if (e.getSource() == signInButton) {
+                switchPanel(loginFrame, pixieLoginPage.createAccountPanel, pixieLoginPage.signInPanel);
+            }
+/*            if (e.getSource() == createAccountConfirmButton) {
+                String userCode = "createAccount[" + pixieLoginPage.createAccountUsernameField.getText().toLowerCase() +
+                        "," + pixieLoginPage.createAccountPasswordField.getText() + "]";
+                String evaluate = client.streamReader(userCode);
 
-            if (e.getSource() == pixieLoginPage.signInButton) {
-                String userCode = "login[" + pixieLoginPage.usernameField.getText().toLowerCase() +
-                        "," + pixieLoginPage.passwordField.getText() + "]";
+                // If username is taken, show error message
+                if (evaluate.equals("false")) {
+                    JOptionPane.showMessageDialog(null, "Username is taken.",
+                            "Invalid", JOptionPane.ERROR_MESSAGE);
+                    // If valid, show Welcome page (having trouble adding Welcome class
+                    // once button is clicked)
+                }*/
+/*            if (e.getSource() == signInButton) {
+                String userCode = "login[" + pixieLoginPage.signInUsernameField.getText().toLowerCase() +
+                        "," + pixieLoginPage.signInPasswordField.getText() + "]";
                 String evaluate = client.streamReader(userCode);
 
                 // If invalid, show error message
                 if (evaluate.equals("false")) {
-                    JOptionPane.showMessageDialog(null, "Invalid username or password", "",
+                    JOptionPane.showMessageDialog(null, "Invalid username or password", "Invalid",
                             JOptionPane.ERROR_MESSAGE);
                 }
-            }
+            }*/
         }
     };
 
@@ -57,9 +72,9 @@ public class Pixie extends JComponent implements Runnable {
      * @param frame - frame you want to display on (loginPageFrame or applicationFrame)
      * @param newPanel - panel you want to display on the frame
      */
-    public void switchPanel(JFrame frame, JPanel newPanel) {
-        frame.removeAll();
-        frame.add(newPanel, BorderLayout.CENTER);
+    public void switchPanel(JFrame frame, JPanel oldPanel, JPanel newPanel) {
+        frame.remove(oldPanel);
+        frame.add(newPanel);
 
         //DEBUGGED: use repaint() and revalidate() to refresh and recalculate layout
         frame.repaint();
@@ -83,15 +98,38 @@ public class Pixie extends JComponent implements Runnable {
      */
     public void run() {
         /*
-        Create the JFrame for the login page and create its basic set up.
+        Create the JFrame for the login page. Build the side menu bar that contains button options to sign in or
+        create a new account. This "side panel" stays, whether we are on the page to sign in or create a new account.
         */
         loginFrame = new JFrame("Pixie Login");
-
         loginFrame.setSize(500, 400);
         loginFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //do not use JFrame.EXIT_ON_CLOSE
         loginFrame.setLocationRelativeTo(null);
 
-        loginFrame.add(pixieLoginPage.signInPanel, BorderLayout.CENTER); //start off on the sign in panel
+        //side panel creation (called it "loginFrameMenu")
+        JPanel loginFrameMenu = new JPanel();
+        loginFrameMenu.setLayout(new FlowLayout(4, 4, 4));
+        loginFrameMenu.setBackground(new Color(94, 156, 156));
+
+        //grid implementation within teh side panel/login frame menu
+        JPanel loginFrameMenuGrid = new JPanel();
+        loginFrameMenuGrid.setLayout(new GridLayout(4, 1, 5, 5));
+        loginFrameMenuGrid.setBackground(new Color(94, 156, 156));
+
+        // Log in and create account buttons
+        createAccountButton = new JButton("Create Account");
+        signInButton = new JButton("Sign In");
+
+        // Add buttons to grid
+        loginFrameMenuGrid.add(signInButton);
+        loginFrameMenuGrid.add(createAccountButton);
+
+        // Add grid to west panel
+        loginFrameMenu.add(loginFrameMenuGrid);
+
+        //start off on the sign in panel
+        loginFrame.add(loginFrameMenu, BorderLayout.WEST);
+        loginFrame.add(pixieLoginPage.signInPanel);
         loginFrame.setVisible(true);
 
         /*
@@ -100,6 +138,13 @@ public class Pixie extends JComponent implements Runnable {
         applicationFrame = new JFrame("Pixie App");
         applicationFrame.setSize(1200, 1000); //we will probably want the actual app to be larger
         applicationFrame.setLocationRelativeTo(null);
+
+        //todo: transfer buttons from other classes that design panels and add action listeners to them below
+        signInButton.addActionListener(actionListener);
+        createAccountButton.addActionListener(actionListener);
+
+        signInConfirmButton.addActionListener(actionListener);
+        createAccountConfirmButton.addActionListener(actionListener);
     }
 
     public static void main(String[] args) {
