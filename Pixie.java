@@ -36,19 +36,23 @@ public class Pixie extends JComponent implements Runnable{
         @Override
         public void actionPerformed(ActionEvent e) {
             // Create account button
+            // Button works
             if (e.getSource() == createButton) {
                 switchToCreate(panel2);
             }
 
             // Log In button
+            // Button works
             if (e.getSource() == loginButton) {
                 switchToLog(panel1);
             }
 
+            // Button doesn't work yet
             if (e.getSource() == signInButton) {
                 acceptLogIn();
             }
 
+            // Button doesn't work yet
             if (e.getSource() == newCreate) {
                 acceptCreate();
             }
@@ -56,7 +60,7 @@ public class Pixie extends JComponent implements Runnable{
         }
     };
 
-    // Button doesn't work yet
+    // Validates sign in
     public void acceptLogIn() {
         String userCode = "login[" + userField.getText().toLowerCase() +
                 "," + passwordField.getText() + "]";
@@ -72,7 +76,7 @@ public class Pixie extends JComponent implements Runnable{
         }
     }
 
-    // Button doesn't work yet
+    // Validates create account
     public void acceptCreate() {
         String userCode = "createAccount[" + userField.getText().toLowerCase() +
                 "," + passwordField.getText() + "]";
@@ -114,7 +118,6 @@ public class Pixie extends JComponent implements Runnable{
     }
 
     // Switches to create account page
-    // Button works
     public void switchToCreate(JPanel newPanel) {
         // Remove all old elements in container
         container.removeAll();
@@ -194,7 +197,6 @@ public class Pixie extends JComponent implements Runnable{
     }
 
     // Switches back to log in page
-    // Button works
     public void switchToLog(JPanel firstPanel) {
         // Removes all elements in container
         container.removeAll();
