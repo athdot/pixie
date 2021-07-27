@@ -36,61 +36,60 @@ public class Pixie extends JComponent implements Runnable{
         @Override
         public void actionPerformed(ActionEvent e) {
             // Create account button
-            // Button works
             if (e.getSource() == createButton) {
                 switchToCreate(panel2);
             }
 
             // Log In button
-            // Button works
             if (e.getSource() == loginButton) {
                 switchToLog(panel1);
             }
-
-            // Button doesn't work yet
+            
             if (e.getSource() == signInButton) {
                 acceptLogIn();
             }
 
-            // Button doesn't work yet
             if (e.getSource() == newCreate) {
                 acceptCreate();
             }
+        }
 
+        public void acceptLogIn() {
+            String userCode = "login[" + userField.getText().toLowerCase() +
+                    "," + passwordField.getText() + "]";
+            String evaluate = client.streamReader(userCode);
+
+            // If invalid, show error message
+        }
+
+        // Still in progress but errors pop up fine
+        public void acceptCreate() {
+            // Checks for space
+            if (userField.getText().contains(" ") || passwordField.getText().contains(" ")) {
+                JOptionPane.showMessageDialog(null, "Username or password shouldn't include space!", "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            // Checks for length    
+            } else if ((userField.getText().length() > 0 && userField.getText().length() <= 6) ||
+                    (passwordField.getText().length() > 0 && passwordField.getText().length() <= 6)) {
+                JOptionPane.showMessageDialog(null, "Username or password should be more than 6 characters!", "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            // Checks for match up    
+            } else if (!passwordField.getText().equals(confirmField.getText())) {
+                JOptionPane.showMessageDialog(null, "Passwords don't match!", "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            // Shows welcome page once all is valid    
+            } else {
+            // Sleep for 1.5 seconds before welcome page pops up   
+            try {
+                Thread.sleep(1500);
+            } catch (InterruptedException ie) {
+                ie.printStackTrace();
+            }
+            welcome();
+
+            }
         }
     };
-
-    // Validates sign in
-    public void acceptLogIn() {
-        String userCode = "login[" + userField.getText().toLowerCase() +
-                "," + passwordField.getText() + "]";
-        String evaluate = client.streamReader(userCode);
-
-        // If invalid, show error message
-        if (evaluate.equals("false")) {
-            JOptionPane.showMessageDialog(null, "Invalid username or password", "Error",
-                    JOptionPane.ERROR_MESSAGE);
-        // If valid, display welcome frame    
-        } else {
-            welcome();
-        }
-    }
-
-    // Validates create account
-    public void acceptCreate() {
-        String userCode = "createAccount[" + userField.getText().toLowerCase() +
-                "," + passwordField.getText() + "]";
-        String evaluate = client.streamReader(userCode);
-
-        // If invalid, show error message
-        if (evaluate.equals("false")) {
-            JOptionPane.showMessageDialog(null, "Invalid username or password", "Error",
-                    JOptionPane.ERROR_MESSAGE);
-        // If valid, display welcome frame    
-        } else {
-            welcome();
-        }
-    }
 
     // The welcome page layout
     // Different frame
