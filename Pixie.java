@@ -2,56 +2,47 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+public class Pixie extends JComponent implements Runnable{
+    Client client;
 
-public class PixieAccount extends JComponent implements Runnable {
     JTextField userField;
     JTextField passwordField;
-    JTextField confirmField;
     JButton loginButton;
     JButton createButton;
-    JButton newCreate;
-
-    PixieAccount go;
-
-    private Client client;
+    JButton signInButton;
+    Pixie go;
 
     ActionListener actionListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (e.getSource() == loginButton) {
-                go.switchToLogIn();
+            if (e.getSource() == createButton) {
+                JFrame frame = new JFrame();
+                Panel panel = new Panel();
+                JLabel confirm = new JLabel("Confirm Password ");
+                confirm.setBounds(40, 157, 175, 30);
+                panel.add(confirm);
+                frame.add(panel);
+
             }
-            if (e.getSource() == newCreate) {
-                go.create();
+            if (e.getSource() == signInButton) {
+                String userCode = "login[" + userField.getText().toLowerCase() +
+                        "," + passwordField.getText() + "]";
+                String evaluate = client.streamReader(userCode);
+
+                // If invalid, show error message
+                if (evaluate.equals("false")) {
+                    JOptionPane.showMessageDialog(null, "Invalid username or password", "",
+                            JOptionPane.ERROR_MESSAGE);
+                }
             }
+
         }
     };
 
-    // Checks the validity of username and password in login page
-    public void create() {
-        String userCode = "createAccount[" + userField.getText().toLowerCase() + "," + passwordField.getText() + "]";
-        String evaluate = client.streamReader(userCode);
-
-        // If username is taken, show error message
-        if (evaluate.equals("false")) {
-            JOptionPane.showMessageDialog(null, "Username is taken.", "",
-                    JOptionPane.ERROR_MESSAGE);
-        // If valid, show Welcome page (having trouble adding Welcome class
-        // once button is clicked)
-        } else if (evaluate.equals("true") && passwordField.equals(confirmField)){
-        }
-
-    }
-
-    // Expects the screen to switch from the create account page to login page
-    // once the "Log In" button is clicked
-    // (Having trouble doing this)
-    public void switchToLogIn() {
-    }
-
+    // The Log In page
     public void run() {
         /* set up new elements */
-        JFrame frame = new JFrame("Create Account");
+        JFrame frame = new JFrame("Pixie");
         JPanel panel = new JPanel();
         JPanel sidePanel = new JPanel();
         JPanel grid = new JPanel();
@@ -61,7 +52,7 @@ public class PixieAccount extends JComponent implements Runnable {
         frame.setLocation(450, 200);
         frame.add(panel);
 
-        // Main container
+        // Allows flexibility when adjusting components, texts, etc.
         panel.setLayout(null);
 
         // Side panel (on west) design
@@ -87,43 +78,39 @@ public class PixieAccount extends JComponent implements Runnable {
         sidePanel.add(grid);
 
         // Buttons and labels with main panel
-        newCreate = new JButton("Create Account");
+        signInButton = new JButton("Sign In");
         JLabel username = new JLabel("Username ");
         JLabel password = new JLabel("Password ");
-        JLabel confirm = new JLabel("Confirm Password ");
-        JLabel invalid = new JLabel("Hello");
-
-        username.setBounds(80, 97, 80, 30);
-        password.setBounds(80, 127, 80, 30);
-        confirm.setBounds(80, 157, 175, 30);
-        invalid.setBounds(80, 157, 175, 30);
+        username.setBounds(100, 117, 80, 30);
+        password.setBounds(100, 147, 80, 30);
 
         // Text fields for username and password
         passwordField = new JPasswordField(10);
-        confirmField = new JPasswordField(10);
         userField = new JTextField(10);
 
-        userField.setBounds(200, 105, 135, 20);
-        passwordField.setBounds(200, 135, 135, 20);
-        confirmField.setBounds(200, 165, 135, 20);
-        newCreate.setBounds(140, 200, 135, 25);
+        // panel.setLayout(null) helps with .setBounds
+        userField.setBounds(180, 125, 100, 20);
+        passwordField.setBounds(180, 155, 100, 20);
+        signInButton.setBounds(150, 200, 100, 25);
+
+        signInButton.addActionListener(actionListener);
+
 
         // Add all to main panel
         panel.add(username);
         panel.add(password);
-        panel.add(newCreate);
-        panel.add(confirm);
 
-        panel.add(confirmField);
         panel.add(passwordField);
         panel.add(userField);
-
+        panel.add(signInButton);
 
         // Allow elements to show
         frame.setVisible(true);
     }
 
+
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new PixieAccount());
+        // Run class
+        SwingUtilities.invokeLater(new Pixie());
     }
 }
