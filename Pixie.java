@@ -66,12 +66,12 @@ public class Pixie extends JComponent implements Runnable{
         public void acceptCreate() {
             // Checks for space
             if (userField.getText().contains(" ") || passwordField.getText().contains(" ")) {
-                JOptionPane.showMessageDialog(null, "Username or password shouldn't include space!", "Error",
+                JOptionPane.showMessageDialog(null, "Username and password shouldn't include space!", "Error",
                         JOptionPane.ERROR_MESSAGE);
             // Checks for length    
             } else if ((userField.getText().length() > 0 && userField.getText().length() <= 6) ||
                     (passwordField.getText().length() > 0 && passwordField.getText().length() <= 6)) {
-                JOptionPane.showMessageDialog(null, "Username or password should be more than 6 characters!", "Error",
+                JOptionPane.showMessageDialog(null, "Username and password should be more than 6 characters!", "Error",
                         JOptionPane.ERROR_MESSAGE);
             // Checks for match up    
             } else if (!passwordField.getText().equals(confirmField.getText())) {
