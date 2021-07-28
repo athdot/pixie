@@ -142,18 +142,15 @@ public class PixieSubmenus extends JComponent {
         createPostSubmenuPanel.add(createPostSubmenuPanelGrid);
     }
     
-    // Write new post button panel
-    // Modifying icon buttons (it encapsulates entire panel when
-    // I add it to new panel, not sure why)
-    public void createNewPost(JPanel frame) {
+    // Create new button post panel
+    public void createNewPost(JPanel panel) {
         /*
-        Creates the panel to "Create Post" submenu 
+        The "Write Post" panel
          */
         createNewPostPanel = new JPanel();
         createNewPostPanel.setLayout(null);
 
         createNewPostPanel.setBorder(new LineBorder(Color.black,3));
-        createNewPostPanel.setLayout(new BorderLayout(10, 10));
 
         // Create Post stuff
         Font font2 = new Font(Font.SANS_SERIF,  Font.PLAIN, 12);
@@ -176,29 +173,33 @@ public class PixieSubmenus extends JComponent {
         title.setBounds(80, 100,50,20);
 
         doneEditingPostButton = new JButton("Done");
-        doneEditingPostButton.setBounds(450,600,60,20);
+        doneEditingPostButton.setBounds(580,550,100,35);
 
         ImageIcon icon = new ImageIcon("icons8-decrease-font-24.png");
         adjustText12Button = new JButton(icon);
-        adjustText12Button.setBounds(100,220,40,40);
+        adjustText12Button.setBounds(200,240,140,30);
 
         ImageIcon icon3 = new ImageIcon("icons8-a-24.png");
         adjustText14Button = new JButton(icon3);
-        adjustText14Button.setBounds(200,220,40,40);
+        adjustText14Button.setBounds(370,240,140,30);
 
         ImageIcon icon2 = new ImageIcon("icons8-increase-font-24.png");
         adjustText16Button = new JButton(icon2);
-        adjustText16Button.setBounds(150,220,40,40);
+        adjustText16Button.setBounds(540,240,140,30);
 
         ImageIcon icon4 = new ImageIcon("icons8-anime-emoji-30.png");
         emojiButton = new JButton(icon4);
-        emojiButton.setBounds(240,600,30,30);
+        emojiButton.setBounds(200,550,100,35);
 
         createNewPostPanel.add(createTitle);
         createNewPostPanel.add(createPost);
-        createNewPostPanel.add(scroll);
+        createNewPostPanel.add(emojiButton);
+        createNewPostPanel.add(adjustText12Button);
+        createNewPostPanel.add(adjustText14Button);
+        createNewPostPanel.add(adjustText16Button);
+        createNewPostPanel.add(doneEditingPostButton);
 
-        frame.add(createNewPostPanel);
+        panel.add(createNewPostPanel);
     }
 
     private void yourPostsSubmenu() {
