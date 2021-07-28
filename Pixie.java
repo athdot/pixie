@@ -9,6 +9,8 @@ import java.awt.event.*;
  * within different classes for organization. Pixie.java creates an instance of all these panels to call them from
  * their external classes. Also listens for all actions across the program.
  *
+ * NOTE: DON'T FORGET TO RUN Server.java FIRST
+ *
  * @author Group 8
  * @version July 27, 2021
  */
