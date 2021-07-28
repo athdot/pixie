@@ -191,6 +191,24 @@ public class Pixie extends JComponent implements Runnable {
 
                 activeUsername = null;
             }
+            
+            if (e.getSource() == pixieSubmenus.deleteAccountButton) {
+                // Makes sure user didn't click delete button by accident
+                JOptionPane pane = new JOptionPane();
+                int p = pane.showConfirmDialog(null, "Are you sure you want to delete your account?",
+                        "Delete?", JOptionPane.YES_NO_OPTION);
+                // If "yes" is clicked, delete
+                // Take user back to login page
+                if (p == 0) {
+                    String ex = "deleteAccount";
+                    CLIENT.streamReader(ex);
+                    switchFrame(appFrame, loginFrame);
+                // If not, close pane
+                } else {
+                    pane.getRootFrame().dispose();
+                }
+
+            }
         }
     };
 
