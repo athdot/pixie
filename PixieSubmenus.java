@@ -20,6 +20,18 @@ public class PixieSubmenus extends JComponent {
     public JPanel yourCommentsSubmenuPanel;
     public JPanel allPostsSubmenuPanel;
     public JPanel searchUserSubmenuPanel;
+    public JPanel createNewPostPanel;
+
+    // FEATURES (NEW!)
+    public JButton emojiButton;
+    public JButton adjustText12Button;
+    public JButton adjustText14Button;
+    public JButton adjustText16Button;
+
+    //"CREATE NEW POST" (NEW!)
+    public JTextField createTitle;
+    public JTextArea createPost;
+    public JButton doneEditingPostButton;
 
     //"YOUR PROFILE"
     public JButton changeBioButton;
@@ -27,7 +39,7 @@ public class PixieSubmenus extends JComponent {
     public JButton changePasswordButton;
     public JButton deleteAccountButton;
 
-    //"CREATE POST"
+    //"CREATE POST SUBMENU"
     public JButton writePostButton;
     public JButton importPostButton;
 
@@ -128,6 +140,65 @@ public class PixieSubmenus extends JComponent {
         createPostSubmenuPanelGrid.add(importPostButton);
 
         createPostSubmenuPanel.add(createPostSubmenuPanelGrid);
+    }
+    
+    // Write new post button panel
+    // Modifying icon buttons (it encapsulates entire panel when
+    // I add it to new panel, not sure why)
+    public void createNewPost(JPanel frame) {
+        /*
+        Creates the panel to "Create Post" submenu 
+         */
+        createNewPostPanel = new JPanel();
+        createNewPostPanel.setLayout(null);
+
+        createNewPostPanel.setBorder(new LineBorder(Color.black,3));
+        createNewPostPanel.setLayout(new BorderLayout(10, 10));
+
+        // Create Post stuff
+        Font font2 = new Font(Font.SANS_SERIF,  Font.PLAIN, 12);
+        createPost = new JTextArea();
+        createPost.setBounds(200,340,480,200);
+        createPost.setFont(font2);
+
+        JScrollPane scroll = new JScrollPane(createPost);
+        scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
+        // Create Title stuff
+        Font font = new Font(Font.SANS_SERIF,  Font.BOLD, 20);
+
+        createTitle = new JTextField();
+        createTitle.setBounds(200,280,480,35);
+        createTitle.setFont(font);
+
+        JLabel title = new JLabel(createTitle.getText());
+        title.setFont(font);
+        title.setBounds(80, 100,50,20);
+
+        doneEditingPostButton = new JButton("Done");
+        doneEditingPostButton.setBounds(450,600,60,20);
+
+        ImageIcon icon = new ImageIcon("icons8-decrease-font-24.png");
+        adjustText12Button = new JButton(icon);
+        adjustText12Button.setBounds(100,220,40,40);
+
+        ImageIcon icon3 = new ImageIcon("icons8-a-24.png");
+        adjustText14Button = new JButton(icon3);
+        adjustText14Button.setBounds(200,220,40,40);
+
+        ImageIcon icon2 = new ImageIcon("icons8-increase-font-24.png");
+        adjustText16Button = new JButton(icon2);
+        adjustText16Button.setBounds(150,220,40,40);
+
+        ImageIcon icon4 = new ImageIcon("icons8-anime-emoji-30.png");
+        emojiButton = new JButton(icon4);
+        emojiButton.setBounds(240,600,30,30);
+
+        createNewPostPanel.add(createTitle);
+        createNewPostPanel.add(createPost);
+        createNewPostPanel.add(scroll);
+
+        frame.add(createNewPostPanel);
     }
 
     private void yourPostsSubmenu() {
