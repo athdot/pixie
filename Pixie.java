@@ -180,7 +180,7 @@ public class Pixie extends JComponent implements Runnable {
                 switchFrame(appFrame, loginFrame);
                 CLIENT.streamReader("logout");
 
-                signInPasswordField.setText("");
+                signInUsernameField.setText("");
                 signInPasswordField.setText("");
 
                 createAccountUsernameField.setText("");
