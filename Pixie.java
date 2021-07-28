@@ -3,342 +3,358 @@ import java.awt.*;
 import java.awt.event.*;
 
 /**
- * Swaps between log in page and create account page
- * Confirms validity of username and password
- * Opens "welcome" page once the username and password is confirmed
+ * Pixie.java - PJ05
+ * Apparently our app is branded as "Pixie". Pixes are mythical creatures in folklore and children's stories.
+ * This class ties the GUI together by allowing all panels of the application to work together. Panels are created
+ * within different classes for organization. Pixie.java creates an instance of all these panels to call them from
+ * their external classes. Also listens for all actions across the program.
  *
- * <p>Purdue University -- CS18000 -- Summer 2021 -- Project 5 -- Group 8</p>
- *
+ * @author Group 8
+ * @version July 27, 2021
  */
 
-public class Pixie extends JComponent implements Runnable{
-    Client client;
+public class Pixie extends JComponent implements Runnable {
 
-    JTextField userField;
-    JTextField passwordField;
-    JTextField confirmField;
-    JButton loginButton;
-    JButton createButton;
+    //each user who has the app open also has a Client object that communicates with the Server class.
+    private final Client CLIENT = new Client();
+    String activeUsername; //for client communication with server
+    JPanel activeSubmenuPanel; //for switch panels method
+
+    //APP HAS 2 JFrames.
+    JFrame loginFrame; //login page frame
+    JFrame appFrame; //frame for the app part
+    JPanel appPanel; //panel containing all sub-menus
+
+    //LOGIN FRAME: baseline features -- the login menu
+    JButton createAccountButton;
     JButton signInButton;
-    JButton newCreate;
-    Pixie go;
 
-    JFrame frame = new JFrame("Pixie");
-    JFrame frame2 = new JFrame("Pixie");
+    //APP FRAME: baseline features -- the main menu
+    JButton yourProfileButton;
+    JButton createPostButton;
+    JButton yourPostsButton;
+    JButton yourCommentsButton;
+    JButton allPostsButton;
+    JButton searchUserButton;
+    JButton logoutButton;
 
-    Container container = frame.getContentPane();
+    //LOGIN FRAME: bring the panels and their components created for the login page from PixieLoginPage class
+    PixieLoginPage pixieLoginPage = new PixieLoginPage();
 
-    JPanel panel1 = new JPanel();
-    JPanel panel2 = new JPanel();
+    JPanel signInPanel = pixieLoginPage.signInPanel;
+    JPanel createAccountPanel = pixieLoginPage.createAccountPanel;
 
+    JTextField signInUsernameField = pixieLoginPage.signInUsernameField;
+    JTextField signInPasswordField = pixieLoginPage.signInPasswordField;
+    JButton signInConfirmButton = pixieLoginPage.signInConfirmButton;
 
+    JTextField createAccountUsernameField = pixieLoginPage.createAccountUsernameField;
+    JTextField createAccountPasswordField = pixieLoginPage.createAccountPasswordField;
+    JTextField confirmPasswordField = pixieLoginPage.confirmPasswordField;
+    JButton createAccountConfirmButton = pixieLoginPage.createAccountConfirmButton;
+
+    //MAIN MENU'S SUBMENUS: bring the side-panel "sub-menus" and their components from PixieSubmenus.java
+    PixieSubmenus pixieSubmenus = new PixieSubmenus();
+
+    JPanel yourProfileSubmenuPanel = pixieSubmenus.yourProfileSubmenuPanel;
+    JPanel createPostSubmenuPanel = pixieSubmenus.createPostSubmenuPanel;
+    JPanel yourPostsSubmenuPanel = pixieSubmenus.yourPostsSubmenuPanel;
+    JPanel yourCommentsSubmenuPanel = pixieSubmenus.yourCommentsSubmenuPanel;
+    JPanel allPostsSubmenuPanel = pixieSubmenus.allPostsSubmenuPanel;
+    JPanel searchUserSubmenuPanel = pixieSubmenus.searchUserSubmenuPanel;
+
+    //FOR THE ENTIRE PROGRAM: Action listeners for all components that require action listeners
     ActionListener actionListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            // Create account button
-            if (e.getSource() == createButton) {
-                switchToCreate(panel2);
-            }
 
-            // Log In button
-            if (e.getSource() == loginButton) {
-                switchToLog(panel1);
-            }
-            
+            //LOGIN FRAME
+
+            //user chooses to navigate to the sign-in page
             if (e.getSource() == signInButton) {
-                acceptLogIn();
+                switchPanel(loginFrame, createAccountPanel, signInPanel);
             }
 
-            if (e.getSource() == newCreate) {
-                acceptCreate();
+            //user chooses to navigate to the create account page
+            if (e.getSource() == createAccountButton) {
+                switchPanel(loginFrame, signInPanel, createAccountPanel);
             }
-        }
 
-        public void acceptLogIn() {
-            String userCode = "login[" + userField.getText().toLowerCase() +
-                    "," + passwordField.getText() + "]";
-            String evaluate = client.streamReader(userCode);
+            //user chooses to sign into the account with provided username and password
+            if (e.getSource() == signInConfirmButton) {
 
-            // If invalid, show error message
-        }
+                if (signInUsernameField.getText().length() == 0 || signInPasswordField.getText().length() == 0) {
+                    JOptionPane.showMessageDialog(null, "Password or Username too Short",
+                            "Invalid", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
 
-        // Still in progress but errors pop up fine
-        public void acceptCreate() {
-            // Checks for space
-            if (userField.getText().contains(" ") || passwordField.getText().contains(" ")) {
-                JOptionPane.showMessageDialog(null, "Username and password shouldn't include space!", "Error",
-                        JOptionPane.ERROR_MESSAGE);
-            // Checks for length    
-            } else if ((userField.getText().length() > 0 && userField.getText().length() <= 6) ||
-                    (passwordField.getText().length() > 0 && passwordField.getText().length() <= 6)) {
-                JOptionPane.showMessageDialog(null, "Username and password should be more than 6 characters!", "Error",
-                        JOptionPane.ERROR_MESSAGE);
-            // Checks for match up    
-            } else if (!passwordField.getText().equals(confirmField.getText())) {
-                JOptionPane.showMessageDialog(null, "Passwords don't match!", "Error",
-                        JOptionPane.ERROR_MESSAGE);
-            // Shows welcome page once all is valid    
-            } else {
-            // Sleep for 1.5 seconds before welcome page pops up   
-            try {
-                Thread.sleep(1500);
-            } catch (InterruptedException ie) {
-                ie.printStackTrace();
+                String worked = "login[" + signInUsernameField.getText().toLowerCase() + "," +
+                        signInPasswordField.getText() + "]";
+                worked = CLIENT.streamReader(worked);
+
+                if (worked.equals("false")) {
+                    JOptionPane.showMessageDialog(null, "Invalid Username or Password",
+                            "Invalid", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    activeUsername = signInUsernameField.getText();
+                    switchFrame(loginFrame, appFrame);
+                }
             }
-            frame.dispose();
-            welcome();
 
+            //APP FRAME
+
+            //user clicks main menu button to go to "your profile" page
+            if (e.getSource() == yourProfileButton) {
+                switchPanel(appPanel, activeSubmenuPanel, yourProfileSubmenuPanel, BorderLayout.WEST);
+                activeSubmenuPanel = yourProfileSubmenuPanel;
             }
+
+            //user clicks main menu button to go to "create post" page
+            if (e.getSource() == createPostButton) {
+                switchPanel(appPanel, activeSubmenuPanel, createPostSubmenuPanel, BorderLayout.WEST);
+                activeSubmenuPanel = createPostSubmenuPanel;
+            }
+
+            //user clicks main menu button to go to "your posts" page
+            if (e.getSource() == yourPostsButton) {
+                switchPanel(appPanel, activeSubmenuPanel, yourPostsSubmenuPanel, BorderLayout.WEST);
+                activeSubmenuPanel = yourPostsSubmenuPanel;
+            }
+
+            //user clicks main menu button to go to "your comments" page
+            if (e.getSource() == yourCommentsButton) {
+                switchPanel(appPanel, activeSubmenuPanel, yourCommentsSubmenuPanel, BorderLayout.WEST);
+                activeSubmenuPanel = yourCommentsSubmenuPanel;
+            }
+
+            //user clicks main menu button to go to "view all posts" page
+            if (e.getSource() == allPostsButton) {
+                switchPanel(appPanel, activeSubmenuPanel, allPostsSubmenuPanel, BorderLayout.WEST);
+                activeSubmenuPanel = allPostsSubmenuPanel;
+            }
+
+            if (e.getSource() == searchUserButton) {
+                switchPanel(appPanel, activeSubmenuPanel, searchUserSubmenuPanel, BorderLayout.WEST);
+                activeSubmenuPanel = searchUserSubmenuPanel;
+            }
+
+            if (e.getSource() == logoutButton) {
+                switchFrame(appFrame, loginFrame);
+                CLIENT.streamReader("logout");
+
+                signInPasswordField.setText("");
+                signInPasswordField.setText("");
+
+                createAccountUsernameField.setText("");
+                createAccountPasswordField.setText("");
+                confirmPasswordField.setText("");
+
+                activeUsername = null;
+            }
+
         }
     };
 
-    // The welcome page layout
-    // Different frame
-    public void welcome() {
-        frame2.setSize(400, 450);
-        frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame2.setLocation(20, 0);
+    //FOR THE ENTIRE PROGRAM: end the client's streams when the user closes out of the app by X'ing out.
+    WindowAdapter windowAdapter = new WindowAdapter() {
+        @Override
+        public void windowClosing(WindowEvent e) {
+            CLIENT.end();
+        }
+    };
 
-        frame2.setBackground(new Color(255, 255, 255));
-
-        // Import png logo
-        ImageIcon icon = new ImageIcon("pixie_logo.png");
-        JLabel label = new JLabel(icon);
-
-        // Loading gif 
-        ImageIcon loading = new ImageIcon("ajax-loader.gif");
-        JLabel label2 = new JLabel(loading);
-        label2.setBounds(660, 800, 40, 40);
-
-        // Make sure loading gif overlaps logo
-        frame2.add(label2);
-        frame2.add(label);
-
-        frame2.pack();
-
-        // Allow elements to show
-        frame2.setVisible(true);
-    }
-
-    // Switches to create account page
-    public void switchToCreate(JPanel newPanel) {
-        // Remove all old elements in container
-        container.removeAll();
-        // Add new elements
-        container.add(newPanel);
-
-        JPanel sidePanel = new JPanel();
-        JPanel grid = new JPanel();
-
-        // Allows flexibility when adjusting components, texts, etc.
-        newPanel.setLayout(null);
-
-        // Side panel (on west) design
-        sidePanel.setLayout(new FlowLayout(4, 4, 4));
-        sidePanel.setBackground(new Color(94, 156, 156));
-        frame.add(sidePanel, BorderLayout.WEST);
-
-        // Grid layout within side panel
-        grid.setLayout(new GridLayout(4, 1, 5, 5));
-        grid.setBackground(new Color(94, 156, 156));
-
-        // Log in and create account buttons
-        ImageIcon icon = new ImageIcon("icons8-create-24.png");
-        ImageIcon icon2 = new ImageIcon("icons8-account-24.png");
-        createButton = new JButton(icon);
-        loginButton = new JButton(icon2);
-
-        // Add buttons to grid
-        grid.add(loginButton);
-        grid.add(createButton);
-
-        // Add grid to west panel
-        sidePanel.add(grid);
-
-        // Buttons and labels with main panel
-        newCreate = new JButton("Create Account");
-        JLabel username = new JLabel("Username ");
-        JLabel password = new JLabel("Password ");
-        JLabel confirm = new JLabel("Confirm Password ");
-        JLabel invalid = new JLabel("Hello");
-
-        // panel.setLayout(null) helps with .setBounds
-        username.setBounds(80, 97, 80, 30);
-        password.setBounds(80, 127, 80, 30);
-        confirm.setBounds(80, 157, 175, 30);
-        invalid.setBounds(80, 157, 175, 30);
-
-        // Text fields for username and password
-        passwordField = new JPasswordField(10);
-        confirmField = new JPasswordField(10);
-        userField = new JTextField(10);
-
-        userField.setBounds(200, 105, 135, 20);
-        passwordField.setBounds(200, 135, 135, 20);
-        confirmField.setBounds(200, 165, 135, 20);
-        newCreate.setBounds(140, 200, 135, 25);
-
-        // Add all to container
-        newPanel.add(username);
-        newPanel.add(password);
-        newPanel.add(newCreate);
-        newPanel.add(confirm);
-
-        newPanel.add(confirmField);
-        newPanel.add(passwordField);
-        newPanel.add(userField);
-
-        // Add button mechanics
-        createButton.addActionListener(actionListener);
-        loginButton.addActionListener(actionListener);
-        newCreate.addActionListener(actionListener);
-
+    /**
+     * Call this method when you want to switch from one panel to another on the given frame
+     * @param frame - frame that you are currently on (loginFrame or applicationFrame)
+     * @param oldPanel - panel that you want to remove from the frame
+     * @param newPanel - panel you want to display on the frame
+     */
+    public void switchPanel(JFrame frame, JPanel oldPanel, JPanel newPanel) {
+        frame.remove(oldPanel);
+        frame.add(newPanel);
 
         //DEBUGGED: use repaint() and revalidate() to refresh and recalculate layout
         frame.repaint();
         frame.revalidate();
     }
 
-    // Switches back to log in page
-    public void switchToLog(JPanel firstPanel) {
-        // Removes all elements in container
-        container.removeAll();
-        // Add log in page
-        container.add(firstPanel);
+    /**
+     * OVERLOADED
+     * @param parentPanel - panel on which the panel you want to switch is laying
+     * @param oldPanel - panel that you want to remove from the parentPanel
+     * @param newPanel - panel that you want to display on the parentPanel
+     */
+    public void switchPanel(JPanel parentPanel, JPanel oldPanel, JPanel newPanel) {
+        parentPanel.remove(oldPanel);
+        parentPanel.add(newPanel);
 
-        JPanel sidePanel = new JPanel();
-        JPanel grid = new JPanel();
-
-        panel1.setLayout(null);
-
-        // Side panel (on west) design
-        sidePanel.setLayout(new FlowLayout(4, 4, 4));
-        sidePanel.setBackground(new Color(94, 156, 156));
-        frame.add(sidePanel, BorderLayout.WEST);
-
-        // Grid layout within side panel
-        grid.setLayout(new GridLayout(4, 1, 5, 5));
-        grid.setBackground(new Color(94, 156, 156));
-
-        // Log in and create account buttons
-        ImageIcon icon = new ImageIcon("icons8-create-24.png");
-        ImageIcon icon2 = new ImageIcon("icons8-account-24.png");
-        createButton = new JButton(icon);
-        loginButton = new JButton(icon2);
-
-        // Add buttons to grid
-        grid.add(loginButton);
-        grid.add(createButton);
-
-        // Add grid to west panel
-        sidePanel.add(grid);
-
-        // Buttons and labels with main panel
-        signInButton = new JButton("Sign In");
-        JLabel username = new JLabel("Username ");
-        JLabel password = new JLabel("Password ");
-        username.setBounds(100, 117, 80, 30);
-        password.setBounds(100, 147, 80, 30);
-
-        // Text fields for username and password
-        passwordField = new JPasswordField(10);
-        userField = new JTextField(10);
-
-
-        // panel.setLayout(null) helps with .setBounds
-        userField.setBounds(180, 125, 100, 20);
-        passwordField.setBounds(180, 155, 100, 20);
-        signInButton.setBounds(150, 200, 100, 25);
-
-        signInButton.addActionListener(actionListener);
-        createButton.addActionListener(actionListener);
-        loginButton.addActionListener(actionListener);
-
-        // Add all to main panel
-        firstPanel.add(username);
-        firstPanel.add(password);
-
-        firstPanel.add(passwordField);
-        firstPanel.add(userField);
-        firstPanel.add(signInButton);
-
-        //DEBUGGED: use repaint() and revalidate() to refresh and recalculate layout
-        frame.repaint();
-        frame.revalidate();
+        parentPanel.repaint();
+        parentPanel.revalidate();
     }
 
-    // The OG log in page
+    /**
+     * OVERLOADED
+     * @param parentPanel - panel on which the panel you want to switch is laying
+     * @param oldPanel - panel that you want to remove from the parentPanel
+     * @param newPanel - panel that you want to display on the parentPanel
+     * @param borderLayoutLoc - BorderLayout constant: NORTH, EAST, SOUTH, WEST, CENTER
+     */
+    public void switchPanel(JPanel parentPanel, JPanel oldPanel, JPanel newPanel, String borderLayoutLoc) {
+        parentPanel.remove(oldPanel);
+        parentPanel.add(newPanel, borderLayoutLoc);
+
+        parentPanel.repaint();
+        parentPanel.revalidate();
+    }
+
+    /**
+     * dispose of one frame and start the other (loginFrame or applicationFrame)
+     * @param oldFrame - frame you want to dispose of
+     * @param newFrame - frame you want to show
+     */
+    public void switchFrame(JFrame oldFrame, JFrame newFrame) {
+        oldFrame.setVisible(false);
+        newFrame.setVisible(true);
+    }
+
+    /**
+     * idea: let there be 2 JFrames in total. One JFrame is for the login page, another for the app itself.
+     * Create the base layout of these frames here (e.g., login page has a side panel containing options to sign in
+     * or create a new account.
+     */
     public void run() {
-        /* set up new elements */
-        JPanel sidePanel = new JPanel();
-        JPanel grid = new JPanel();
 
-        frame.setSize(500, 400);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLocation(450, 200);
-        frame.add(panel1);
+        Color menuColor = new Color(0, 160, 160);
 
-        // Allows flexibility when adjusting components, texts, etc.
-        panel1.setLayout(null);
-        
-        // Side panel (on west) design
-        sidePanel.setLayout(new FlowLayout(4, 4, 4));
-        sidePanel.setBackground(new Color(94, 156, 156));
-        frame.add(sidePanel, BorderLayout.WEST);
+        /*
+        Create the JFrame for the login page. Build the side menu bar/panel which is shared by all pages of the login
+        page. The side menu bar/panel contains button options to sign in or create a new account.
+        */
 
-        // Grid layout within side panel
-        grid.setLayout(new GridLayout(4, 1, 5, 5));
-        grid.setBackground(new Color(94, 156, 156));
+        loginFrame = new JFrame("Pixie Login");
+        loginFrame.setSize(500, 400);
+        loginFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        loginFrame.addWindowListener(windowAdapter);
+        loginFrame.setLocationRelativeTo(null);
+
+        //side panel creation (called it "loginFrameMenu")
+        JPanel loginFrameMenu = new JPanel();
+        loginFrameMenu.setLayout(new FlowLayout(FlowLayout.TRAILING, 4, 4));
+        loginFrameMenu.setBackground(menuColor);
+
+        //grid implementation within the side panel/login frame menu
+        JPanel loginFrameMenuGrid = new JPanel();
+        loginFrameMenuGrid.setLayout(new GridLayout(5, 1, 5, 5));
+        loginFrameMenuGrid.setBackground(menuColor);
+
+        // side panel menu label
+        JLabel loginMenuLabel = new JLabel("LOGIN PAGE");
+        loginMenuLabel.setHorizontalAlignment(JLabel.CENTER);
+        loginMenuLabel.setForeground(Color.white);
 
         // Log in and create account buttons
-        ImageIcon icon = new ImageIcon("icons8-create-24.png");
-        ImageIcon icon2 = new ImageIcon("icons8-account-24.png");
-        createButton = new JButton(icon);
-        loginButton = new JButton(icon2);
-        
-        // Add buttons to grid
-        grid.add(loginButton);
-        grid.add(createButton);
-        
-        // Add grid to west panel
-        sidePanel.add(grid);
-        
-        // Buttons and labels with main panel
+        createAccountButton = new JButton("Create Account");
         signInButton = new JButton("Sign In");
-        JLabel username = new JLabel("Username ");
-        JLabel password = new JLabel("Password ");
-        username.setBounds(100, 117, 80, 30);
-        password.setBounds(100, 147, 80, 30);
 
-        // Text fields for username and password
-        passwordField = new JPasswordField(10);
-        userField = new JTextField(10);
+        // Add buttons to grid
+        loginFrameMenuGrid.add(loginMenuLabel);
+        loginFrameMenuGrid.add(signInButton);
+        loginFrameMenuGrid.add(createAccountButton);
 
+        // Add grid to west panel
+        loginFrameMenu.add(loginFrameMenuGrid);
 
-        // panel.setLayout(null) helps with .setBounds
-        userField.setBounds(180, 125, 100, 20);
-        passwordField.setBounds(180, 155, 100, 20);
-        signInButton.setBounds(150, 200, 100, 25);
+        //add baseline features to the loginFrame
+        loginFrame.add(loginFrameMenu, BorderLayout.WEST);
+        loginFrame.add(signInPanel); //start off on the sign in panel
+        loginFrame.setVisible(true);
 
+        /*
+        Create the JFrame for the rest of the app (which will contain the main menu and all sub-menus)
+        */
+
+        appFrame = new JFrame("Pixie App");
+        appFrame.setSize(800, 500); //we will probably want the actual app to be larger
+        appFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        appFrame.addWindowListener(windowAdapter);
+        appFrame.setLocationRelativeTo(null);
+
+        //side panel creation
+        JPanel appFrameMenu = new JPanel();
+        appFrameMenu.setLayout(new FlowLayout(FlowLayout.TRAILING, 4, 4));
+        appFrameMenu.setBackground(menuColor);
+
+        //side panel grid
+        JPanel appFrameMenuGrid = new JPanel();
+        appFrameMenuGrid.setLayout(new GridLayout(8, 1, 5, 5));
+        appFrameMenuGrid.setBackground(menuColor);
+
+        // side panel menu label
+        JLabel mainMenuLabel = new JLabel("MAIN MENU");
+        mainMenuLabel.setHorizontalAlignment(JLabel.CENTER);
+        mainMenuLabel.setForeground(Color.white);
+
+        // Log in and create account buttons
+        yourProfileButton = new JButton("Your Profile");
+        createPostButton = new JButton("Create Post");
+        yourPostsButton  = new JButton("View Your Posts");
+        yourCommentsButton = new JButton("View Your Comments");
+        allPostsButton = new JButton("View All Posts");
+        searchUserButton = new JButton("Search For User");
+        logoutButton = new JButton("Logout");
+
+        // Add buttons to grid
+        appFrameMenuGrid.add(mainMenuLabel);
+        appFrameMenuGrid.add(yourProfileButton);
+        appFrameMenuGrid.add(createPostButton);
+        appFrameMenuGrid.add(yourPostsButton);
+        appFrameMenuGrid.add(yourCommentsButton);
+        appFrameMenuGrid.add(allPostsButton);
+        appFrameMenuGrid.add(searchUserButton);
+        appFrameMenuGrid.add(logoutButton);
+
+        // Add grid to west panel
+        appFrameMenu.add(appFrameMenuGrid);
+
+        //start off on the sign in panel
+        appFrame.add(appFrameMenu, BorderLayout.WEST);
+        appPanel = new JPanel(new BorderLayout());
+        appPanel.add(yourProfileSubmenuPanel, BorderLayout.WEST); //start off on the "Your Profile" sub menu
+        activeSubmenuPanel = yourProfileSubmenuPanel;
+        appFrame.add(appPanel);
+        //appFrame.setVisible(true);
+
+        /*
+        All JComponents that need action listeners (e.g., buttons) need to have action listeners instantiated within
+        this class. This includes components from other classes that helped create panels for the JFrames. Add their
+        action listeners here.
+         */
+
+        //LOGIN FRAME
+
+        //user can navigate to sign-in or create-new-account page
         signInButton.addActionListener(actionListener);
-        createButton.addActionListener(actionListener);
-        loginButton.addActionListener(actionListener);
+        createAccountButton.addActionListener(actionListener);
 
-        // Add all to main panel
-        panel1.add(username);
-        panel1.add(password);
+        signInConfirmButton.addActionListener(actionListener); //confirm button for signing in
+        createAccountConfirmButton.addActionListener(actionListener); //confirm button for creating new account
 
-        panel1.add(passwordField);
-        panel1.add(userField);
-        panel1.add(signInButton);
+        //APP FRAME
 
-        // Allow elements to show
-        frame.setVisible(true);
+        //user can navigate to 6 different pages using the main menu (similar to Application.java from PJ04)
+        yourProfileButton.addActionListener(actionListener);
+        createPostButton.addActionListener(actionListener);
+        yourPostsButton.addActionListener(actionListener);
+        yourCommentsButton.addActionListener(actionListener);
+        allPostsButton.addActionListener(actionListener);
+        searchUserButton.addActionListener(actionListener);
+        logoutButton.addActionListener(actionListener);
+
     }
-
 
     public static void main(String[] args) {
-        // Run class
+        //run application on event dispatch thread (EDT)
         SwingUtilities.invokeLater(new Pixie());
     }
 }
