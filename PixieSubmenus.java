@@ -33,6 +33,17 @@ public class PixieSubmenus extends JComponent {
     public JTextArea createPost;
     public JButton doneEditingPostButton;
 
+    //"WRITE POST" PANEL (NEW!)
+    public JPanel writePostPanel;
+
+    //"CHANGE BIO" PANEL (NEW!)
+    public JPanel changeBioPanel;
+
+    //CHANGE BIO (NEW!)
+    public JTextField createBioTitle;
+    public JTextArea editBio;
+    public JButton doneEditingBioButton;
+
     //"YOUR PROFILE"
     public JButton changeBioButton;
     public JButton changeUsernameButton;
@@ -200,6 +211,65 @@ public class PixieSubmenus extends JComponent {
         createNewPostPanel.add(doneEditingPostButton);
 
         panel.add(createNewPostPanel);
+    }
+    
+    // Change biography panel
+    public void changeBio(JPanel panel) {
+        /*
+        The "Change Bio" panel
+         */
+        changeBioPanel = new JPanel();
+        changeBioPanel.setLayout(null);
+
+        // Create Post stuff
+        Font font2 = new Font(Font.SANS_SERIF,  Font.PLAIN, 12);
+        editBio = new JTextArea();
+        editBio.setBounds(200,340,480,200);
+        editBio.setFont(font2);
+
+        JScrollPane scroll = new JScrollPane();
+        scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
+        // Create Title stuff
+        Font font = new Font(Font.SANS_SERIF,  Font.BOLD, 20);
+
+        createBioTitle = new JTextField();
+        createBioTitle.setBounds(200,280,480,35);
+        createBioTitle.setFont(font);
+
+        JLabel title = new JLabel(createTitle.getText());
+        title.setFont(font);
+        title.setBounds(80, 100,50,20);
+
+        doneEditingBioButton = new JButton("Done");
+        doneEditingBioButton.setBounds(580,550,100,35);
+
+        ImageIcon icon = new ImageIcon("icons8-decrease-font-24.png");
+        adjustText12Button = new JButton(icon);
+        adjustText12Button.setBounds(200,240,140,30);
+
+        ImageIcon icon3 = new ImageIcon("icons8-a-24.png");
+        adjustText14Button = new JButton(icon3);
+        adjustText14Button.setBounds(370,240,140,30);
+
+        ImageIcon icon2 = new ImageIcon("icons8-increase-font-24.png");
+        adjustText16Button = new JButton(icon2);
+        adjustText16Button.setBounds(540,240,140,30);
+
+        ImageIcon icon4 = new ImageIcon("icons8-anime-emoji-30.png");
+        emojiButton = new JButton(icon4);
+        emojiButton.setBounds(200,550,100,35);
+
+        changeBioPanel.add(createBioTitle);
+        changeBioPanel.add(editBio);
+        changeBioPanel.add(emojiButton);
+        changeBioPanel.add(adjustText12Button);
+        changeBioPanel.add(adjustText14Button);
+        changeBioPanel.add(adjustText16Button);
+        changeBioPanel.add(doneEditingBioButton);
+
+        panel.add(changeBioPanel);
+
     }
 
     private void yourPostsSubmenu() {
