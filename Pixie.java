@@ -16,60 +16,121 @@ import java.awt.event.*;
 public class Pixie extends JComponent implements Runnable {
 
     //each user who has the app open also has a Client object that communicates with the Server class.
-    private Client client;
+    private final Client CLIENT = new Client();
+    private String currentUsername;
 
-    //The entire app has 2 JFrames. One containing all login pages, another for the rest
-    JFrame loginFrame; //loginFrame
-    JFrame applicationFrame; //applicationFrame
+    //APP HAS 2 JFrames.
+    JFrame loginFrame; //login page frame
+    JFrame appFrame; //frame for the app part
 
-    //loginFrame baseline features
+    //LOGIN FRAME: baseline features -- the login menu
     JButton createAccountButton;
     JButton signInButton;
 
-    //create an instance of the classes containing all panel layouts
+    //APP FRAME: baseline features -- the main menu
+    JButton yourProfileButton;
+    JButton createPostButton;
+    JButton viewYourPostsButton;
+    JButton viewYourCommentsButton;
+    JButton viewAllPostsButton;
+    JButton logoutButton;
+
+    //LOGIN FRAME: bring the panels and their components created for the login page from PixieLoginPage class
     PixieLoginPage pixieLoginPage = new PixieLoginPage();
+
+    JPanel signInPanel = pixieLoginPage.signInPanel;
+    JPanel createAccountPanel = pixieLoginPage.createAccountPanel;
+
+    JTextField signInUsernameField = pixieLoginPage.signInUsernameField;
+    JTextField signInPasswordField = pixieLoginPage.signInPasswordField;
     JButton signInConfirmButton = pixieLoginPage.signInConfirmButton;
+
+    JTextField createAccountUsernameField = pixieLoginPage.createAccountUsernameField;
+    JTextField createAccountPasswordField = pixieLoginPage.createAccountPasswordField;
+    JTextField confirmPasswordField = pixieLoginPage.confirmPasswordField;
     JButton createAccountConfirmButton = pixieLoginPage.createAccountConfirmButton;
 
+    //FOR THE ENTIRE PROGRAM: Action listeners for all components that require action listeners
     ActionListener actionListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            if (e.getSource() == createAccountButton) {
-                switchPanel(loginFrame, pixieLoginPage.signInPanel, pixieLoginPage.createAccountPanel);
-            }
+            // LOGIN FRAME
+
+            //user chooses to navigate to the sign-in page
             if (e.getSource() == signInButton) {
-                switchPanel(loginFrame, pixieLoginPage.createAccountPanel, pixieLoginPage.signInPanel);
+                switchPanel(loginFrame, createAccountPanel, signInPanel);
             }
-/*            if (e.getSource() == createAccountConfirmButton) {
-                String userCode = "createAccount[" + pixieLoginPage.createAccountUsernameField.getText().toLowerCase() +
-                        "," + pixieLoginPage.createAccountPasswordField.getText() + "]";
-                String evaluate = client.streamReader(userCode);
 
-                // If username is taken, show error message
-                if (evaluate.equals("false")) {
-                    JOptionPane.showMessageDialog(null, "Username is taken.",
+            //user chooses to navigate to the create account page
+            if (e.getSource() == createAccountButton) {
+                switchPanel(loginFrame, signInPanel, createAccountPanel);
+            }
+
+            //user chooses to sign into the account with provided username and password
+            if (e.getSource() == signInConfirmButton) {
+
+                String worked = "login[" + signInUsernameField.getText().toLowerCase() + "," +
+                        signInPasswordField.getText() + "]";
+                worked = CLIENT.streamReader(worked);
+
+                if (worked.equals("false")) {
+                    JOptionPane.showMessageDialog(null, "Invalid Username or Password",
                             "Invalid", JOptionPane.ERROR_MESSAGE);
-                    // If valid, show Welcome page (having trouble adding Welcome class
-                    // once button is clicked)
-                }*/
-/*            if (e.getSource() == signInButton) {
-                String userCode = "login[" + pixieLoginPage.signInUsernameField.getText().toLowerCase() +
-                        "," + pixieLoginPage.signInPasswordField.getText() + "]";
-                String evaluate = client.streamReader(userCode);
-
-                // If invalid, show error message
-                if (evaluate.equals("false")) {
-                    JOptionPane.showMessageDialog(null, "Invalid username or password", "Invalid",
-                            JOptionPane.ERROR_MESSAGE);
+                } else {
+                    currentUsername = signInUsernameField.getText();
+                    changeFrame(loginFrame, appFrame);
                 }
-            }*/
+            }
+
+            //user chooses to create a new account with given username, password, and confirm password
+            if (e.getSource() == createAccountConfirmButton) {
+
+                if (createAccountUsernameField.getText().contains(" ")) {
+                    JOptionPane.showMessageDialog(null, "No Spaces Should be in the Username",
+                            "Invalid", JOptionPane.ERROR_MESSAGE);
+                    return; //exit the method, ignore the rest.
+                } else if (createAccountUsernameField.getText().contains(",")) {
+                    JOptionPane.showMessageDialog(null, "No Commas Should be in the Username",
+                            "Invalid", JOptionPane.ERROR_MESSAGE);
+                    return;
+                } else if (!createAccountPasswordField.getText().equals(confirmPasswordField.getText())) {
+                    JOptionPane.showMessageDialog(null, "Passwords Must Match",
+                            "Invalid", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                String worked = "createAccount[" + createAccountUsernameField.getText().toLowerCase() + "," +
+                        createAccountPasswordField.getText() + "]";
+                worked = CLIENT.streamReader(worked);
+
+                if (worked.equals("true")) {
+                    JOptionPane.showMessageDialog(null, "New Account Created",
+                            "Account Created", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Invalid Username or Password",
+                            "Invalid", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+
+            //APP FRAME
+
+            //...
+
+        }
+    };
+
+    //FOR THE ENTIRE PROGRAM: end the client when the user closes out of the app by X'ing out.
+    WindowAdapter windowAdapter = new WindowAdapter() {
+        @Override
+        public void windowClosed(WindowEvent e) {
+            CLIENT.end();
         }
     };
 
     /**
      * Call this method when you want to switch from one panel to another on the given frame
-     * @param frame - frame you want to display on (loginPageFrame or applicationFrame)
+     * @param frame - frame that you are currently on (loginFrame or applicationFrame)
      * @param newPanel - panel you want to display on the frame
      */
     public void switchPanel(JFrame frame, JPanel oldPanel, JPanel newPanel) {
@@ -82,39 +143,41 @@ public class Pixie extends JComponent implements Runnable {
     }
 
     /**
-     * dispose of one frame and start the other (loginPageFrame or applicationFrame)
+     * dispose of one frame and start the other (loginFrame or applicationFrame)
      * @param oldFrame - frame you want to dispose of
      * @param newFrame - frame you want to show
      */
     public void changeFrame(JFrame oldFrame, JFrame newFrame) {
-        oldFrame.dispose();
+        oldFrame.setVisible(false);
         newFrame.setVisible(true);
     }
 
     /**
-     * idea: let there be 2 JFrames in total. One JFrame is for the login page, another for the app itself. The frame
-     * should be no more than a simple raw frame. Panel layouts are created in their respective classes and then added
-     * to the JFrames later on.
+     * idea: let there be 2 JFrames in total. One JFrame is for the login page, another for the app itself.
+     * Create the base layout of these frames here (e.g., login page has a side panel containing options to sign in
+     * or create a new account.
      */
     public void run() {
         /*
-        Create the JFrame for the login page. Build the side menu bar that contains button options to sign in or
-        create a new account. This "side panel" stays, whether we are on the page to sign in or create a new account.
+        Create the JFrame for the login page. Build the side menu bar/panel which is shared by all pages of the login
+        page. The side menu bar/panel contains button options to sign in or create a new account.
         */
+
         loginFrame = new JFrame("Pixie Login");
         loginFrame.setSize(500, 400);
         loginFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //do not use JFrame.EXIT_ON_CLOSE
+        loginFrame.addWindowListener(windowAdapter);
         loginFrame.setLocationRelativeTo(null);
 
         //side panel creation (called it "loginFrameMenu")
         JPanel loginFrameMenu = new JPanel();
         loginFrameMenu.setLayout(new FlowLayout(4, 4, 4));
-        loginFrameMenu.setBackground(new Color(94, 156, 156));
+        loginFrameMenu.setBackground(new Color(0, 160, 160));
 
-        //grid implementation within teh side panel/login frame menu
+        //grid implementation within the side panel/login frame menu
         JPanel loginFrameMenuGrid = new JPanel();
         loginFrameMenuGrid.setLayout(new GridLayout(4, 1, 5, 5));
-        loginFrameMenuGrid.setBackground(new Color(94, 156, 156));
+        loginFrameMenuGrid.setBackground(new Color(0, 160, 160));
 
         // Log in and create account buttons
         createAccountButton = new JButton("Create Account");
@@ -129,22 +192,77 @@ public class Pixie extends JComponent implements Runnable {
 
         //start off on the sign in panel
         loginFrame.add(loginFrameMenu, BorderLayout.WEST);
-        loginFrame.add(pixieLoginPage.signInPanel);
+        loginFrame.add(signInPanel);
         loginFrame.setVisible(true);
 
         /*
         Create the JFrame for the rest of the app (which will contain the main menu and all sub-menus)
         */
-        applicationFrame = new JFrame("Pixie App");
-        applicationFrame.setSize(1200, 1000); //we will probably want the actual app to be larger
-        applicationFrame.setLocationRelativeTo(null);
 
-        //todo: transfer buttons from other classes that design panels and add action listeners to them below
+        appFrame = new JFrame("Pixie App");
+        appFrame.setSize(1000, 700); //we will probably want the actual app to be larger
+        appFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //do not use JFrame.EXIT_ON_CLOSE
+        appFrame.addWindowListener(windowAdapter);
+        appFrame.setLocationRelativeTo(null);
+
+        //side panel creation
+        JPanel appFrameMenu = new JPanel();
+        appFrameMenu.setLayout(new FlowLayout(4, 4, 4));
+        appFrameMenu.setBackground(new Color(0, 160, 160));
+
+        //
+        JPanel appFrameMenuGrid = new JPanel();
+        appFrameMenuGrid.setLayout(new GridLayout(6, 1, 5, 5));
+        appFrameMenuGrid.setBackground(new Color(0, 160, 160));
+
+        // Log in and create account buttons
+        yourProfileButton = new JButton("Your Profile");
+        createPostButton = new JButton("Create Post");
+        viewYourPostsButton  = new JButton("View Your Posts");
+        viewYourCommentsButton = new JButton("View Your Comments");
+        viewAllPostsButton = new JButton("View All Posts");
+        logoutButton = new JButton("Logout");
+
+        // Add buttons to grid
+        appFrameMenuGrid.add(yourProfileButton);
+        appFrameMenuGrid.add(createPostButton);
+        appFrameMenuGrid.add(viewYourPostsButton);
+        appFrameMenuGrid.add(viewYourCommentsButton);
+        appFrameMenuGrid.add(viewAllPostsButton);
+        appFrameMenuGrid.add(logoutButton);
+
+        // Add grid to west panel
+        appFrameMenu.add(appFrameMenuGrid);
+
+        //start off on the sign in panel
+        appFrame.add(appFrameMenu, BorderLayout.WEST);
+        //appFrame.setVisible(true);
+
+        /*
+        All JComponents that need action listeners (e.g., buttons) need to have action listeners instantiated within
+        this class. This includes components from other classes that helped create panels for the JFrames. Add their
+        action listeners here.
+         */
+
+        //LOGIN FRAME
+
+        //user can navigate to sign-in or create-new-account page
         signInButton.addActionListener(actionListener);
         createAccountButton.addActionListener(actionListener);
 
-        signInConfirmButton.addActionListener(actionListener);
-        createAccountConfirmButton.addActionListener(actionListener);
+        signInConfirmButton.addActionListener(actionListener); //confirm button for signing in
+        createAccountConfirmButton.addActionListener(actionListener); //confirm button for creating new account
+
+        //APP FRAME
+
+        //user can navigate to 6 different pages using the main menu (similar to Application.java from PJ04)
+        yourProfileButton.addActionListener(actionListener);
+        createPostButton.addActionListener(actionListener);
+        viewYourPostsButton.addActionListener(actionListener);
+        viewYourCommentsButton.addActionListener(actionListener);
+        viewAllPostsButton.addActionListener(actionListener);
+        logoutButton.addActionListener(actionListener);
+
     }
 
     public static void main(String[] args) {

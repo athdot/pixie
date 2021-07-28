@@ -3,7 +3,8 @@ import java.awt.*;
 
 /**
  * PixieLoginPage - PJ05
- * Contains panel layouts for login JFrame interface
+ * Contains panel layouts for login JFrame interface: A panel for when the user wants to sign in. Another panel for
+ * when the user wants to create an account.
  *
  * @author Group 8
  * @version July 27, 2021
@@ -29,13 +30,9 @@ public class PixieLoginPage extends JComponent {
     public JButton createAccountConfirmButton;
 
     public PixieLoginPage() {
+        //creating an instance of this class also creates the panels/pages that will show on the login JFrame
         getPanels();
     }
-
-    /**
-     * Assign the bare minimum attributes for a panel that you're creating as part of the log in page. Additional items
-     * can be added afterwards (e.g., such as a confirm password field for the createAccountPanel).
-     */
 
     private void getPanels() {
 
