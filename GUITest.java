@@ -16,8 +16,8 @@ public class GUITest extends JComponent implements Runnable {
     JPanel panel1 = new JPanel(new BorderLayout());
     JPanel panel2 = new JPanel(new BorderLayout());
 
-    JButton toPanel2 = new JButton("To Panel 2");
-    JButton toPanel1 = new JButton("To Panel 1");
+    JButton toPanel2 = new JButton("Go To Panel 2");
+    JButton toPanel1 = new JButton("Go To Panel 1");
 
     ActionListener actionListener = new ActionListener() {
         @Override
