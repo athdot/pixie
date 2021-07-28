@@ -60,21 +60,16 @@ public class ContentDisplay extends JComponent implements Runnable {
                 frame.repaint();
                 frame.remove(subPanel);
                 frame.remove(createPostPanel);
-                /*frame.remove(subPasswordPanel);
-                frame.remove(subUsernamePanel);
-                frame.remove(deleteAccount);*/
-
                 frame.add(subBioPanel);
                 subBioPanel.setVisible(true);
-                //TODO: show the user name and the Bio changed after clicking the button
+                //TODO: show the user name and the Bio after perform action. 
+                
             }
             if (e.getSource() == changeUsername) {
                 frame.repaint();
                 frame.remove(subPanel);
                 frame.remove(createPostPanel);
-                /*frame.remove(subPasswordPanel);
-                frame.remove(subBioPanel);
-                frame.remove(deleteAccount);*/
+                
                 frame.add(subUsernamePanel);
                 subUsernamePanel.setVisible(true);
             }
@@ -82,9 +77,7 @@ public class ContentDisplay extends JComponent implements Runnable {
                 frame.repaint();
                 frame.remove(subPanel);
                 frame.remove(createPostPanel);
-                /*frame.remove(subBioPanel);
-                frame.remove(subUsernamePanel);
-                frame.remove(deleteAccount);*/
+                
                 frame.add(subPasswordPanel);
                 subPasswordPanel.setVisible(true);
             }
@@ -92,9 +85,7 @@ public class ContentDisplay extends JComponent implements Runnable {
                 frame.repaint();
                 frame.remove(subPanel);
                 frame.remove(createPostPanel);
-                /*frame.remove(subUsernamePanel);
-                frame.remove(subPasswordPanel);
-                frame.remove(subBioPanel);*/
+              
                 frame.add(deleteAccountPanel);
                 deleteAccountPanel.setVisible(true);
             }
@@ -134,19 +125,6 @@ public class ContentDisplay extends JComponent implements Runnable {
         invokeLater(new ContentDisplay());
     }
 
-    /*public void profileChange() {
-        changeBio = new JButton("Change Bio");
-        JLabel bioChanger = new JLabel("Enter your new bio: ");
-        //JLabel password = new JLabel("Password ");
-        // Adjusts movement of labels on the panel
-        bioChanger.setBounds(80, 117, 80, 30);
-        newBio = new JTextField(20);
-        newBio.setBounds(160, 125, 100, 20);
-
-
-        //password.setBounds(80, 147, 80, 30);
-
-    }*/
 
     @Override
     public void run() {
