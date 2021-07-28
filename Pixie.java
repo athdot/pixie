@@ -70,6 +70,12 @@ public class Pixie extends JComponent implements Runnable {
             //user chooses to sign into the account with provided username and password
             if (e.getSource() == signInConfirmButton) {
 
+                if (signInUsernameField.getText().length() == 0 || signInPasswordField.getText().length() == 0) {
+                    JOptionPane.showMessageDialog(null, "Password or Username too Short",
+                            "Invalid", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
                 String worked = "login[" + signInUsernameField.getText().toLowerCase() + "," +
                         signInPasswordField.getText() + "]";
                 worked = CLIENT.streamReader(worked);
@@ -98,6 +104,11 @@ public class Pixie extends JComponent implements Runnable {
                     JOptionPane.showMessageDialog(null, "Passwords Must Match",
                             "Invalid", JOptionPane.ERROR_MESSAGE);
                     return;
+                } else if (createAccountUsernameField.getText().length() == 0 ||
+                        createAccountPasswordField.getText().length() == 0) {
+                    JOptionPane.showMessageDialog(null, "Password or Username too Short",
+                            "Invalid", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
 
                 String worked = "createAccount[" + createAccountUsernameField.getText().toLowerCase() + "," +
@@ -107,6 +118,8 @@ public class Pixie extends JComponent implements Runnable {
                 if (worked.equals("true")) {
                     JOptionPane.showMessageDialog(null, "New Account Created",
                             "Account Created", JOptionPane.INFORMATION_MESSAGE);
+                    currentUsername = createAccountUsernameField.getText();
+                    changeFrame(loginFrame, appFrame);
                 } else {
                     JOptionPane.showMessageDialog(null, "Invalid Username or Password",
                             "Invalid", JOptionPane.ERROR_MESSAGE);
