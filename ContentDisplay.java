@@ -4,7 +4,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import static javax.swing.SwingUtilities.invokeLater;
-
+/**
+ * Project 5 GUI--besides login page.
+ *
+ * <p>xx
+ *
+ * @author Mingrui Xia
+ * @version july 27 2021
+ */
 public class ContentDisplay extends JComponent implements Runnable {
     JButton yourProfile;
     /**option 1 submenu options**/
