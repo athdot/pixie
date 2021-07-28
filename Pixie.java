@@ -17,11 +17,13 @@ public class Pixie extends JComponent implements Runnable {
 
     //each user who has the app open also has a Client object that communicates with the Server class.
     private final Client CLIENT = new Client();
-    private String currentUsername;
+    String activeUsername; //for client communication with server
+    JPanel activeSubmenuPanel; //for switch panels method
 
     //APP HAS 2 JFrames.
     JFrame loginFrame; //login page frame
     JFrame appFrame; //frame for the app part
+    JPanel appPanel; //panel containing all sub-menus
 
     //LOGIN FRAME: baseline features -- the login menu
     JButton createAccountButton;
@@ -30,9 +32,9 @@ public class Pixie extends JComponent implements Runnable {
     //APP FRAME: baseline features -- the main menu
     JButton yourProfileButton;
     JButton createPostButton;
-    JButton viewYourPostsButton;
-    JButton viewYourCommentsButton;
-    JButton viewAllPostsButton;
+    JButton yourPostsButton;
+    JButton yourCommentsButton;
+    JButton allPostsButton;
     JButton searchUserButton;
     JButton logoutButton;
 
@@ -51,12 +53,22 @@ public class Pixie extends JComponent implements Runnable {
     JTextField confirmPasswordField = pixieLoginPage.confirmPasswordField;
     JButton createAccountConfirmButton = pixieLoginPage.createAccountConfirmButton;
 
+    //MAIN MENU'S SUBMENUS: bring the side-panel "sub-menus" and their components from PixieSubmenus.java
+    PixieSubmenus pixieSubmenus = new PixieSubmenus();
+
+    JPanel yourProfileSubmenuPanel = pixieSubmenus.yourProfileSubmenuPanel;
+    JPanel createPostSubmenuPanel = pixieSubmenus.createPostSubmenuPanel;
+    JPanel yourPostsSubmenuPanel = pixieSubmenus.yourPostsSubmenuPanel;
+    JPanel yourCommentsSubmenuPanel = pixieSubmenus.yourCommentsSubmenuPanel;
+    JPanel allPostsSubmenuPanel = pixieSubmenus.allPostsSubmenuPanel;
+    JPanel searchUserSubmenuPanel = pixieSubmenus.searchUserSubmenuPanel;
+
     //FOR THE ENTIRE PROGRAM: Action listeners for all components that require action listeners
     ActionListener actionListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            // LOGIN FRAME
+            //LOGIN FRAME
 
             //user chooses to navigate to the sign-in page
             if (e.getSource() == signInButton) {
@@ -85,8 +97,8 @@ public class Pixie extends JComponent implements Runnable {
                     JOptionPane.showMessageDialog(null, "Invalid Username or Password",
                             "Invalid", JOptionPane.ERROR_MESSAGE);
                 } else {
-                    currentUsername = signInUsernameField.getText();
-                    changeFrame(loginFrame, appFrame);
+                    activeUsername = signInUsernameField.getText();
+                    switchFrame(loginFrame, appFrame);
                 }
             }
 
@@ -119,8 +131,8 @@ public class Pixie extends JComponent implements Runnable {
                 if (worked.equals("true")) {
                     JOptionPane.showMessageDialog(null, "New Account Created",
                             "Account Created", JOptionPane.INFORMATION_MESSAGE);
-                    currentUsername = createAccountUsernameField.getText();
-                    changeFrame(loginFrame, appFrame);
+                    activeUsername = createAccountUsernameField.getText();
+                    switchFrame(loginFrame, appFrame);
                 } else {
                     JOptionPane.showMessageDialog(null, "Invalid Username or Password",
                             "Invalid", JOptionPane.ERROR_MESSAGE);
@@ -129,7 +141,54 @@ public class Pixie extends JComponent implements Runnable {
 
             //APP FRAME
 
-            //...
+            //user clicks main menu button to go to "your profile" page
+            if (e.getSource() == yourProfileButton) {
+                switchPanel(appPanel, activeSubmenuPanel, yourProfileSubmenuPanel, BorderLayout.WEST);
+                activeSubmenuPanel = yourProfileSubmenuPanel;
+            }
+
+            //user clicks main menu button to go to "create post" page
+            if (e.getSource() == createPostButton) {
+                switchPanel(appPanel, activeSubmenuPanel, createPostSubmenuPanel, BorderLayout.WEST);
+                activeSubmenuPanel = createPostSubmenuPanel;
+            }
+
+            //user clicks main menu button to go to "your posts" page
+            if (e.getSource() == yourPostsButton) {
+                switchPanel(appPanel, activeSubmenuPanel, yourPostsSubmenuPanel, BorderLayout.WEST);
+                activeSubmenuPanel = yourPostsSubmenuPanel;
+            }
+
+            //user clicks main menu button to go to "your comments" page
+            if (e.getSource() == yourCommentsButton) {
+                switchPanel(appPanel, activeSubmenuPanel, yourCommentsSubmenuPanel, BorderLayout.WEST);
+                activeSubmenuPanel = yourCommentsSubmenuPanel;
+            }
+
+            //user clicks main menu button to go to "view all posts" page
+            if (e.getSource() == allPostsButton) {
+                switchPanel(appPanel, activeSubmenuPanel, allPostsSubmenuPanel, BorderLayout.WEST);
+                activeSubmenuPanel = allPostsSubmenuPanel;
+            }
+
+            if (e.getSource() == searchUserButton) {
+                switchPanel(appPanel, activeSubmenuPanel, searchUserSubmenuPanel, BorderLayout.WEST);
+                activeSubmenuPanel = searchUserSubmenuPanel;
+            }
+
+            if (e.getSource() == logoutButton) {
+                switchFrame(appFrame, loginFrame);
+                CLIENT.streamReader("logout");
+
+                signInPasswordField.setText("");
+                signInPasswordField.setText("");
+
+                createAccountUsernameField.setText("");
+                createAccountPasswordField.setText("");
+                confirmPasswordField.setText("");
+
+                activeUsername = null;
+            }
 
         }
     };
@@ -137,7 +196,7 @@ public class Pixie extends JComponent implements Runnable {
     //FOR THE ENTIRE PROGRAM: end the client's streams when the user closes out of the app by X'ing out.
     WindowAdapter windowAdapter = new WindowAdapter() {
         @Override
-        public void windowClosed(WindowEvent e) {
+        public void windowClosing(WindowEvent e) {
             CLIENT.end();
         }
     };
@@ -145,6 +204,7 @@ public class Pixie extends JComponent implements Runnable {
     /**
      * Call this method when you want to switch from one panel to another on the given frame
      * @param frame - frame that you are currently on (loginFrame or applicationFrame)
+     * @param oldPanel - panel that you want to remove from the frame
      * @param newPanel - panel you want to display on the frame
      */
     public void switchPanel(JFrame frame, JPanel oldPanel, JPanel newPanel) {
@@ -157,11 +217,40 @@ public class Pixie extends JComponent implements Runnable {
     }
 
     /**
+     * OVERLOADED
+     * @param parentPanel - panel on which the panel you want to switch is laying
+     * @param oldPanel - panel that you want to remove from the parentPanel
+     * @param newPanel - panel that you want to display on the parentPanel
+     */
+    public void switchPanel(JPanel parentPanel, JPanel oldPanel, JPanel newPanel) {
+        parentPanel.remove(oldPanel);
+        parentPanel.add(newPanel);
+
+        parentPanel.repaint();
+        parentPanel.revalidate();
+    }
+
+    /**
+     * OVERLOADED
+     * @param parentPanel - panel on which the panel you want to switch is laying
+     * @param oldPanel - panel that you want to remove from the parentPanel
+     * @param newPanel - panel that you want to display on the parentPanel
+     * @param borderLayoutLoc - BorderLayout constant: NORTH, EAST, SOUTH, WEST, CENTER
+     */
+    public void switchPanel(JPanel parentPanel, JPanel oldPanel, JPanel newPanel, String borderLayoutLoc) {
+        parentPanel.remove(oldPanel);
+        parentPanel.add(newPanel, borderLayoutLoc);
+
+        parentPanel.repaint();
+        parentPanel.revalidate();
+    }
+
+    /**
      * dispose of one frame and start the other (loginFrame or applicationFrame)
      * @param oldFrame - frame you want to dispose of
      * @param newFrame - frame you want to show
      */
-    public void changeFrame(JFrame oldFrame, JFrame newFrame) {
+    public void switchFrame(JFrame oldFrame, JFrame newFrame) {
         oldFrame.setVisible(false);
         newFrame.setVisible(true);
     }
@@ -172,6 +261,9 @@ public class Pixie extends JComponent implements Runnable {
      * or create a new account.
      */
     public void run() {
+
+        Color menuColor = new Color(0, 160, 160);
+
         /*
         Create the JFrame for the login page. Build the side menu bar/panel which is shared by all pages of the login
         page. The side menu bar/panel contains button options to sign in or create a new account.
@@ -179,34 +271,40 @@ public class Pixie extends JComponent implements Runnable {
 
         loginFrame = new JFrame("Pixie Login");
         loginFrame.setSize(500, 400);
-        loginFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //do not use JFrame.EXIT_ON_CLOSE
+        loginFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         loginFrame.addWindowListener(windowAdapter);
         loginFrame.setLocationRelativeTo(null);
 
         //side panel creation (called it "loginFrameMenu")
         JPanel loginFrameMenu = new JPanel();
-        loginFrameMenu.setLayout(new FlowLayout(4, 4, 4));
-        loginFrameMenu.setBackground(new Color(0, 160, 160));
+        loginFrameMenu.setLayout(new FlowLayout(FlowLayout.TRAILING, 4, 4));
+        loginFrameMenu.setBackground(menuColor);
 
         //grid implementation within the side panel/login frame menu
         JPanel loginFrameMenuGrid = new JPanel();
-        loginFrameMenuGrid.setLayout(new GridLayout(4, 1, 5, 5));
-        loginFrameMenuGrid.setBackground(new Color(0, 160, 160));
+        loginFrameMenuGrid.setLayout(new GridLayout(5, 1, 5, 5));
+        loginFrameMenuGrid.setBackground(menuColor);
+
+        // side panel menu label
+        JLabel loginMenuLabel = new JLabel("LOGIN PAGE");
+        loginMenuLabel.setHorizontalAlignment(JLabel.CENTER);
+        loginMenuLabel.setForeground(Color.white);
 
         // Log in and create account buttons
         createAccountButton = new JButton("Create Account");
         signInButton = new JButton("Sign In");
 
         // Add buttons to grid
+        loginFrameMenuGrid.add(loginMenuLabel);
         loginFrameMenuGrid.add(signInButton);
         loginFrameMenuGrid.add(createAccountButton);
 
         // Add grid to west panel
         loginFrameMenu.add(loginFrameMenuGrid);
 
-        //start off on the sign in panel
+        //add baseline features to the loginFrame
         loginFrame.add(loginFrameMenu, BorderLayout.WEST);
-        loginFrame.add(signInPanel);
+        loginFrame.add(signInPanel); //start off on the sign in panel
         loginFrame.setVisible(true);
 
         /*
@@ -214,36 +312,42 @@ public class Pixie extends JComponent implements Runnable {
         */
 
         appFrame = new JFrame("Pixie App");
-        appFrame.setSize(1000, 700); //we will probably want the actual app to be larger
-        appFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //do not use JFrame.EXIT_ON_CLOSE
+        appFrame.setSize(800, 500); //we will probably want the actual app to be larger
+        appFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         appFrame.addWindowListener(windowAdapter);
         appFrame.setLocationRelativeTo(null);
 
         //side panel creation
         JPanel appFrameMenu = new JPanel();
-        appFrameMenu.setLayout(new FlowLayout(4, 4, 4));
-        appFrameMenu.setBackground(new Color(0, 160, 160));
+        appFrameMenu.setLayout(new FlowLayout(FlowLayout.TRAILING, 4, 4));
+        appFrameMenu.setBackground(menuColor);
 
-        //
+        //side panel grid
         JPanel appFrameMenuGrid = new JPanel();
-        appFrameMenuGrid.setLayout(new GridLayout(7, 1, 5, 5));
-        appFrameMenuGrid.setBackground(new Color(0, 160, 160));
+        appFrameMenuGrid.setLayout(new GridLayout(8, 1, 5, 5));
+        appFrameMenuGrid.setBackground(menuColor);
+
+        // side panel menu label
+        JLabel mainMenuLabel = new JLabel("MAIN MENU");
+        mainMenuLabel.setHorizontalAlignment(JLabel.CENTER);
+        mainMenuLabel.setForeground(Color.white);
 
         // Log in and create account buttons
         yourProfileButton = new JButton("Your Profile");
         createPostButton = new JButton("Create Post");
-        viewYourPostsButton  = new JButton("View Your Posts");
-        viewYourCommentsButton = new JButton("View Your Comments");
-        viewAllPostsButton = new JButton("View All Posts");
+        yourPostsButton  = new JButton("View Your Posts");
+        yourCommentsButton = new JButton("View Your Comments");
+        allPostsButton = new JButton("View All Posts");
         searchUserButton = new JButton("Search For User");
         logoutButton = new JButton("Logout");
 
         // Add buttons to grid
+        appFrameMenuGrid.add(mainMenuLabel);
         appFrameMenuGrid.add(yourProfileButton);
         appFrameMenuGrid.add(createPostButton);
-        appFrameMenuGrid.add(viewYourPostsButton);
-        appFrameMenuGrid.add(viewYourCommentsButton);
-        appFrameMenuGrid.add(viewAllPostsButton);
+        appFrameMenuGrid.add(yourPostsButton);
+        appFrameMenuGrid.add(yourCommentsButton);
+        appFrameMenuGrid.add(allPostsButton);
         appFrameMenuGrid.add(searchUserButton);
         appFrameMenuGrid.add(logoutButton);
 
@@ -252,6 +356,10 @@ public class Pixie extends JComponent implements Runnable {
 
         //start off on the sign in panel
         appFrame.add(appFrameMenu, BorderLayout.WEST);
+        appPanel = new JPanel(new BorderLayout());
+        appPanel.add(yourProfileSubmenuPanel, BorderLayout.WEST); //start off on the "Your Profile" sub menu
+        activeSubmenuPanel = yourProfileSubmenuPanel;
+        appFrame.add(appPanel);
         //appFrame.setVisible(true);
 
         /*
@@ -274,9 +382,9 @@ public class Pixie extends JComponent implements Runnable {
         //user can navigate to 6 different pages using the main menu (similar to Application.java from PJ04)
         yourProfileButton.addActionListener(actionListener);
         createPostButton.addActionListener(actionListener);
-        viewYourPostsButton.addActionListener(actionListener);
-        viewYourCommentsButton.addActionListener(actionListener);
-        viewAllPostsButton.addActionListener(actionListener);
+        yourPostsButton.addActionListener(actionListener);
+        yourCommentsButton.addActionListener(actionListener);
+        allPostsButton.addActionListener(actionListener);
         searchUserButton.addActionListener(actionListener);
         logoutButton.addActionListener(actionListener);
 

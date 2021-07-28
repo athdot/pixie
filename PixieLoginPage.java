@@ -13,10 +13,11 @@ import java.awt.*;
 public class PixieLoginPage extends JComponent {
 
     //make these fields public because Pixie.java needs to access them
-    //creating getters and setters for larger pages would be extremely redundant
+    //creating getters for larger pages would be extremely redundant
 
-    JPanel signInPanel;
-    JPanel createAccountPanel;
+    //JPanels for sign-in and create-new-account page
+    public JPanel signInPanel;
+    public JPanel createAccountPanel;
 
     //username and password field for sign in option
     public JTextField signInUsernameField;
@@ -31,11 +32,11 @@ public class PixieLoginPage extends JComponent {
 
     public PixieLoginPage() {
         //creating an instance of this class also creates the panels/pages that will show on the login JFrame
-        getPanels();
+        getSignInPage();
+        getCreateAccountPage();
     }
 
-    private void getPanels() {
-
+    private void getSignInPage() {
         /*
         Create the features on the sign in panel which can be displayed on the login frame
          */
@@ -65,7 +66,9 @@ public class PixieLoginPage extends JComponent {
         signInPanel.add(signInPasswordField);
         signInPanel.add(signInUsernameField);
         signInPanel.add(signInConfirmButton);
+    }
 
+    private void getCreateAccountPage() {
         /*
         Create the features on the create account panel that can be displayed on the login frame
         DEBUG: Single JComponents can only be added to one panel and should not be reused.
