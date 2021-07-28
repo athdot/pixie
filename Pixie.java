@@ -33,6 +33,7 @@ public class Pixie extends JComponent implements Runnable {
     JButton viewYourPostsButton;
     JButton viewYourCommentsButton;
     JButton viewAllPostsButton;
+    JButton searchUserButton;
     JButton logoutButton;
 
     //LOGIN FRAME: bring the panels and their components created for the login page from PixieLoginPage class
@@ -133,7 +134,7 @@ public class Pixie extends JComponent implements Runnable {
         }
     };
 
-    //FOR THE ENTIRE PROGRAM: end the client when the user closes out of the app by X'ing out.
+    //FOR THE ENTIRE PROGRAM: end the client's streams when the user closes out of the app by X'ing out.
     WindowAdapter windowAdapter = new WindowAdapter() {
         @Override
         public void windowClosed(WindowEvent e) {
@@ -225,7 +226,7 @@ public class Pixie extends JComponent implements Runnable {
 
         //
         JPanel appFrameMenuGrid = new JPanel();
-        appFrameMenuGrid.setLayout(new GridLayout(6, 1, 5, 5));
+        appFrameMenuGrid.setLayout(new GridLayout(7, 1, 5, 5));
         appFrameMenuGrid.setBackground(new Color(0, 160, 160));
 
         // Log in and create account buttons
@@ -234,6 +235,7 @@ public class Pixie extends JComponent implements Runnable {
         viewYourPostsButton  = new JButton("View Your Posts");
         viewYourCommentsButton = new JButton("View Your Comments");
         viewAllPostsButton = new JButton("View All Posts");
+        searchUserButton = new JButton("Search For User");
         logoutButton = new JButton("Logout");
 
         // Add buttons to grid
@@ -242,6 +244,7 @@ public class Pixie extends JComponent implements Runnable {
         appFrameMenuGrid.add(viewYourPostsButton);
         appFrameMenuGrid.add(viewYourCommentsButton);
         appFrameMenuGrid.add(viewAllPostsButton);
+        appFrameMenuGrid.add(searchUserButton);
         appFrameMenuGrid.add(logoutButton);
 
         // Add grid to west panel
@@ -274,6 +277,7 @@ public class Pixie extends JComponent implements Runnable {
         viewYourPostsButton.addActionListener(actionListener);
         viewYourCommentsButton.addActionListener(actionListener);
         viewAllPostsButton.addActionListener(actionListener);
+        searchUserButton.addActionListener(actionListener);
         logoutButton.addActionListener(actionListener);
 
     }
