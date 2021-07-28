@@ -102,43 +102,6 @@ public class Pixie extends JComponent implements Runnable {
                 }
             }
 
-            //user chooses to create a new account with given username, password, and confirm password
-            if (e.getSource() == createAccountConfirmButton) {
-
-                if (createAccountUsernameField.getText().contains(" ")) {
-                    JOptionPane.showMessageDialog(null, "No Spaces Should be in the Username",
-                            "Invalid", JOptionPane.ERROR_MESSAGE);
-                    return; //exit the method, ignore the rest.
-                } else if (createAccountUsernameField.getText().contains(",")) {
-                    JOptionPane.showMessageDialog(null, "No Commas Should be in the Username",
-                            "Invalid", JOptionPane.ERROR_MESSAGE);
-                    return;
-                } else if (!createAccountPasswordField.getText().equals(confirmPasswordField.getText())) {
-                    JOptionPane.showMessageDialog(null, "Passwords Must Match",
-                            "Invalid", JOptionPane.ERROR_MESSAGE);
-                    return;
-                } else if (createAccountUsernameField.getText().length() == 0 ||
-                        createAccountPasswordField.getText().length() == 0) {
-                    JOptionPane.showMessageDialog(null, "Password or Username too Short",
-                            "Invalid", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                String worked = "createAccount[" + createAccountUsernameField.getText().toLowerCase() + "," +
-                        createAccountPasswordField.getText() + "]";
-                worked = CLIENT.streamReader(worked);
-
-                if (worked.equals("true")) {
-                    JOptionPane.showMessageDialog(null, "New Account Created",
-                            "Account Created", JOptionPane.INFORMATION_MESSAGE);
-                    activeUsername = createAccountUsernameField.getText();
-                    switchFrame(loginFrame, appFrame);
-                } else {
-                    JOptionPane.showMessageDialog(null, "Invalid Username or Password",
-                            "Invalid", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-
             //APP FRAME
 
             //user clicks main menu button to go to "your profile" page
