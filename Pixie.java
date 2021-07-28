@@ -101,15 +101,6 @@ public class Pixie extends JComponent implements Runnable {
                     switchFrame(loginFrame, appFrame);
                 }
             }
-        }
-
-        public void acceptLogIn() {
-            String userCode = "login[" + userField.getText().toLowerCase() +
-                    "," + passwordField.getText() + "]";
-            String evaluate = client.streamReader(userCode);
-
-            // If invalid, show error message
-        }
 
             //user chooses to create a new account with given username, password, and confirm password
             if (e.getSource() == createAccountConfirmButton) {
@@ -198,7 +189,6 @@ public class Pixie extends JComponent implements Runnable {
 
                 activeUsername = null;
             }
-
         }
     };
 
