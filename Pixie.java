@@ -315,6 +315,32 @@ public class Pixie extends JComponent implements Runnable {
                     changeFrame(appFrame, loginFrame);
                 }
             }
+            
+            // CREATE POSTS: WRITE POST BUTTON
+            if (e.getSource() == writePostButton) {
+                switchPanel(appPanelContent, activeContentPanel, createNewPostPanel, BorderLayout.CENTER);
+                activeContentPanel = createNewPostPanel;
+            }
+
+            if (e.getSource() == doneEditingPostButton) {
+                String newPost = "post[" + createPostTitleField.getText() + "," + createPostContentField.getText() + "]";
+                String post = CLIENT.streamReader(newPost);
+
+                if (post.equals("true")) {
+                    JOptionPane.showMessageDialog(null, "Post has been added successfully!",
+                            "Post added", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Post was unable to be added",
+                            "Something went wrong", JOptionPane.INFORMATION_MESSAGE);
+                }
+
+            }
+
+            // CREATE POSTS: IMPORT CSV BUTTON
+            if (e.getSource() == importPostButton) {
+                switchPanel(appPanelContent, activeContentPanel, importFromCSVPanel, BorderLayout.CENTER);
+                activeContentPanel = importFromCSVPanel;
+            }
 
             //user clicks main menu button to go to "create post" page
             if (e.getSource() == createPostButton) {
@@ -567,6 +593,11 @@ public class Pixie extends JComponent implements Runnable {
         confirmChangeUsernameButton.addActionListener(actionListener);
         confirmChangeBioButton.addActionListener(actionListener);
         confirmChangePasswordButton.addActionListener(actionListener);
+        
+        writePostButton.addActionListener(actionListener);
+        importPostButton.addActionListener(actionListener);
+
+        doneEditingPostButton.addActionListener(actionListener);
 
     }
 
