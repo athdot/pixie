@@ -1,4 +1,4 @@
-import org.junit.After;
+/*import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.JUnitCore;
@@ -30,7 +30,7 @@ import static org.junit.Assert.fail;
  * @author Group 8
  * @version 7/21/2021
  */
-public class RunLocalTest {
+/*public class RunLocalTest {
     public static void main(String[] args)
     {
         Result result = JUnitCore.runClasses(TestCase.class);
@@ -506,3 +506,4 @@ public class RunLocalTest {
         }
     }
 }
+*/

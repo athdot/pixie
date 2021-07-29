@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 
 /**
@@ -49,6 +50,10 @@ public class PixieSubmenus extends JComponent {
     public JButton changeUsernameButton;
     public JButton changePasswordButton;
     public JButton deleteAccountButton;
+    //sub sub menus
+    public JPanel changeUsernamePanel;
+    public JTextField newUsername;
+    public JButton saveUsername;
 
     //"CREATE POST SUBMENU"
     public JButton writePostButton;
@@ -95,6 +100,7 @@ public class PixieSubmenus extends JComponent {
         searchUserSubmenu();
     }
 
+
     private void yourProfileSubmenu() {
         /*
         Create the "Your Profile" submenu that will appear when the user clicks the "Your Profile" button that's on the
@@ -124,6 +130,26 @@ public class PixieSubmenus extends JComponent {
         yourProfileSubmenuPanelGrid.add(deleteAccountButton);
 
         yourProfileSubmenuPanel.add(yourProfileSubmenuPanelGrid);
+    }
+
+    private void changeUsernameSubmenu(String username) {
+        changeUsernamePanel = new JPanel();
+        changeUsernamePanel.setLayout(new FlowLayout(FlowLayout.TRAILING, 4, 4));
+
+        String currentUsername = String.format("Current username: %s", username);
+        JLabel changeUsername = new JLabel(currentUsername);
+        changeUsername.setHorizontalAlignment(JLabel.CENTER);
+        changeUsername.setForeground(Color.white);
+
+        newUsername = new JTextField();
+        newUsername.setBounds(200, 280, 480, 35);
+
+        saveUsername = new JButton();
+        saveUsername.setText("Save");
+
+        changeUsernamePanel.add(newUsername);
+        changeUsernamePanel.add(newUsername);
+        changeUsernamePanel.add(saveUsername);
     }
 
     private void createPostSubmenu() {
