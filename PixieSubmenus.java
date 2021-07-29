@@ -1,10 +1,12 @@
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 
 /**
  * PixieSubmenus.java - PJ05
  * Contains the submenu layouts that the user can see when s/he clicks on each of the main menu options after log in.
+ *
+ * @author Group 8
+ * @version July 28, 2021
  */
 
 public class PixieSubmenus extends JComponent {
@@ -12,7 +14,7 @@ public class PixieSubmenus extends JComponent {
     //make these fields public because Pixie.java needs to access them
     //creating getters for larger pages is extremely redundant
 
-    Color subMenuColor = new Color(121, 71, 154, 255);
+    Color subMenuColor = new Color(114, 90, 122, 255);
 
     //SUBMENUS FOR EACH MAIN MENU OPTION
     public JPanel yourProfileSubmenuPanel;
@@ -21,45 +23,18 @@ public class PixieSubmenus extends JComponent {
     public JPanel yourCommentsSubmenuPanel;
     public JPanel allPostsSubmenuPanel;
     public JPanel searchUserSubmenuPanel;
-    public JPanel createNewPostPanel;
-
-    // FEATURES (NEW!)
-    public JButton emojiButton;
-    public JButton adjustText12Button;
-    public JButton adjustText14Button;
-    public JButton adjustText16Button;
-
-    //"CREATE NEW POST" (NEW!)
-    public JTextField createTitle;
-    public JTextArea createPost;
-    public JButton doneEditingPostButton;
-
-    //"WRITE POST" PANEL (NEW!)
-    public JPanel writePostPanel;
-
-    //"CHANGE BIO" PANEL (NEW!)
-    public JPanel changeBioPanel;
-
-    //CHANGE BIO (NEW!)
-    public JTextField createBioTitle;
-    public JTextArea editBio;
-    public JButton doneEditingBioButton;
 
     //"YOUR PROFILE"
     public JButton changeBioButton;
     public JButton changeUsernameButton;
     public JButton changePasswordButton;
     public JButton deleteAccountButton;
-    //sub sub menus
-    public JPanel changeUsernamePanel;
-    public JTextField newUsername;
-    public JButton saveUsername;
 
-    //"CREATE POST SUBMENU"
+    //"CREATE POST SUBMENU" submenu components
     public JButton writePostButton;
     public JButton importPostButton;
 
-    //"VIEW YOUR POSTS"
+    //"VIEW YOUR POSTS" submenu components
     public JTextField selectYourPostField;
     public JButton selectYourPostButton;
 
@@ -69,20 +44,20 @@ public class PixieSubmenus extends JComponent {
     public JButton exportYourPostButton;
     public JButton deleteYourPostButton;
 
-    //"VIEW YOUR COMMENTS"
+    //"VIEW YOUR COMMENTS" submenu components
     public JTextField selectYourCommentField;
     public JButton selectYourCommentButton;
 
     public JButton editYourCommentContentButton; //these buttons appear after selecting a comment
     public JButton deleteYourCommentButton;
 
-    //"VIEW ALL POSTS"
+    //"VIEW ALL POSTS" submenu components
     public JTextField selectPostField;
     public JButton selectPostButton;
 
     public JButton commentOnPostButton; //this button appears after selecting a post
 
-    //"SEARCH USER"
+    //"SEARCH USER" submenu components
     public JTextField searchUserField;
     public JButton searchUserButton;
 
@@ -99,7 +74,6 @@ public class PixieSubmenus extends JComponent {
         viewAllPostsSubmenu();
         searchUserSubmenu();
     }
-
 
     private void yourProfileSubmenu() {
         /*
@@ -132,24 +106,6 @@ public class PixieSubmenus extends JComponent {
         yourProfileSubmenuPanel.add(yourProfileSubmenuPanelGrid);
     }
 
-    public void changeUsernameSubmenu(String username) {
-        changeUsernamePanel = new JPanel();
-        changeUsernamePanel.setLayout(new GridLayout(4, 1, 5, 5));
-
-        String currentUsername = String.format("Current username: %s", username);
-        JLabel changeUsername = new JLabel(currentUsername);
-        changeUsername.setHorizontalAlignment(JLabel.CENTER);
-
-        newUsername = new JTextField();
-        newUsername.setBounds(200, 280, 80, 15);
-
-        saveUsername = new JButton("Save");
-
-        changeUsernamePanel.add(changeUsername);
-        changeUsernamePanel.add(newUsername);
-        changeUsernamePanel.add(saveUsername);
-    }
-
     private void createPostSubmenu() {
         /*
         Create the "Create Post" submenu that will appear when the user clicks the "Create Post" button that's on the
@@ -175,125 +131,6 @@ public class PixieSubmenus extends JComponent {
         createPostSubmenuPanelGrid.add(importPostButton);
 
         createPostSubmenuPanel.add(createPostSubmenuPanelGrid);
-    }
-    
-    // Create new button post panel
-    public void createNewPost(JPanel panel) {
-        /*
-        The "Write Post" panel
-         */
-        createNewPostPanel = new JPanel();
-        createNewPostPanel.setLayout(null);
-
-        createNewPostPanel.setBorder(new LineBorder(Color.black,3));
-
-        // Create Post stuff
-        Font font2 = new Font(Font.SANS_SERIF,  Font.PLAIN, 12);
-        createPost = new JTextArea();
-        createPost.setBounds(200,340,480,200);
-        createPost.setFont(font2);
-
-        JScrollPane scroll = new JScrollPane(createPost);
-        scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-
-        // Create Title stuff
-        Font font = new Font(Font.SANS_SERIF,  Font.BOLD, 20);
-
-        createTitle = new JTextField();
-        createTitle.setBounds(200,280,480,35);
-        createTitle.setFont(font);
-
-        JLabel title = new JLabel(createTitle.getText());
-        title.setFont(font);
-        title.setBounds(80, 100,50,20);
-
-        doneEditingPostButton = new JButton("Done");
-        doneEditingPostButton.setBounds(580,550,100,35);
-
-        ImageIcon icon = new ImageIcon("icons8-decrease-font-24.png");
-        adjustText12Button = new JButton(icon);
-        adjustText12Button.setBounds(200,240,140,30);
-
-        ImageIcon icon3 = new ImageIcon("icons8-a-24.png");
-        adjustText14Button = new JButton(icon3);
-        adjustText14Button.setBounds(370,240,140,30);
-
-        ImageIcon icon2 = new ImageIcon("icons8-increase-font-24.png");
-        adjustText16Button = new JButton(icon2);
-        adjustText16Button.setBounds(540,240,140,30);
-
-        ImageIcon icon4 = new ImageIcon("icons8-anime-emoji-30.png");
-        emojiButton = new JButton(icon4);
-        emojiButton.setBounds(200,550,100,35);
-
-        createNewPostPanel.add(createTitle);
-        createNewPostPanel.add(createPost);
-        createNewPostPanel.add(emojiButton);
-        createNewPostPanel.add(adjustText12Button);
-        createNewPostPanel.add(adjustText14Button);
-        createNewPostPanel.add(adjustText16Button);
-        createNewPostPanel.add(doneEditingPostButton);
-
-        panel.add(createNewPostPanel);
-    }
-    
-    // Change biography panel
-    public void changeBio(JPanel panel) {
-        /*
-        The "Change Bio" panel
-         */
-        changeBioPanel = new JPanel();
-        changeBioPanel.setLayout(null);
-
-        // Create Post stuff
-        Font font2 = new Font(Font.SANS_SERIF,  Font.PLAIN, 12);
-        editBio = new JTextArea();
-        editBio.setBounds(200,340,480,200);
-        editBio.setFont(font2);
-
-        JScrollPane scroll = new JScrollPane();
-        scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-
-        // Create Title stuff
-        Font font = new Font(Font.SANS_SERIF,  Font.BOLD, 20);
-
-        createBioTitle = new JTextField();
-        createBioTitle.setBounds(200,280,480,35);
-        createBioTitle.setFont(font);
-
-        JLabel title = new JLabel(createTitle.getText());
-        title.setFont(font);
-        title.setBounds(80, 100,50,20);
-
-        doneEditingBioButton = new JButton("Done");
-        doneEditingBioButton.setBounds(580,550,100,35);
-
-        ImageIcon icon = new ImageIcon("icons8-decrease-font-24.png");
-        adjustText12Button = new JButton(icon);
-        adjustText12Button.setBounds(200,240,140,30);
-
-        ImageIcon icon3 = new ImageIcon("icons8-a-24.png");
-        adjustText14Button = new JButton(icon3);
-        adjustText14Button.setBounds(370,240,140,30);
-
-        ImageIcon icon2 = new ImageIcon("icons8-increase-font-24.png");
-        adjustText16Button = new JButton(icon2);
-        adjustText16Button.setBounds(540,240,140,30);
-
-        ImageIcon icon4 = new ImageIcon("icons8-anime-emoji-30.png");
-        emojiButton = new JButton(icon4);
-        emojiButton.setBounds(200,550,100,35);
-
-        changeBioPanel.add(createBioTitle);
-        changeBioPanel.add(editBio);
-        changeBioPanel.add(emojiButton);
-        changeBioPanel.add(adjustText12Button);
-        changeBioPanel.add(adjustText14Button);
-        changeBioPanel.add(adjustText16Button);
-        changeBioPanel.add(doneEditingBioButton);
-
-        panel.add(changeBioPanel);
-
     }
 
     private void yourPostsSubmenu() {
@@ -405,7 +242,7 @@ public class PixieSubmenus extends JComponent {
         searchUserLabel.setHorizontalAlignment(JLabel.CENTER);
         searchUserLabel.setForeground(Color.white);
 
-        JLabel searchUserInstructionLabel = new JLabel("Provide the Username:");
+        JLabel searchUserInstructionLabel = new JLabel("Provide Account Username:");
         searchUserInstructionLabel.setHorizontalAlignment(JLabel.CENTER);
         searchUserInstructionLabel.setForeground(Color.white);
 

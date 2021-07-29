@@ -21,15 +21,11 @@ public class Pixie extends JComponent implements Runnable {
     private final Client CLIENT = new Client();
     String activeUsername; //for client communication with server
     JPanel activeSubmenuPanel; //for switch panels method
-    JPanel activeSubSubMenuPanel; //for switching panels
+    JPanel activeSubSubmenuPanel; //for switching panels
 
-    //empty panel
-    JPanel emptyPanel = new JPanel();
-
-    //APP HAS 2 JFrames.
+    //APP HAS 2 JFrames
     JFrame loginFrame; //login page frame
     JFrame appFrame; //frame for the app part
-    JPanel appPanel; //panel containing all sub-menus
 
     //LOGIN FRAME: baseline features -- the login menu
     JButton createAccountButton;
@@ -43,6 +39,10 @@ public class Pixie extends JComponent implements Runnable {
     JButton allPostsButton;
     JButton searchUserButton;
     JButton logoutButton;
+
+    //APP FRAME: panels for "mapping" purposes
+    JPanel appPanel; //panel containing all sub-menus and the content that they lead to
+    JPanel appPanelContent;
 
     //LOGIN FRAME: bring the panels and their components created for the login page from PixieLoginPage class
     PixieLoginPage pixieLoginPage = new PixieLoginPage();
@@ -68,7 +68,15 @@ public class Pixie extends JComponent implements Runnable {
     JPanel yourCommentsSubmenuPanel = pixieSubmenus.yourCommentsSubmenuPanel;
     JPanel allPostsSubmenuPanel = pixieSubmenus.allPostsSubmenuPanel;
     JPanel searchUserSubmenuPanel = pixieSubmenus.searchUserSubmenuPanel;
-    JPanel changeUsername = pixieSubmenus.changeUsernamePanel;
+
+    //YOUR PROFILE: bring panel setups for "Your Profile" page from PixieYourProfile
+    PixieYourProfile pixieYourProfile = new PixieYourProfile();
+
+    JPanel changeUsernamePanel = pixieYourProfile.changeUsernamePanel;
+    JPanel changeBioPanel = pixieYourProfile.changeBioPanel;
+
+    //CREATE POST: bring panel setups for "Create Post" page from PixieCreatePost
+    PixieCreatePost pixieCreatePost = new PixieCreatePost();
 
     //FOR THE ENTIRE PROGRAM: Action listeners for all components that require action listeners
     ActionListener actionListener = new ActionListener() {
@@ -105,7 +113,7 @@ public class Pixie extends JComponent implements Runnable {
                             "Invalid", JOptionPane.ERROR_MESSAGE);
                 } else {
                     activeUsername = signInUsernameField.getText();
-                    switchFrame(loginFrame, appFrame);
+                    changeFrame(loginFrame, appFrame);
                 }
             }
 
@@ -139,7 +147,7 @@ public class Pixie extends JComponent implements Runnable {
                     JOptionPane.showMessageDialog(null, "New Account Created",
                             "Account Created", JOptionPane.INFORMATION_MESSAGE);
                     activeUsername = createAccountUsernameField.getText();
-                    switchFrame(loginFrame, appFrame);
+                    changeFrame(loginFrame, appFrame);
                 } else {
                     JOptionPane.showMessageDialog(null, "Invalid Username or Password",
                             "Invalid", JOptionPane.ERROR_MESSAGE);
@@ -154,14 +162,34 @@ public class Pixie extends JComponent implements Runnable {
                 activeSubmenuPanel = yourProfileSubmenuPanel;
             }
 
-            //user clicks change username button under "your profile" page
-            if (e.getSource() == pixieSubmenus.changeUsernameButton) {
-                pixieSubmenus.changeUsernameSubmenu(activeUsername);
-                changeUsername = pixieSubmenus.changeUsernamePanel;
-                appPanel.add(changeUsername, BorderLayout.CENTER);
-                activeSubSubMenuPanel = changeUsername;
-                appPanel.repaint();
-                appPanel.revalidate();
+//            //user clicks change username button under "your profile" page
+//            if (e.getSource() == pixieSubmenus.changeUsernameButton) {
+//                pixieSubmenus.changeUsernameSubmenu(activeUsername);
+//                changeUsername = pixieSubmenus.changeUsernamePanel;
+//                appPanel.add(changeUsername, BorderLayout.CENTER);
+//                activeSubSubmenuPanel = changeUsername;
+//                appPanel.repaint();
+//                appPanel.revalidate();
+//            }
+
+            //user clicks "delete account" button on "your profile" menu
+            if (e.getSource() == pixieSubmenus.deleteAccountButton) {
+                // Makes sure user didn't click delete button by accident
+                int choice = JOptionPane.showConfirmDialog(null,
+                        "Are you sure you want to delete your account?", "Delete?",
+                        JOptionPane.YES_NO_OPTION);
+
+                if (choice == JOptionPane.YES_OPTION) {
+                    String ex = "deleteAccount";
+                    CLIENT.streamReader(ex);
+                    changeFrame(appFrame, loginFrame);
+
+                    signInUsernameField.setText(""); //don't remember username and password after deleting account
+                    signInPasswordField.setText("");
+                    createAccountUsernameField.setText("");
+                    createAccountPasswordField.setText("");
+                    confirmPasswordField.setText("");
+                }
             }
 
             //user clicks main menu button to go to "create post" page
@@ -188,49 +216,40 @@ public class Pixie extends JComponent implements Runnable {
                 activeSubmenuPanel = allPostsSubmenuPanel;
             }
 
+            //user clicks main menu button for search user
             if (e.getSource() == searchUserButton) {
                 switchPanel(appPanel, activeSubmenuPanel, searchUserSubmenuPanel, BorderLayout.WEST);
                 activeSubmenuPanel = searchUserSubmenuPanel;
             }
 
+            //user clicks main menu logout button
             if (e.getSource() == logoutButton) {
-                switchFrame(appFrame, loginFrame);
-                CLIENT.streamReader("logout");
+                //make sure user didn't click by accident
+                int choice = JOptionPane.showConfirmDialog(null,
+                        "Are you sure you want to log out?", "Logout?", JOptionPane.YES_NO_OPTION);
 
-                signInUsernameField.setText("");
-                signInPasswordField.setText("");
+                if (choice == JOptionPane.YES_OPTION) {
+                    changeFrame(appFrame, loginFrame);
+                    CLIENT.streamReader("logout");
+                    activeUsername = null;
 
-                createAccountUsernameField.setText("");
-                createAccountPasswordField.setText("");
-                confirmPasswordField.setText("");
-
-                activeUsername = null;
-            }
-            
-            if (e.getSource() == pixieSubmenus.deleteAccountButton) {
-                // Makes sure user didn't click delete button by accident
-                JOptionPane pane = new JOptionPane();
-                int p = pane.showConfirmDialog(null, "Are you sure you want to delete your account?",
-                        "Delete?", JOptionPane.YES_NO_OPTION);
-                // If "yes" is clicked, delete
-                // Take user back to login page
-                if (p == 0) {
-                    String ex = "deleteAccount";
-                    CLIENT.streamReader(ex);
-                    switchFrame(appFrame, loginFrame);
-                // If not, close pane
-                } else {
-                    pane.getRootFrame().dispose();
+                    signInUsernameField.setText(""); //don't remember username and password after logging out
+                    signInPasswordField.setText("");
+                    createAccountUsernameField.setText("");
+                    createAccountPasswordField.setText("");
+                    confirmPasswordField.setText("");
                 }
-
             }
         }
     };
 
-    //FOR THE ENTIRE PROGRAM: end the client's streams when the user closes out of the app by X'ing out.
+    //FOR THE ENTIRE PROGRAM: end the program a user after user X's out
     WindowAdapter windowAdapter = new WindowAdapter() {
         @Override
         public void windowClosing(WindowEvent e) {
+            loginFrame.dispose();
+            appFrame.dispose();
+            CLIENT.streamReader("logout");
             CLIENT.end();
         }
     };
@@ -255,20 +274,6 @@ public class Pixie extends JComponent implements Runnable {
      * @param parentPanel - panel on which the panel you want to switch is laying
      * @param oldPanel - panel that you want to remove from the parentPanel
      * @param newPanel - panel that you want to display on the parentPanel
-     */
-    public void switchPanel(JPanel parentPanel, JPanel oldPanel, JPanel newPanel) {
-        parentPanel.remove(oldPanel);
-        parentPanel.add(newPanel);
-
-        parentPanel.repaint();
-        parentPanel.revalidate();
-    }
-
-    /**
-     * OVERLOADED
-     * @param parentPanel - panel on which the panel you want to switch is laying
-     * @param oldPanel - panel that you want to remove from the parentPanel
-     * @param newPanel - panel that you want to display on the parentPanel
      * @param borderLayoutLoc - BorderLayout constant: NORTH, EAST, SOUTH, WEST, CENTER
      */
     public void switchPanel(JPanel parentPanel, JPanel oldPanel, JPanel newPanel, String borderLayoutLoc) {
@@ -284,8 +289,8 @@ public class Pixie extends JComponent implements Runnable {
      * @param oldFrame - frame you want to dispose of
      * @param newFrame - frame you want to show
      */
-    public void switchFrame(JFrame oldFrame, JFrame newFrame) {
-        oldFrame.setVisible(false);
+    public void changeFrame(JFrame oldFrame, JFrame newFrame) {
+        oldFrame.dispose();
         newFrame.setVisible(true);
     }
 
@@ -296,7 +301,7 @@ public class Pixie extends JComponent implements Runnable {
      */
     public void run() {
 
-        Color menuColor = new Color(0, 160, 160);
+        Color menuColor = new Color(53, 92, 125);
 
         /*
         Create the JFrame for the login page. Build the side menu bar/panel which is shared by all pages of the login
@@ -393,8 +398,11 @@ public class Pixie extends JComponent implements Runnable {
         appPanel = new JPanel(new BorderLayout());
         appPanel.add(yourProfileSubmenuPanel, BorderLayout.WEST); //start off on the "Your Profile" sub menu
         activeSubmenuPanel = yourProfileSubmenuPanel;
+
+        appPanelContent = new JPanel(new GridLayout(0, 1));
+        appPanel.add(appPanelContent);
         appFrame.add(appPanel);
-        //appFrame.setVisible(true);
+//        appFrame.setVisible(true); //for testing app layout, bypass sign in phase
 
         /*
         All JComponents that need action listeners (e.g., buttons) need to have action listeners instantiated within
