@@ -143,6 +143,11 @@ public class Pixie extends JComponent implements Runnable {
                 } else {
                     activeUsername = signInUsernameField.getText();
                     changeFrame(loginFrame, appFrame);
+                    //change username and bio fields to correct values
+                    String profile = CLIENT.streamReader("getProfile[" + activeUsername + "]");
+                    Account user = StreamParse.stringToAccount(profile);
+                    yourProfileUsernameLabel.setText(activeUsername);
+                    yourProfileBioLabel.setText("<html>" + user.getBio() + "</html>");
                 }
             }
 
@@ -177,6 +182,11 @@ public class Pixie extends JComponent implements Runnable {
                             "Account Created", JOptionPane.INFORMATION_MESSAGE);
                     activeUsername = createAccountUsernameField.getText();
                     changeFrame(loginFrame, appFrame);
+                    //change username and bio fields to correct values
+                    String profile = CLIENT.streamReader("getProfile[" + activeUsername + "]");
+                    Account user = StreamParse.stringToAccount(profile);
+                    yourProfileUsernameLabel.setText(activeUsername);
+                    yourProfileBioLabel.setText("<html>" + user.getBio() + "</html>");
                 } else {
                     JOptionPane.showMessageDialog(null, "Invalid Username or Password",
                             "Invalid", JOptionPane.ERROR_MESSAGE);
@@ -193,6 +203,10 @@ public class Pixie extends JComponent implements Runnable {
                 switchPanel(appPanel, activeSubmenuPanel, yourProfileSubmenuPanel, BorderLayout.WEST);
                 activeSubmenuPanel = yourProfileSubmenuPanel;
 
+                String profile = CLIENT.streamReader("getProfile[" + activeUsername + "]");
+                Account user = StreamParse.stringToAccount(profile);
+                yourProfileUsernameLabel.setText(activeUsername);
+                yourProfileBioLabel.setText("<html>" + user.getBio() + "</html>");
                 switchPanel(appPanelContent, activeContentPanel, yourProfilePanel, BorderLayout.CENTER);
                 activeContentPanel = yourProfilePanel;
             }
@@ -200,6 +214,18 @@ public class Pixie extends JComponent implements Runnable {
             if (e.getSource() == changeBioButton) {
                 switchPanel(appPanelContent, activeContentPanel, changeBioPanel, BorderLayout.CENTER);
                 activeContentPanel = changeBioPanel;
+            }
+
+            if(e.getSource() == confirmChangeBioButton) {
+                String changeBio = "changeBio[" + changeBioField.getText() + "]";
+
+                changeBio = CLIENT.streamReader(changeBio);
+
+                if (changeBio.equalsIgnoreCase("false")) {
+                    JOptionPane.showMessageDialog(null, "Something went terribly wrong",
+                            "Invalid", JOptionPane.ERROR_MESSAGE);
+                }
+                changeBioField.setText("");
             }
 
             if (e.getSource() == changeUsernameButton) {
@@ -508,6 +534,7 @@ public class Pixie extends JComponent implements Runnable {
         confirmChangeUsernameButton.addActionListener(actionListener);
         confirmChangeBioButton.addActionListener(actionListener);
         confirmChangePasswordButton.addActionListener(actionListener);
+
     }
 
     public static void main(String[] args) {

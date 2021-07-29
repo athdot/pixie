@@ -131,10 +131,10 @@ public class PixieYourProfile extends JComponent {
         yourProfilePanel = new JPanel(null);
 
         JLabel usernameTitle = new JLabel("Your Username:");
-        usernameTitle.setBounds(100, 100, 300, 25);
+        usernameTitle.setBounds(100, 100, 100, 25);
 
         yourProfileUsernameLabel = new JLabel("your username goes here");
-        yourProfileUsernameLabel.setBounds(100, 120, 300, 25);
+        yourProfileUsernameLabel.setBounds(200, 100, 200, 25);
 
         JLabel biographyTitle = new JLabel("Your Biography:");
         biographyTitle.setBounds(100, 200, 300, 25);

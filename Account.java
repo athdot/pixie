@@ -37,6 +37,10 @@ public class Account {
         bio = ""; //user can set the bio later
     }
 
+    public String getBio() {
+        return bio;
+    }
+
     public String getUsername() {
         return username;
     }
