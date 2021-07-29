@@ -1,5 +1,4 @@
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 
 /**
@@ -14,13 +13,21 @@ public class PixieCreatePost extends JComponent {
 
     //All panels related to the "Create Post" option
     public JPanel createNewPostPanel;
+    public JPanel importFromCSVPanel;
 
     //"CREATE NEW POST" (NEW!)
-    public JTextField createTitle;
-    public JTextArea createPost;
+    public JTextField createPostTitleField;
+    public JTextField createPostContentField;
     public JButton doneEditingPostButton;
 
-    // FEATURES (NEW!) -- add these only if we have spare time later
+    //IMPORT FROM CSV OPTION -- components
+    public JTextField importFromCSVField;
+    public JButton importFromCSVButton;
+
+    // FEATURES (NEW!)
+    //we do not have logic for this, it can be set up if there is time to spare later
+    //we should focus on completing the objectives before moving onto fancier things -Nathan
+
 //    public JButton emojiButton;
 //    public JButton adjustText12Button;
 //    public JButton adjustText14Button;
@@ -28,40 +35,35 @@ public class PixieCreatePost extends JComponent {
 
     public PixieCreatePost() {
         createNewPost();
+        importFromCSV();
     }
 
-    // Create new button post panel
+    /**
+     * setup for the "Create a New Post" page
+     */
     public void createNewPost() {
-        /*
-        The "Write Post" panel
-         */
+
         createNewPostPanel = new JPanel();
         createNewPostPanel.setLayout(null);
 
-        createNewPostPanel.setBorder(new LineBorder(Color.black,3));
+        Font instructionFont = new Font(Font.SANS_SERIF,  Font.PLAIN, 12);
 
-        // Create Post stuff
-        Font font2 = new Font(Font.SANS_SERIF,  Font.PLAIN, 12);
-        createPost = new JTextArea();
-        createPost.setBounds(200,340,480,200);
-        createPost.setFont(font2);
+        JLabel titleInstruction = new JLabel("Post Title:");
+        titleInstruction.setFont(instructionFont);
+        titleInstruction.setBounds(100, 100, 300, 25);
 
-        JScrollPane scroll = new JScrollPane(createPost);
-        scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        createPostTitleField = new JTextField();
+        createPostTitleField.setBounds(100, 150, 250, 25);
 
-        // Create Title stuff
-        Font font = new Font(Font.SANS_SERIF,  Font.BOLD, 20);
+        JLabel contentInstruction = new JLabel("Post Content:");
+        contentInstruction.setFont(instructionFont);
+        contentInstruction.setBounds(100, 200, 300, 25);
 
-        createTitle = new JTextField();
-        createTitle.setBounds(200,280,480,35);
-        createTitle.setFont(font);
+        createPostContentField = new JTextField();
+        createPostContentField.setBounds(100, 250, 250, 25);
 
-        JLabel title = new JLabel(createTitle.getText());
-        title.setFont(font);
-        title.setBounds(80, 100,50,20);
-
-        doneEditingPostButton = new JButton("Done");
-        doneEditingPostButton.setBounds(580,550,100,35);
+        doneEditingPostButton = new JButton("Create Post");
+        doneEditingPostButton.setBounds(100, 320, 200, 30);
 
 //        ImageIcon icon = new ImageIcon("icons8-decrease-font-24.png");
 //        adjustText12Button = new JButton(icon);
@@ -84,9 +86,36 @@ public class PixieCreatePost extends JComponent {
 //        createNewPostPanel.add(adjustText14Button);
 //        createNewPostPanel.add(adjustText16Button);
 
-        createNewPostPanel.add(createTitle);
-        createNewPostPanel.add(createPost);
+        createNewPostPanel.add(titleInstruction);
+        createNewPostPanel.add(createPostTitleField);
+
+        createNewPostPanel.add(contentInstruction);
+        createNewPostPanel.add(createPostContentField);
         createNewPostPanel.add(doneEditingPostButton);
+    }
+
+    /**
+     * set up for the "Import from CSV" option
+     */
+    public void importFromCSV() {
+        importFromCSVPanel = new JPanel(null);
+
+        //create title for the "change username" page
+        JLabel importFromCSV = new JLabel("Enter CSV Filename (include \".csv\"):");
+        importFromCSV.setBounds(100, 150, 300, 25);
+
+        //create the text field for the "change username" page
+        importFromCSVField = new JTextField();
+        importFromCSVField.setBounds(100, 200, 250, 25);
+
+        //create the save changed-username button
+        importFromCSVButton = new JButton("Confirm");
+        importFromCSVButton.setBounds(100,250,130,30);
+
+        //add them to the changeUsernamePanel in correct order
+        importFromCSVPanel.add(importFromCSV);
+        importFromCSVPanel.add(importFromCSVField);
+        importFromCSVPanel.add(importFromCSVButton);
     }
 
     /*
@@ -96,7 +125,8 @@ public class PixieCreatePost extends JComponent {
     public static void main(String[] args) {
         PixieCreatePost pixieCreatePost = new PixieCreatePost();
         JFrame frame = new JFrame();
-        frame.add(pixieCreatePost.createNewPostPanel);
+        frame.setSize(500, 800);
+        frame.add(pixieCreatePost.importFromCSVPanel);
         frame.setVisible(true);
     }
 

@@ -12,107 +12,138 @@ import java.awt.*;
 public class PixieYourProfile extends JComponent {
 
     //PANELS created for "Your Profile" page
-    public JPanel changeUsernamePanel;
     public JPanel changeBioPanel;
+    public JPanel changeUsernamePanel;
+    public JPanel changePasswordPanel;
+    public JPanel yourProfilePanel;
 
     //CHANGE BIO - components of the change bio page
     public JTextField changeBioField;
-    public JButton confirmBioEditButton;
+    public JButton confirmChangeBioButton;
 
     //CHANGE USERNAME - components of the change username page
-    public JTextField newUsername;
-    public JButton saveUsername;
+    public JTextField changeUsernameField;
+    public JButton confirmChangeUsernameButton;
 
-    //FEATURES (NEW!) -- optional;
-    //we do not have logic for this, it can be set up if there is time to spare later
-    //we should focus on completing the objectives before moving onto fancier things -Nathan
+    //CHANGE PASSWORD - components of the change password page
+    public JTextField changePasswordField;
+    public JButton confirmChangePasswordButton;
 
-//    public JButton emojiButton;
-//    public JButton adjustText12Button;
-//    public JButton adjustText14Button;
-//    public JButton adjustText16Button;
+    //YOUR PROFILE - text components of the user's profile
+    public JLabel yourProfileUsernameLabel;
+    public JLabel yourProfileBioLabel;
 
     public PixieYourProfile() {
         //when creating an instance of PixieYourProfile, also set up the associated pages
-        changeUsernamePage();
         changeBioPage();
+        changeUsernamePage();
+        changePasswordPage();
+        yourProfilePage();
     }
 
+    /**
+     * The "Change Bio" panel - includes a title "Enter Your New Bio:" along with a JTextArea to house the new bio
+     * information. And a "Save Bio" button.
+     */
+    public void changeBioPage() {
+        changeBioPanel = new JPanel(null); //keep layout as null: Works well with setBounds()
+
+        JLabel instructions = new JLabel("Enter Your New Bio:");
+        instructions.setFont(new Font(Font.SANS_SERIF,  Font.BOLD, 12));
+        instructions.setBounds(100, 150, 300, 25);
+
+        changeBioField = new JTextField();
+        changeBioField.setBounds(100, 200, 250, 25);
+
+        confirmChangeBioButton = new JButton("Save Bio");
+        confirmChangeBioButton.setBounds(100,250,130,30);
+
+        changeBioPanel.add(instructions);
+        changeBioPanel.add(changeBioField);
+        changeBioPanel.add(confirmChangeBioButton);
+    }
+
+    /**
+     * change username page: when the user chooses to change their username. Consists of a small text box to enter
+     * new username, and a button to confirm the change.
+     */
     public void changeUsernamePage() {
-        changeUsernamePanel = new JPanel();
-        changeUsernamePanel.setLayout(new GridLayout(4, 1, 5, 5));
+        changeUsernamePanel = new JPanel(null);
 
         //create title for the "change username" page
         JLabel changeUsername = new JLabel("Change Username");
-        changeUsername.setHorizontalAlignment(JLabel.CENTER);
+        changeUsername.setBounds(100, 150, 300, 25);
 
         //create the text field for the "change username" page
-        newUsername = new JTextField();
-        newUsername.setBounds(200, 280, 80, 15);
+        changeUsernameField = new JTextField();
+        changeUsernameField.setBounds(100, 200, 250, 25);
 
         //create the save changed-username button
-        saveUsername = new JButton("Save");
+        confirmChangeUsernameButton = new JButton("Save Username");
+        confirmChangeUsernameButton.setBounds(100,250,130,30);
 
         //add them to the changeUsernamePanel in correct order
         changeUsernamePanel.add(changeUsername);
-        changeUsernamePanel.add(newUsername);
-        changeUsernamePanel.add(saveUsername);
+        changeUsernamePanel.add(changeUsernameField);
+        changeUsernamePanel.add(confirmChangeUsernameButton);
     }
 
-    // Change biography panel
-    public void changeBioPage() {
-        /*
-        The "Change Bio" panel
-         */
-        changeBioPanel = new JPanel();
-        changeBioPanel.setLayout(new GridLayout(3, 1));
+    /**
+     * change password page: when the user chooses to change their password. Consists of a small text box to enter
+     * new password, and a button to confirm the change.
+     */
+    public void changePasswordPage() {
+        changePasswordPanel = new JPanel(null);
 
-        // Create Post stuff
-//        Font font2 = new Font(Font.SANS_SERIF,  Font.PLAIN, 12);
-//        editBioField = new JTextArea();
-//        editBioField.setBounds(200,340,480,200);
-//        editBioField.setFont(font2);
+        //create title for the "change username" page
+        JLabel changePassword = new JLabel("Change Password");
+        changePassword.setBounds(100, 150, 300, 25);
 
-        JScrollPane scroll = new JScrollPane();
-        scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        //create the text field for the "change username" page
+        changePasswordField = new JTextField();
+        changePasswordField.setBounds(100, 200, 250, 25);
 
-        // Create Title stuff
-        Font font = new Font(Font.SANS_SERIF,  Font.BOLD, 20);
+        //create the save changed-username button
+        confirmChangePasswordButton = new JButton("Save Password");
+        confirmChangePasswordButton.setBounds(100,250,130,30);
 
-        changeBioField = new JTextField();
-        changeBioField.setBounds(200,280,480,35);
-        changeBioField.setFont(font);
+        //add them to the changeUsernamePanel in correct order
+        changePasswordPanel.add(changePassword);
+        changePasswordPanel.add(changePasswordField);
+        changePasswordPanel.add(confirmChangePasswordButton);
+    }
 
-        JLabel title = new JLabel("Enter Your New Bio:");
-        title.setFont(font);
-        title.setBounds(80, 100,50,20);
+    /**
+     * an overall screen that displays the profile of the user. Includes 2 text labels: One for displaying username,
+     * Another for displaying the biography
+     */
+    public void yourProfilePage() {
+        yourProfilePanel = new JPanel(null);
 
-        confirmBioEditButton = new JButton("Done");
-        confirmBioEditButton.setBounds(580,550,100,35);
+        JLabel usernameTitle = new JLabel("Your Username:");
+        usernameTitle.setBounds(100, 100, 300, 25);
 
-//        ImageIcon icon = new ImageIcon("icons8-decrease-font-24.png");
-//        adjustText12Button = new JButton(icon);
-//        adjustText12Button.setBounds(200,240,140,30);
-//
-//        ImageIcon icon3 = new ImageIcon("icons8-a-24.png");
-//        adjustText14Button = new JButton(icon3);
-//        adjustText14Button.setBounds(370,240,140,30);
-//
-//        ImageIcon icon2 = new ImageIcon("icons8-increase-font-24.png");
-//        adjustText16Button = new JButton(icon2);
-//        adjustText16Button.setBounds(540,240,140,30);
-//
-//        ImageIcon icon4 = new ImageIcon("icons8-anime-emoji-30.png");
-//        emojiButton = new JButton(icon4);
-//        emojiButton.setBounds(200,550,100,35);
-//
-//        changeBioPanel.add(emojiButton);
-//        changeBioPanel.add(adjustText12Button);
-//        changeBioPanel.add(adjustText14Button);
-//        changeBioPanel.add(adjustText16Button);
+        yourProfileUsernameLabel = new JLabel("your username goes here");
+        yourProfileUsernameLabel.setBounds(100, 120, 300, 25);
 
-        changeBioPanel.add(changeBioField);
-        changeBioPanel.add(confirmBioEditButton);
+        JLabel biographyTitle = new JLabel("Your Biography:");
+        biographyTitle.setBounds(100, 200, 300, 25);
+
+        //DEBUGGED: wrapping in html tags will automatically display runoff text on a new line for JLabel
+        JPanel bioContainerPanel = new JPanel(null);
+        bioContainerPanel.setBounds(100, 225, 300, 300);
+        yourProfileBioLabel = new JLabel("<html>your bio stuff goes here i think." +
+                "Here's to test what the scroll pane is like??? Here's just more test text." +
+                "Here's more text to test this bit of the label." +
+                "THis label is going to be replaced with the actual bio in Pixie.java</html>");
+        yourProfileBioLabel.setBounds(0, 0, 300, 300);
+        bioContainerPanel.add(yourProfileBioLabel);
+        yourProfileBioLabel.setVerticalAlignment(JLabel.TOP);
+
+        yourProfilePanel.add(usernameTitle);
+        yourProfilePanel.add(yourProfileUsernameLabel);
+        yourProfilePanel.add(biographyTitle);
+        yourProfilePanel.add(bioContainerPanel);
     }
 
     /*
@@ -122,7 +153,10 @@ public class PixieYourProfile extends JComponent {
     public static void main(String[] args) {
         PixieYourProfile pixieYourProfile = new PixieYourProfile();
         JFrame frame = new JFrame();
-        frame.add(pixieYourProfile.changeBioPanel);
+        frame.setSize(1200, 800);
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.add(pixieYourProfile.yourProfilePanel);
+        frame.add(panel);
         frame.setVisible(true);
     }
 }
