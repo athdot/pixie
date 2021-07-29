@@ -132,22 +132,20 @@ public class PixieSubmenus extends JComponent {
         yourProfileSubmenuPanel.add(yourProfileSubmenuPanelGrid);
     }
 
-    private void changeUsernameSubmenu(String username) {
+    public void changeUsernameSubmenu(String username) {
         changeUsernamePanel = new JPanel();
-        changeUsernamePanel.setLayout(new FlowLayout(FlowLayout.TRAILING, 4, 4));
+        changeUsernamePanel.setLayout(new GridLayout(4, 1, 5, 5));
 
         String currentUsername = String.format("Current username: %s", username);
         JLabel changeUsername = new JLabel(currentUsername);
         changeUsername.setHorizontalAlignment(JLabel.CENTER);
-        changeUsername.setForeground(Color.white);
 
         newUsername = new JTextField();
-        newUsername.setBounds(200, 280, 480, 35);
+        newUsername.setBounds(200, 280, 80, 15);
 
-        saveUsername = new JButton();
-        saveUsername.setText("Save");
+        saveUsername = new JButton("Save");
 
-        changeUsernamePanel.add(newUsername);
+        changeUsernamePanel.add(changeUsername);
         changeUsernamePanel.add(newUsername);
         changeUsernamePanel.add(saveUsername);
     }

@@ -21,6 +21,10 @@ public class Pixie extends JComponent implements Runnable {
     private final Client CLIENT = new Client();
     String activeUsername; //for client communication with server
     JPanel activeSubmenuPanel; //for switch panels method
+    JPanel activeSubSubMenuPanel; //for switching panels
+
+    //empty panel
+    JPanel emptyPanel = new JPanel();
 
     //APP HAS 2 JFrames.
     JFrame loginFrame; //login page frame
@@ -64,6 +68,7 @@ public class Pixie extends JComponent implements Runnable {
     JPanel yourCommentsSubmenuPanel = pixieSubmenus.yourCommentsSubmenuPanel;
     JPanel allPostsSubmenuPanel = pixieSubmenus.allPostsSubmenuPanel;
     JPanel searchUserSubmenuPanel = pixieSubmenus.searchUserSubmenuPanel;
+    JPanel changeUsername = pixieSubmenus.changeUsernamePanel;
 
     //FOR THE ENTIRE PROGRAM: Action listeners for all components that require action listeners
     ActionListener actionListener = new ActionListener() {
@@ -147,6 +152,16 @@ public class Pixie extends JComponent implements Runnable {
             if (e.getSource() == yourProfileButton) {
                 switchPanel(appPanel, activeSubmenuPanel, yourProfileSubmenuPanel, BorderLayout.WEST);
                 activeSubmenuPanel = yourProfileSubmenuPanel;
+            }
+
+            //user clicks change username button under "your profile" page
+            if (e.getSource() == pixieSubmenus.changeUsernameButton) {
+                pixieSubmenus.changeUsernameSubmenu(activeUsername);
+                changeUsername = pixieSubmenus.changeUsernamePanel;
+                appPanel.add(changeUsername, BorderLayout.CENTER);
+                activeSubSubMenuPanel = changeUsername;
+                appPanel.repaint();
+                appPanel.revalidate();
             }
 
             //user clicks main menu button to go to "create post" page
@@ -407,6 +422,7 @@ public class Pixie extends JComponent implements Runnable {
         searchUserButton.addActionListener(actionListener);
         logoutButton.addActionListener(actionListener);
 
+        pixieSubmenus.changeUsernameButton.addActionListener(actionListener);
     }
 
     public static void main(String[] args) {
