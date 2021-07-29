@@ -103,6 +103,16 @@ public class Pixie extends JComponent implements Runnable {
     //CREATE POST: bring panel setups for "Create Post" page from PixieCreatePost
 
     PixieCreatePost pixieCreatePost = new PixieCreatePost();
+    
+    JPanel createNewPostPanel = pixieCreatePost.createNewPostPanel;
+    JPanel importFromCSVPanel = pixieCreatePost.importFromCSVPanel;
+
+    JTextField createPostTitleField = pixieCreatePost.createPostTitleField;
+    JTextField createPostContentField = pixieCreatePost.createPostContentField;
+    JButton doneEditingPostButton = pixieCreatePost.doneEditingPostButton;
+
+    JTextField importFromCSVField = pixieCreatePost.importFromCSVField;
+    JButton importFromCSVButton = pixieCreatePost.importFromCSVButton;
 
     //FOR THE ENTIRE PROGRAM: Action listeners for all components that require action listeners
     ActionListener actionListener = new ActionListener() {
