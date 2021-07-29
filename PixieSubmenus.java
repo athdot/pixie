@@ -133,7 +133,7 @@ public class PixieSubmenus extends JComponent {
     }
 
     public void changeUsernameSubmenu(String username) {
-        changeUsernamePanel = new JPanel();
+        changeUsernamePanel = new JPanel(null);
         changeUsernamePanel.setLayout(new GridLayout(4, 1, 5, 5));
 
         String currentUsername = String.format("Current username: %s", username);
@@ -144,7 +144,7 @@ public class PixieSubmenus extends JComponent {
         newUsername.setBounds(200, 280, 80, 15);
 
         saveUsername = new JButton("Save");
-
+        saveUsername.setBounds(150, 200, 100, 25);
         changeUsernamePanel.add(changeUsername);
         changeUsernamePanel.add(newUsername);
         changeUsernamePanel.add(saveUsername);
