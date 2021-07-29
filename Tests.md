@@ -4,9 +4,16 @@
 
 Steps:
 
+1. Choose the "Sign In" button in left panel.
+2. Enter your username and password into the corresponding fields.
+3. Click the Sign In button below the username and password fields.
+
 Expected Result: 
 
-Test Status
+The Pixie application main page will be loaded with the main menu on the left side of the screen and all other areas 
+empty.
+
+Test Status: Failed
 
 
 ###Test 2: 

@@ -11,6 +11,7 @@ import java.awt.*;
 
 public class PixieYourProfile extends JComponent {
 
+    public JPanel blankPanel = new JPanel(null);
     //PANELS created for "Your Profile" page
     public JPanel changeBioPanel;
     public JPanel changeUsernamePanel;
@@ -40,8 +41,13 @@ public class PixieYourProfile extends JComponent {
         changeUsernamePage();
         changePasswordPage();
         yourProfilePage();
+        blankContentPage();
     }
 
+
+    private void blankContentPage() {
+        blankPanel.setBackground(Color.WHITE);
+    }
     /**
      * The "Change Bio" panel - includes a title "Enter Your New Bio:" along with a JTextArea to house the new bio
      * information. And a "Save Bio" button.

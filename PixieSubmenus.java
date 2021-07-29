@@ -23,6 +23,7 @@ public class PixieSubmenus extends JComponent {
     public JPanel yourCommentsSubmenuPanel;
     public JPanel allPostsSubmenuPanel;
     public JPanel searchUserSubmenuPanel;
+    public JPanel blankPanel = new JPanel(null);
 
     //"YOUR PROFILE"
     public JButton changeBioButton;
@@ -73,6 +74,12 @@ public class PixieSubmenus extends JComponent {
         yourCommentsSubmenu();
         viewAllPostsSubmenu();
         searchUserSubmenu();
+        blankPanelSubmenu();
+    }
+
+    private void blankPanelSubmenu() {
+        yourProfileSubmenuPanel.setLayout(new FlowLayout(FlowLayout.TRAILING, 4, 4));
+        yourProfileSubmenuPanel.setBackground(subMenuColor);
     }
 
     private void yourProfileSubmenu() {

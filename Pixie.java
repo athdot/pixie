@@ -72,6 +72,7 @@ public class Pixie extends JComponent implements Runnable {
     JPanel yourCommentsSubmenuPanel = pixieSubmenus.yourCommentsSubmenuPanel;
     JPanel allPostsSubmenuPanel = pixieSubmenus.allPostsSubmenuPanel;
     JPanel searchUserSubmenuPanel = pixieSubmenus.searchUserSubmenuPanel;
+    JPanel blankSubmenuPanel = pixieSubmenus.blankPanel;
 
     JButton changeBioButton = pixieSubmenus.changeBioButton;
     JButton changeUsernameButton = pixieSubmenus.changeUsernameButton;
@@ -86,6 +87,7 @@ public class Pixie extends JComponent implements Runnable {
     JPanel changeUsernamePanel = pixieYourProfile.changeUsernamePanel;
     JPanel changePasswordPanel = pixieYourProfile.changePasswordPanel;
     JPanel yourProfilePanel = pixieYourProfile.yourProfilePanel;
+    JPanel blankContentPanel = pixieYourProfile.blankPanel;
 
     JTextField changeBioField = pixieYourProfile.changeBioField;
     JButton confirmChangeBioButton = pixieYourProfile.confirmChangeBioButton;
@@ -143,11 +145,11 @@ public class Pixie extends JComponent implements Runnable {
                 } else {
                     activeUsername = signInUsernameField.getText();
                     changeFrame(loginFrame, appFrame);
-                    //change username and bio fields to correct values
-                    String profile = CLIENT.streamReader("getProfile[" + activeUsername + "]");
-                    Account user = StreamParse.stringToAccount(profile);
-                    yourProfileUsernameLabel.setText(activeUsername);
-                    yourProfileBioLabel.setText("<html>" + user.getBio() + "</html>");
+                    //sets app frame to be blank other than the main screen
+                    switchPanel(appPanel, activeSubmenuPanel, blankSubmenuPanel, BorderLayout.WEST);
+                    activeSubmenuPanel = blankSubmenuPanel;
+                    switchPanel(appPanelContent, activeContentPanel, blankContentPanel, BorderLayout.CENTER);
+                    activeContentPanel = blankContentPanel;
                 }
             }
 
@@ -182,11 +184,11 @@ public class Pixie extends JComponent implements Runnable {
                             "Account Created", JOptionPane.INFORMATION_MESSAGE);
                     activeUsername = createAccountUsernameField.getText();
                     changeFrame(loginFrame, appFrame);
-                    //change username and bio fields to correct values
-                    String profile = CLIENT.streamReader("getProfile[" + activeUsername + "]");
-                    Account user = StreamParse.stringToAccount(profile);
-                    yourProfileUsernameLabel.setText(activeUsername);
-                    yourProfileBioLabel.setText("<html>" + user.getBio() + "</html>");
+                    //sets app frame to be blank other than the main screen
+                    switchPanel(appPanel, activeSubmenuPanel, blankSubmenuPanel, BorderLayout.WEST);
+                    activeSubmenuPanel = blankSubmenuPanel;
+                    switchPanel(appPanelContent, activeContentPanel, blankContentPanel, BorderLayout.CENTER);
+                    activeContentPanel = blankContentPanel;
                 } else {
                     JOptionPane.showMessageDialog(null, "Invalid Username or Password",
                             "Invalid", JOptionPane.ERROR_MESSAGE);
