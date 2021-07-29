@@ -26,7 +26,8 @@ public class PixieYourProfile extends JComponent {
     public JButton confirmChangeUsernameButton;
 
     //CHANGE PASSWORD - components of the change password page
-    public JTextField changePasswordField;
+    public JTextField oldPasswordField;
+    public JTextField newPasswordField;
     public JButton confirmChangePasswordButton;
 
     //YOUR PROFILE - text components of the user's profile
@@ -71,7 +72,7 @@ public class PixieYourProfile extends JComponent {
         changeUsernamePanel = new JPanel(null);
 
         //create title for the "change username" page
-        JLabel changeUsername = new JLabel("Change Username");
+        JLabel changeUsername = new JLabel("Enter your new Username");
         changeUsername.setBounds(100, 150, 300, 25);
 
         //create the text field for the "change username" page
@@ -96,12 +97,19 @@ public class PixieYourProfile extends JComponent {
         changePasswordPanel = new JPanel(null);
 
         //create title for the "change username" page
-        JLabel changePassword = new JLabel("Change Password");
-        changePassword.setBounds(100, 150, 300, 25);
+        JLabel changePassword = new JLabel("Old password:");
+        changePassword.setBounds(100, 50, 300, 25);
 
         //create the text field for the "change username" page
-        changePasswordField = new JTextField();
-        changePasswordField.setBounds(100, 200, 250, 25);
+        oldPasswordField = new JTextField();
+        oldPasswordField.setBounds(100, 100, 250, 25);
+
+        JLabel newPassword = new JLabel("New password:");
+        newPassword.setBounds(100, 150, 300, 25);
+
+        //create the text field for the "change username" page
+        newPasswordField = new JTextField();
+        newPasswordField.setBounds(100, 200, 250, 25);
 
         //create the save changed-username button
         confirmChangePasswordButton = new JButton("Save Password");
@@ -109,7 +117,9 @@ public class PixieYourProfile extends JComponent {
 
         //add them to the changeUsernamePanel in correct order
         changePasswordPanel.add(changePassword);
-        changePasswordPanel.add(changePasswordField);
+        changePasswordPanel.add(oldPasswordField);
+        changePasswordPanel.add(newPassword);
+        changePasswordPanel.add(newPasswordField);
         changePasswordPanel.add(confirmChangePasswordButton);
     }
 

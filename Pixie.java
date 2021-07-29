@@ -93,7 +93,8 @@ public class Pixie extends JComponent implements Runnable {
     JTextField changeUsernameField = pixieYourProfile.changeUsernameField;
     JButton confirmChangeUsernameButton = pixieYourProfile.confirmChangeUsernameButton;
 
-    JTextField changePasswordField = pixieYourProfile.changePasswordField;
+    JTextField oldPasswordField = pixieYourProfile.oldPasswordField;
+    JTextField newPasswordField = pixieYourProfile.newPasswordField;
     JButton confirmChangePasswordButton = pixieYourProfile.confirmChangePasswordButton;
 
     JLabel yourProfileUsernameLabel = pixieYourProfile.yourProfileUsernameLabel;
@@ -206,11 +207,39 @@ public class Pixie extends JComponent implements Runnable {
                 activeContentPanel = changeUsernamePanel;
             }
 
+            if(e.getSource() == confirmChangeUsernameButton) {
+                String newUsername = "changeUsername[" + changeUsernameField.getText() + "]";
+
+                newUsername = CLIENT.streamReader(newUsername);
+
+                if(newUsername.equalsIgnoreCase("false")) {
+                    JOptionPane.showMessageDialog(null, "Username is taken",
+                            "Invalid", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    activeUsername = changeUsernameField.getText();
+                    changeUsernameField.setText("");
+                }
+            }
+
             if (e.getSource() == changePasswordButton) {
                 switchPanel(appPanelContent, activeContentPanel, changePasswordPanel, BorderLayout.CENTER);
                 activeContentPanel = changePasswordPanel;
             }
 
+            if (e.getSource() == confirmChangePasswordButton) {
+                String changePassword = "changePassword[" + oldPasswordField.getText() + ","
+                        + newPasswordField.getText() + "]";
+
+                changePassword = CLIENT.streamReader(changePassword);
+
+                if (changePassword.equalsIgnoreCase("false")) {
+                    JOptionPane.showMessageDialog(null, "Old password was incorrect",
+                            "Invalid", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    oldPasswordField.setText("");
+                    newPasswordField.setText("");
+                }
+            }
             //user clicks "delete account" button on "your profile" menu
             if (e.getSource() == deleteAccountButton) {
                 // Makes sure user didn't click delete button by accident
@@ -475,6 +504,10 @@ public class Pixie extends JComponent implements Runnable {
         changeUsernameButton.addActionListener(actionListener);
         changePasswordButton.addActionListener(actionListener);
         deleteAccountButton.addActionListener(actionListener);
+
+        confirmChangeUsernameButton.addActionListener(actionListener);
+        confirmChangeBioButton.addActionListener(actionListener);
+        confirmChangePasswordButton.addActionListener(actionListener);
     }
 
     public static void main(String[] args) {
