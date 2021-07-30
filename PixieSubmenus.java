@@ -40,12 +40,6 @@ public class PixieSubmenus extends JComponent {
     public JTextField selectYourPostField;
     public JButton selectYourPostButton;
 
-    public JButton editYourPostTitleButton; //these buttons appear after selecting your post
-    public JButton editYourPostContentButton;
-    public JButton commentOnYourPostButton;
-    public JButton exportYourPostButton;
-    public JButton deleteYourPostButton;
-
     //"VIEW YOUR COMMENTS" submenu components
     public JTextField selectYourCommentField;
     public JButton selectYourCommentButton;
@@ -56,8 +50,6 @@ public class PixieSubmenus extends JComponent {
     //"VIEW ALL POSTS" submenu components
     public JTextField selectPostField;
     public JButton selectPostButton;
-
-    public JButton commentOnPostButton; //this button appears after selecting a post
 
     //"SEARCH USER" submenu components
     public JTextField searchUserField;
@@ -75,14 +67,13 @@ public class PixieSubmenus extends JComponent {
         yourCommentsSubmenu();
         viewAllPostsSubmenu();
         searchUserSubmenu();
-
         blankPanelSubmenu();
     }
 
-    //?
+    //basic set up for the blank panel submenu
     private void blankPanelSubmenu() {
-        yourProfileSubmenuPanel.setLayout(new FlowLayout(FlowLayout.TRAILING, 4, 4));
-        yourProfileSubmenuPanel.setBackground(subMenuColor);
+        blankPanel.setLayout(new FlowLayout(FlowLayout.TRAILING, 30, 4));
+        blankPanel.setBackground(subMenuColor);
     }
 
     private void yourProfileSubmenu() {

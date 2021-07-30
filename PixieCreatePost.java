@@ -118,10 +118,10 @@ public class PixieCreatePost extends JComponent {
         importFromCSVPanel.add(importFromCSVButton);
     }
 
-    /*
-    Frame preview testing: Good idea to set up a temporary main method to see how the pages will look.
-    Comment out or delete this main method later.
-    */
+    /**
+     * temporary main method to test layouts created above.
+     * Comment out later to avoid confusion about running the program.
+     */
     public static void main(String[] args) {
         PixieCreatePost pixieCreatePost = new PixieCreatePost();
         JFrame frame = new JFrame();

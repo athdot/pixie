@@ -42,14 +42,8 @@ public class PixieYourProfile extends JComponent {
         changeUsernamePage();
         changePasswordPage();
         yourProfilePage();
-
-        blankContentPage();
     }
 
-    //?
-    private void blankContentPage() {
-        blankPanel.setBackground(Color.WHITE);
-    }
     /**
      * The "Change Bio" panel - includes a title "Enter Your New Bio:" along with a JTextArea to house the new bio
      * information. And a "Save Bio" button.
@@ -57,7 +51,7 @@ public class PixieYourProfile extends JComponent {
     private void changeBioPage() {
         changeBioPanel = new JPanel(null); //keep layout as null: Works well with setBounds()
 
-        JLabel instructions = new JLabel("Enter Your New Bio:");
+        JLabel instructions = new JLabel("Enter your new bio:");
         instructions.setFont(new Font(Font.SANS_SERIF,  Font.BOLD, 12));
         instructions.setBounds(100, 150, 300, 25);
 
@@ -165,10 +159,10 @@ public class PixieYourProfile extends JComponent {
         yourProfilePanel.add(bioContainerPanel);
     }
 
-    /*
-    Frame preview testing: Good idea to set up a temporary main method to see how the pages will look.
-    Comment out or delete this main method later
-    */
+    /**
+     * temporary main method to test layouts created above.
+     * Comment out later to avoid confusion about running the program.
+     */
     public static void main(String[] args) {
         PixieYourProfile pixieYourProfile = new PixieYourProfile();
         JFrame frame = new JFrame();

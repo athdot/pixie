@@ -1,9 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.util.ArrayList;
 
 /**
@@ -31,13 +28,15 @@ public class Pixie extends JComponent implements Runnable {
     JPanel activeSubmenuPanel; //the submenus of the main menu options: which one is currently shown?
     JPanel activeContentPanel; //the right-most panel of the app: what's currently on it?
 
-    //APP HAS 2 JFrames
-    JFrame loginFrame; //login page frame
-    JFrame appFrame; //for rest of application
-
     //LOGIN FRAME: baseline features -- the login menu
+    JFrame loginFrame; //login page frame
     JButton createAccountButton;
     JButton signInButton;
+
+    //APP FRAME: panels for "mapping" purposes
+    JFrame appFrame; //for rest of application
+    JPanel appPanel; //panel containing all sub-menus and the content that they lead to
+    JPanel appPanelContent; //content currently on the right-most panel of the appFrame
 
     //APP FRAME: baseline features -- the main menu
     JButton yourProfileButton;
@@ -48,82 +47,107 @@ public class Pixie extends JComponent implements Runnable {
     JButton searchUserButton;
     JButton logoutButton;
 
-    //APP FRAME: panels for "mapping" purposes
-    JPanel appPanel; //panel containing all sub-menus and the content that they lead to
-    JPanel appPanelContent; //content currently on the right-most panel of the appFrame
-
-    //LOGIN FRAME: bring the panels and their components created for the login page from PixieLoginPage class
+    /**
+     * LOGIN FRAME: bring the panels and their components created for the login page from PixieLoginPage class
+     */
 
     PixieLoginPage pixieLoginPage = new PixieLoginPage();
 
     JPanel signInPanel = pixieLoginPage.signInPanel;
-    JPanel createAccountPanel = pixieLoginPage.createAccountPanel;
-
     JTextField signInUsernameField = pixieLoginPage.signInUsernameField;
     JTextField signInPasswordField = pixieLoginPage.signInPasswordField;
     JButton signInConfirmButton = pixieLoginPage.signInConfirmButton;
 
+    JPanel createAccountPanel = pixieLoginPage.createAccountPanel;
     JTextField createAccountUsernameField = pixieLoginPage.createAccountUsernameField;
     JTextField createAccountPasswordField = pixieLoginPage.createAccountPasswordField;
     JTextField confirmPasswordField = pixieLoginPage.confirmPasswordField;
     JButton createAccountConfirmButton = pixieLoginPage.createAccountConfirmButton;
 
-    //MAIN MENU'S SUBMENUS: bring the side-panel "sub-menus" and their components from PixieSubmenus.java
+    /**
+     * MAIN MENU'S SUBMENUS: bring the side-panel "sub-menus" and their components from PixieSubmenus.java
+     */
 
     PixieSubmenus pixieSubmenus = new PixieSubmenus();
 
-    JPanel yourProfileSubmenuPanel = pixieSubmenus.yourProfileSubmenuPanel;
-    JPanel createPostSubmenuPanel = pixieSubmenus.createPostSubmenuPanel;
+    JPanel blankSubmenuPanel = pixieSubmenus.blankPanel; //?
+
     JPanel yourPostsSubmenuPanel = pixieSubmenus.yourPostsSubmenuPanel;
     JPanel yourCommentsSubmenuPanel = pixieSubmenus.yourCommentsSubmenuPanel;
     JPanel allPostsSubmenuPanel = pixieSubmenus.allPostsSubmenuPanel;
     JPanel searchUserSubmenuPanel = pixieSubmenus.searchUserSubmenuPanel;
-    JPanel blankSubmenuPanel = pixieSubmenus.blankPanel; //?
 
+    JPanel yourProfileSubmenuPanel = pixieSubmenus.yourProfileSubmenuPanel;
     JButton changeBioButton = pixieSubmenus.changeBioButton;
     JButton changeUsernameButton = pixieSubmenus.changeUsernameButton;
     JButton changePasswordButton = pixieSubmenus.changePasswordButton;
     JButton deleteAccountButton = pixieSubmenus.deleteAccountButton;
 
+    JPanel createPostSubmenuPanel = pixieSubmenus.createPostSubmenuPanel;
     JButton writePostButton = pixieSubmenus.writePostButton;
     JButton importPostButton = pixieSubmenus.importPostButton;
 
-    //YOUR PROFILE: bring panel setups for "Your Profile" page from PixieYourProfile
+    /**
+     * YOUR PROFILE: bring panel setups for "Your Profile" page from PixieYourProfile
+     */
 
     PixieYourProfile pixieYourProfile = new PixieYourProfile();
 
-    JPanel changeBioPanel = pixieYourProfile.changeBioPanel;
-    JPanel changeUsernamePanel = pixieYourProfile.changeUsernamePanel;
-    JPanel changePasswordPanel = pixieYourProfile.changePasswordPanel;
-    JPanel yourProfilePanel = pixieYourProfile.yourProfilePanel;
-    JPanel blankContentPanel = pixieYourProfile.blankPanel; //?
+    JPanel blankContentPanel = pixieYourProfile.blankPanel; //if you want the menu to be empty
 
+    JPanel changeBioPanel = pixieYourProfile.changeBioPanel; //change bio page
     JTextField changeBioField = pixieYourProfile.changeBioField;
     JButton confirmChangeBioButton = pixieYourProfile.confirmChangeBioButton;
 
+    JPanel changeUsernamePanel = pixieYourProfile.changeUsernamePanel; //change username page
     JTextField changeUsernameField = pixieYourProfile.changeUsernameField;
     JButton confirmChangeUsernameButton = pixieYourProfile.confirmChangeUsernameButton;
 
+    JPanel changePasswordPanel = pixieYourProfile.changePasswordPanel; //change password page
     JTextField oldPasswordField = pixieYourProfile.oldPasswordField;
     JTextField newPasswordField = pixieYourProfile.newPasswordField;
     JButton confirmChangePasswordButton = pixieYourProfile.confirmChangePasswordButton;
 
+    JPanel yourProfilePanel = pixieYourProfile.yourProfilePanel; //viewing your profile
     JLabel yourProfileUsernameLabel = pixieYourProfile.yourProfileUsernameLabel;
     JLabel yourProfileBioLabel = pixieYourProfile.yourProfileBioLabel;
 
-    //CREATE POST: bring panel setups for "Create Post" page from PixieCreatePost
+    /**
+     * CREATE POST: bring panel setups for "Create Post" page from PixieCreatePost
+     */
 
     PixieCreatePost pixieCreatePost = new PixieCreatePost();
     
-    JPanel createNewPostPanel = pixieCreatePost.createNewPostPanel;
-    JPanel importFromCSVPanel = pixieCreatePost.importFromCSVPanel;
-
+    JPanel createNewPostPanel = pixieCreatePost.createNewPostPanel; //"write new post" page
     JTextField createPostTitleField = pixieCreatePost.createPostTitleField;
     JTextField createPostContentField = pixieCreatePost.createPostContentField;
     JButton doneEditingPostButton = pixieCreatePost.doneEditingPostButton;
 
+    JPanel importFromCSVPanel = pixieCreatePost.importFromCSVPanel; //"import from CSV" page
     JTextField importFromCSVField = pixieCreatePost.importFromCSVField;
     JButton importFromCSVButton = pixieCreatePost.importFromCSVButton;
+
+    /**
+     * VIEW YOUR POST/VIEW ALL POSTS: bring panel setups and components from PixieViewPost
+     */
+
+    PixieViewPost pixieViewPost = new PixieViewPost();
+
+    JPanel viewPostsOutlinePanel = pixieViewPost.viewPostsOutlinePanel; //parent panel for viewing posts
+    JPanel viewPostsContainerPanel = pixieViewPost.viewPostsContainerPanel; //add the JLabel posts into here
+
+    JPanel viewYourPostOptionsPanel = pixieViewPost.viewYourPostOptionsPanel; //panel appears after selecting post
+    JButton editYourPostButton = pixieViewPost.editYourPostButton; //buttons appear after selecting your post
+    JButton commentOnYourPostButton = pixieViewPost.commentOnYourPostButton;
+    JButton exportYourPostButton = pixieViewPost.exportYourPostButton;
+    JButton deleteYourPostButton = pixieViewPost.deleteYourPostButton;
+
+    JPanel viewAllPostOptionsPanel = pixieViewPost.viewAllPostOptionsPanel; //panel appears after selecting post
+    JButton commentOnPostButton = pixieViewPost.commentOnPostButton; //appears after selecting a post
+
+    JPanel commentOnPostPanel = pixieViewPost.commentOnPostPanel; //create/edit comment page
+    JTextField commentOnPostField = pixieViewPost.commentOnPostField;
+    JButton confirmCommentButton = pixieViewPost.confirmCommentButton;
 
     //FOR THE ENTIRE PROGRAM: Action listeners for all components that require action listeners
     ActionListener actionListener = new ActionListener() {
@@ -333,7 +357,7 @@ public class Pixie extends JComponent implements Runnable {
                             "Invalid", JOptionPane.ERROR_MESSAGE);
                 } else {
                     JOptionPane.showMessageDialog(null, "Password changed successfully!",
-                            "Password changed", JOptionPane.ERROR_MESSAGE);
+                            "Password changed", JOptionPane.INFORMATION_MESSAGE);
                     oldPasswordField.setText("");
                     newPasswordField.setText("");
                 }
@@ -363,6 +387,9 @@ public class Pixie extends JComponent implements Runnable {
             if (e.getSource() == createPostButton) {
                 switchPanel(appPanel, activeSubmenuPanel, createPostSubmenuPanel, BorderLayout.WEST);
                 activeSubmenuPanel = createPostSubmenuPanel;
+
+                switchPanel(appPanelContent, activeContentPanel, blankContentPanel, BorderLayout.CENTER);
+                activeContentPanel = blankContentPanel;
             }
 
             //create post: user wants to write a new post
@@ -379,6 +406,8 @@ public class Pixie extends JComponent implements Runnable {
                 if (worked.equals("true")) {
                     JOptionPane.showMessageDialog(null, "Post has been added successfully!",
                             "Post added", JOptionPane.INFORMATION_MESSAGE);
+                    createPostTitleField.setText("");
+                    createPostContentField.setText("");
                 } else {
                     JOptionPane.showMessageDialog(null, "Post was unable to be added",
                             "Something went wrong", JOptionPane.INFORMATION_MESSAGE);
@@ -398,8 +427,7 @@ public class Pixie extends JComponent implements Runnable {
                 String filename = importFromCSVField.getText();
 
                 try {
-                    DataManagement dm = new DataManagement();
-                    ArrayList<String[]> importBlock = dm.readFile(filename);
+                    ArrayList<String[]> importBlock = DataManagement.readFile(filename);
 
                     //test username: cannot import post for someone else
                     if (importBlock.get(0)[2].split(",")[0].equals(activeUsername)) {
@@ -412,6 +440,7 @@ public class Pixie extends JComponent implements Runnable {
                             JOptionPane.showMessageDialog(null,
                                     "Post has been added successfully!", "Post added",
                                     JOptionPane.INFORMATION_MESSAGE);
+                            importFromCSVField.setText("");
                         }
 
                     } else {
@@ -427,10 +456,41 @@ public class Pixie extends JComponent implements Runnable {
             //█░█ █ █▀▀ █░█░█   █▄█ █▀█ █░█ █▀█   █▀█ █▀█ █▀ ▀█▀ █▀
             //▀▄▀ █ ██▄ ▀▄▀▄▀   ░█░ █▄█ █▄█ █▀▄   █▀▀ █▄█ ▄█ ░█░ ▄█
 
+            //remove any list of posts everytime you click a main menu option (except logout)
+            if (e.getSource() == yourProfileButton || e.getSource() == createPostButton ||
+                    e.getSource() == yourPostsButton || e.getSource() == yourCommentsButton ||
+                    e.getSource() == allPostsButton || e.getSource() == searchUserButton) {
+                //NOTE: keep this statement in-front of all logic that lists out the posts
+                viewPostsContainerPanel.removeAll();
+            }
+
             //user clicks main menu button to go to "your posts" page
             if (e.getSource() == yourPostsButton) {
                 switchPanel(appPanel, activeSubmenuPanel, yourPostsSubmenuPanel, BorderLayout.WEST);
                 activeSubmenuPanel = yourPostsSubmenuPanel;
+
+                switchPanel(appPanelContent, activeContentPanel, viewPostsOutlinePanel, BorderLayout.CENTER);
+                activeContentPanel = viewPostsOutlinePanel;
+
+                String getYourPosts = CLIENT.streamReader("getUserPosts[" + activeUsername + "]");
+                ArrayList<Post> yourPosts = StreamParse.stringToPosts(getYourPosts);
+
+                for (int i = yourPosts.size(); i > 0; i--) { //start from the back, to get latest posts first
+
+                    Post post = yourPosts.get(i - 1);
+                    String formattedPost = "<html>" + post.toString().replace("\n", "<br/>") +
+                            "<br/></html>";
+                    JLabel postLabel = new JLabel(formattedPost); //each post is displayed within a label
+
+                    //fluid dimensions can be achieved with setMinimumSize, setMaximumSize, and setPreferredSize
+                    postLabel.setMinimumSize(new Dimension(300, 0));
+                    postLabel.setPreferredSize(new Dimension(300, 100));
+                    postLabel.setMaximumSize(new Dimension(300, 500));
+                    postLabel.setBorder(BorderFactory.createLineBorder(Color.black, 1));
+                    postLabel.setVerticalAlignment(JLabel.CENTER);
+
+                    viewPostsContainerPanel.add(postLabel);
+                }
             }
 
             //█░█ █ █▀▀ █░█░█   █▄█ █▀█ █░█ █▀█   █▀▀ █▀█ █▀▄▀█ █▀▄▀█ █▀▀ █▄░█ ▀█▀ █▀
@@ -458,6 +518,9 @@ public class Pixie extends JComponent implements Runnable {
             if (e.getSource() == searchUserButton) {
                 switchPanel(appPanel, activeSubmenuPanel, searchUserSubmenuPanel, BorderLayout.WEST);
                 activeSubmenuPanel = searchUserSubmenuPanel;
+
+                switchPanel(appPanelContent, activeContentPanel, blankContentPanel, BorderLayout.CENTER);
+                activeContentPanel = blankContentPanel;
             }
 
             //LOGOUT -- user clicks main menu logout button
@@ -475,7 +538,7 @@ public class Pixie extends JComponent implements Runnable {
         }
     };
 
-    //FOR THE ENTIRE PROGRAM: end the program a user after user X's out
+    //FOR THE ENTIRE PROGRAM: safe end the program a user after user X's out
     WindowAdapter windowAdapter = new WindowAdapter() {
         @Override
         public void windowClosing(WindowEvent e) {
@@ -631,12 +694,12 @@ public class Pixie extends JComponent implements Runnable {
         //start off on the sign in panel
         appFrame.add(appFrameMenu, BorderLayout.WEST);
         appPanel = new JPanel(new BorderLayout());
-        appPanel.add(yourProfileSubmenuPanel, BorderLayout.WEST); //start off on the "Your Profile" sub menu
-        activeSubmenuPanel = yourProfileSubmenuPanel;
+        appPanel.add(blankSubmenuPanel, BorderLayout.WEST); //start off on a blank submenu; actually nice idea sami
+        activeSubmenuPanel = blankSubmenuPanel;
 
         appPanelContent = new JPanel(new BorderLayout()); //actions on the submenu will change this panel
-        appPanelContent.add(yourProfilePanel, BorderLayout.CENTER); //start out on the "Your Profile" page
-        activeContentPanel = yourProfilePanel;
+        appPanelContent.add(blankContentPanel, BorderLayout.CENTER); //start out on a blank screen
+        activeContentPanel = blankContentPanel;
         appPanel.add(appPanelContent);
         appFrame.add(appPanel);
 
@@ -668,18 +731,20 @@ public class Pixie extends JComponent implements Runnable {
         searchUserButton.addActionListener(actionListener);
         logoutButton.addActionListener(actionListener);
 
+        //options if user goes to "Your Profile" submenu
         changeBioButton.addActionListener(actionListener);
         changeUsernameButton.addActionListener(actionListener);
         changePasswordButton.addActionListener(actionListener);
         deleteAccountButton.addActionListener(actionListener);
 
+        //buttons for changing username, bio, and password in "Your Profile"
         confirmChangeUsernameButton.addActionListener(actionListener);
         confirmChangeBioButton.addActionListener(actionListener);
         confirmChangePasswordButton.addActionListener(actionListener);
-        
+
+        //buttons for writing/editing and importing a post
         writePostButton.addActionListener(actionListener);
         doneEditingPostButton.addActionListener(actionListener);
-
         importPostButton.addActionListener(actionListener);
         importFromCSVButton.addActionListener(actionListener);
     }
