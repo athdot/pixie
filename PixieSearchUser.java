@@ -13,7 +13,7 @@ public class PixieSearchUser extends JComponent {
     Client client;
     JTextField userNameEnteredForSearch;
     JLabel userProfilePrompt;
-    JLabel userPostsPrompt
+    JLabel userPostsPrompt;
     Frame frame = new Frame();
 
     /** after click the search button, if the username is found, then the main panel should pop up three options**/
