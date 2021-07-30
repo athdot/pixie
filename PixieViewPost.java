@@ -48,7 +48,7 @@ public class PixieViewPost extends JComponent {
         JScrollPane jsp = new JScrollPane(boundingBox);
         jsp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         jsp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        jsp.setBounds(100, 100, 300, 300);
+        jsp.setBounds(100, 100, 300, 250);
 
         //inside jsp, add another JPanel to constrict JLabel posts that will be added
         viewPostsContainerPanel = new JPanel(new GridLayout(0, 1));

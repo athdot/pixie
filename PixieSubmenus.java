@@ -16,31 +16,27 @@ public class PixieSubmenus extends JComponent {
 
     Color subMenuColor = new Color(114, 90, 122, 255);
 
-    //SUBMENUS FOR EACH MAIN MENU OPTION
-    public JPanel yourProfileSubmenuPanel;
-    public JPanel createPostSubmenuPanel;
-    public JPanel yourPostsSubmenuPanel;
-    public JPanel yourCommentsSubmenuPanel;
-    public JPanel allPostsSubmenuPanel;
-    public JPanel searchUserSubmenuPanel;
-
-    public JPanel blankPanel = new JPanel(null);
+    public JPanel blankPanel = new JPanel(null); //start off on this submenu panel
 
     //"YOUR PROFILE"
+    public JPanel yourProfileSubmenuPanel;
     public JButton changeBioButton;
     public JButton changeUsernameButton;
     public JButton changePasswordButton;
     public JButton deleteAccountButton;
 
     //"CREATE POST SUBMENU" submenu components
+    public JPanel createPostSubmenuPanel;
     public JButton writePostButton;
     public JButton importPostButton;
 
     //"VIEW YOUR POSTS" submenu components
+    public JPanel yourPostsSubmenuPanel;
     public JTextField selectYourPostField;
     public JButton selectYourPostButton;
 
     //"VIEW YOUR COMMENTS" submenu components
+    public JPanel yourCommentsSubmenuPanel;
     public JTextField selectYourCommentField;
     public JButton selectYourCommentButton;
 
@@ -48,10 +44,12 @@ public class PixieSubmenus extends JComponent {
     public JButton deleteYourCommentButton;
 
     //"VIEW ALL POSTS" submenu components
+    public JPanel allPostsSubmenuPanel;
     public JTextField selectPostField;
     public JButton selectPostButton;
 
     //"SEARCH USER" submenu components
+    public JPanel searchUserSubmenuPanel;
     public JTextField searchUserField;
     public JButton searchUserButton;
 

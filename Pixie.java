@@ -28,6 +28,16 @@ public class Pixie extends JComponent implements Runnable {
     JPanel activeSubmenuPanel; //the submenus of the main menu options: which one is currently shown?
     JPanel activeContentPanel; //the right-most panel of the app: what's currently on it?
 
+    //store total number of posts/comments that showed up in "your posts", "your comments", and "all posts"
+    int yourPostsNumTotal;
+    int yourCommentsNumTotal;
+    int allPostsNumTotal;
+
+    //store chosen numbers for posts/comments -- remember the numbers that appeared
+    int yourPostsChosenNum;
+    int yourCommentsChosenNum;
+    int allPostsChosenNum;
+
     //LOGIN FRAME: baseline features -- the login menu
     JFrame loginFrame; //login page frame
     JButton createAccountButton;
@@ -72,7 +82,6 @@ public class Pixie extends JComponent implements Runnable {
 
     JPanel blankSubmenuPanel = pixieSubmenus.blankPanel; //?
 
-    JPanel yourPostsSubmenuPanel = pixieSubmenus.yourPostsSubmenuPanel;
     JPanel yourCommentsSubmenuPanel = pixieSubmenus.yourCommentsSubmenuPanel;
     JPanel allPostsSubmenuPanel = pixieSubmenus.allPostsSubmenuPanel;
     JPanel searchUserSubmenuPanel = pixieSubmenus.searchUserSubmenuPanel;
@@ -86,6 +95,10 @@ public class Pixie extends JComponent implements Runnable {
     JPanel createPostSubmenuPanel = pixieSubmenus.createPostSubmenuPanel;
     JButton writePostButton = pixieSubmenus.writePostButton;
     JButton importPostButton = pixieSubmenus.importPostButton;
+
+    JPanel yourPostsSubmenuPanel = pixieSubmenus.yourPostsSubmenuPanel;
+    JTextField selectYourPostField = pixieSubmenus.selectYourPostField;
+    JButton selectYourPostButton = pixieSubmenus.selectYourPostButton;
 
     /**
      * YOUR PROFILE: bring panel setups for "Your Profile" page from PixieYourProfile
@@ -475,11 +488,12 @@ public class Pixie extends JComponent implements Runnable {
                 String getYourPosts = CLIENT.streamReader("getUserPosts[" + activeUsername + "]");
                 ArrayList<Post> yourPosts = StreamParse.stringToPosts(getYourPosts);
 
+                yourPostsNumTotal = 0;
                 for (int i = yourPosts.size(); i > 0; i--) { //start from the back, to get latest posts first
 
                     Post post = yourPosts.get(i - 1);
-                    String formattedPost = "<html>" + post.toString().replace("\n", "<br/>") +
-                            "<br/></html>";
+                    String formattedPost =  "<html>" + "Post #" + ++yourPostsNumTotal + ": " +
+                            post.toString().replace("\n", "<br/>") + "<br/></html>";
                     JLabel postLabel = new JLabel(formattedPost); //each post is displayed within a label
 
                     //fluid dimensions can be achieved with setMinimumSize, setMaximumSize, and setPreferredSize
@@ -492,6 +506,29 @@ public class Pixie extends JComponent implements Runnable {
                     viewPostsContainerPanel.add(postLabel);
                 }
             }
+
+            if (e.getSource() == selectYourPostButton) {
+                yourPostsChosenNum = 0;
+                try {
+                    yourPostsChosenNum = Integer.parseInt(selectYourPostField.getText());
+                } catch (Exception exception) {
+                    JOptionPane.showMessageDialog(null, "Please provide a valid post number",
+                            "Select post", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                if (1 <= yourPostsChosenNum && yourPostsChosenNum <= yourPostsNumTotal) {
+                    switchPanel(appPanel, activeSubmenuPanel, viewYourPostOptionsPanel, BorderLayout.WEST);
+                    activeSubmenuPanel = viewYourPostOptionsPanel;
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please provide a valid post number",
+                            "Select post", JOptionPane.ERROR_MESSAGE);
+                    yourPostsChosenNum = 0;
+                }
+            }
+
+            //todo: complete edit post, create comment, export post, delete post below -- scenario: after selecting a post
+            //todo: "View Your Comments" and "View All Posts" will have similar logic to "View Your Posts"
 
             //█░█ █ █▀▀ █░█░█   █▄█ █▀█ █░█ █▀█   █▀▀ █▀█ █▀▄▀█ █▀▄▀█ █▀▀ █▄░█ ▀█▀ █▀
             //▀▄▀ █ ██▄ ▀▄▀▄▀   ░█░ █▄█ █▄█ █▀▄   █▄▄ █▄█ █░▀░█ █░▀░█ ██▄ █░▀█ ░█░ ▄█
@@ -723,30 +760,31 @@ public class Pixie extends JComponent implements Runnable {
         //APP FRAME
 
         //user can navigate to 6 different pages using the main menu (similar to Application.java from PJ04)
-        yourProfileButton.addActionListener(actionListener);
-        createPostButton.addActionListener(actionListener);
-        yourPostsButton.addActionListener(actionListener);
         yourCommentsButton.addActionListener(actionListener);
         allPostsButton.addActionListener(actionListener);
         searchUserButton.addActionListener(actionListener);
         logoutButton.addActionListener(actionListener);
 
-        //options if user goes to "Your Profile" submenu
+        //YOUR PROFILE options if user goes to "Your Profile" submenu
+        yourProfileButton.addActionListener(actionListener);
         changeBioButton.addActionListener(actionListener);
         changeUsernameButton.addActionListener(actionListener);
         changePasswordButton.addActionListener(actionListener);
         deleteAccountButton.addActionListener(actionListener);
-
-        //buttons for changing username, bio, and password in "Your Profile"
         confirmChangeUsernameButton.addActionListener(actionListener);
         confirmChangeBioButton.addActionListener(actionListener);
         confirmChangePasswordButton.addActionListener(actionListener);
 
-        //buttons for writing/editing and importing a post
+        //CREATE POST buttons for writing/editing and importing a post
+        createPostButton.addActionListener(actionListener);
         writePostButton.addActionListener(actionListener);
         doneEditingPostButton.addActionListener(actionListener);
         importPostButton.addActionListener(actionListener);
         importFromCSVButton.addActionListener(actionListener);
+
+        //YOUR POSTS: buttons related to your posts
+        yourPostsButton.addActionListener(actionListener);
+        selectYourPostButton.addActionListener(actionListener);
     }
 
     public static void main(String[] args) {
