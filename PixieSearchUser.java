@@ -12,6 +12,8 @@ public class PixieSearchUser extends JComponent {
     public JButton viewComments;
     Client client;
     JTextField userNameEnteredForSearch;
+    JLabel userProfilePrompt;
+    JLabel userPostsPrompt
     Frame frame = new Frame();
 
     /** after click the search button, if the username is found, then the main panel should pop up three options**/
@@ -38,7 +40,7 @@ public class PixieSearchUser extends JComponent {
         showProfilePanel = new JPanel(null);
         frame.add(showProfilePanel);
         String userSearched = "userSearch[" + userNameEnteredForSearch.getText() + "]";
-        JLabel userProfilePrompt = new JLabel(client.streamReader(userSearched));
+        userProfilePrompt = new JLabel(client.streamReader(userSearched));
         userProfilePrompt.setBounds(80, 150, 200, 30);
         showProfilePanel.add(userProfilePrompt);
         //TODO: add the actionlistener
@@ -49,7 +51,7 @@ public class PixieSearchUser extends JComponent {
         showPostsPanel = new JPanel(null);
         frame.add(showPostsPanel);
         String userPosts = "getUserPosts["+ userNameEnteredForSearch.getText() + "]";
-        JLabel userPostsPrompt = new JLabel(client.streamReader(userPosts));
+        userPostsPrompt = new JLabel(client.streamReader(userPosts));
         userPostsPrompt.setBounds(80, 150, 200, 30);
         showPostsPanel.add(userPostsPrompt);
         //TODO: add the actionlistener
