@@ -547,10 +547,10 @@ public class Application {
             ArrayList<String[]> importBlock = dm.readFile(importFilename);
             ArrayList<String[]> existing = dm.readFile("post.csv");
 
-//            for (int i = 0; i < importBlock.get(0).length; i++) { //length is 4 (has 1 comment, otherwise 3)
-//                System.out.println(importBlock.get(0)[i]); //DEBUGGING
-//            }
-//            System.out.println(user.getUsername());
+            for (int i = 0; i < importBlock.get(0).length; i++) { //length is 4 (has 1 comment, otherwise 3)
+                System.out.println(importBlock.get(0)[i]); //DEBUGGING
+            }
+            System.out.println(user.getUsername());
 
             try {
                 if (importBlock.get(0)[2].split(",")[0].equals(user.getUsername())) {

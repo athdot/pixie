@@ -1,6 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.util.ArrayList;
 
 /**
  * Pixie.java - PJ05
@@ -74,7 +78,7 @@ public class Pixie extends JComponent implements Runnable {
     JPanel yourCommentsSubmenuPanel = pixieSubmenus.yourCommentsSubmenuPanel;
     JPanel allPostsSubmenuPanel = pixieSubmenus.allPostsSubmenuPanel;
     JPanel searchUserSubmenuPanel = pixieSubmenus.searchUserSubmenuPanel;
-    JPanel blankSubmenuPanel = pixieSubmenus.blankPanel; //what is the purpose of this panel?
+    JPanel blankSubmenuPanel = pixieSubmenus.blankPanel; //?
 
     JButton changeBioButton = pixieSubmenus.changeBioButton;
     JButton changeUsernameButton = pixieSubmenus.changeUsernameButton;
@@ -92,7 +96,7 @@ public class Pixie extends JComponent implements Runnable {
     JPanel changeUsernamePanel = pixieYourProfile.changeUsernamePanel;
     JPanel changePasswordPanel = pixieYourProfile.changePasswordPanel;
     JPanel yourProfilePanel = pixieYourProfile.yourProfilePanel;
-    JPanel blankContentPanel = pixieYourProfile.blankPanel; //what is the purpose of this panel?
+    JPanel blankContentPanel = pixieYourProfile.blankPanel; //?
 
     JTextField changeBioField = pixieYourProfile.changeBioField;
     JButton confirmChangeBioButton = pixieYourProfile.confirmChangeBioButton;
@@ -355,7 +359,7 @@ public class Pixie extends JComponent implements Runnable {
             //█▀▀ █▀█ █▀▀ ▄▀█ ▀█▀ █▀▀   █▀█ █▀█ █▀ ▀█▀
             //█▄▄ █▀▄ ██▄ █▀█ ░█░ ██▄   █▀▀ █▄█ ▄█ ░█░
 
-            //user clicks main menu button to go to "create post" page
+            //user goes to "create post" page submenu
             if (e.getSource() == createPostButton) {
                 switchPanel(appPanel, activeSubmenuPanel, createPostSubmenuPanel, BorderLayout.WEST);
                 activeSubmenuPanel = createPostSubmenuPanel;
@@ -367,22 +371,56 @@ public class Pixie extends JComponent implements Runnable {
                 activeContentPanel = createNewPostPanel;
             }
 
+            //user is done editing the post and wants to save/create it
+            if (e.getSource() == doneEditingPostButton) {
+                String post = "post[" + createPostTitleField.getText() + "," + createPostContentField.getText() + "]";
+                String worked = CLIENT.streamReader(post);
+
+                if (worked.equals("true")) {
+                    JOptionPane.showMessageDialog(null, "Post has been added successfully!",
+                            "Post added", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Post was unable to be added",
+                            "Something went wrong", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+
             //create post: user wants to go to import post from CSV page
             if (e.getSource() == importPostButton) {
                 switchPanel(appPanelContent, activeContentPanel, importFromCSVPanel, BorderLayout.CENTER);
                 activeContentPanel = importFromCSVPanel;
             }
 
-            if (e.getSource() == doneEditingPostButton) {
-                String newPost = "post[" + createPostTitleField.getText() + "," + createPostContentField.getText() + "]";
-                String post = CLIENT.streamReader(newPost);
+            //create post: user confirms the CSV file name for import
+            if (e.getSource() == importFromCSVButton) {
 
-                if (post.equals("true")) {
-                    JOptionPane.showMessageDialog(null, "Post has been added successfully!",
-                            "Post added", JOptionPane.INFORMATION_MESSAGE);
-                } else {
-                    JOptionPane.showMessageDialog(null, "Post was unable to be added",
-                            "Something went wrong", JOptionPane.INFORMATION_MESSAGE);
+                //ask Charles to integrate this part into the Server? -- for organization?
+                String filename = importFromCSVField.getText();
+
+                try {
+                    DataManagement dm = new DataManagement();
+                    ArrayList<String[]> importBlock = dm.readFile(filename);
+
+                    //test username: cannot import post for someone else
+                    if (importBlock.get(0)[2].split(",")[0].equals(activeUsername)) {
+
+                        String postTitle = importBlock.get(0)[1].split(",")[0];
+                        String postContent = importBlock.get(0)[2].split(",")[2];
+                        String worked = CLIENT.streamReader("post[" + postTitle + "," + postContent + "]");
+
+                        if (worked.equals("true")) {
+                            JOptionPane.showMessageDialog(null,
+                                    "Post has been added successfully!", "Post added",
+                                    JOptionPane.INFORMATION_MESSAGE);
+                        }
+
+                    } else {
+                        JOptionPane.showMessageDialog(null, "You cannot import this post",
+                                "Something went wrong", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (Exception exception) {
+                    JOptionPane.showMessageDialog(null, "Post was unable to be imported",
+                            "Something went wrong", JOptionPane.ERROR_MESSAGE);
                 }
             }
 
@@ -640,10 +678,10 @@ public class Pixie extends JComponent implements Runnable {
         confirmChangePasswordButton.addActionListener(actionListener);
         
         writePostButton.addActionListener(actionListener);
-        importPostButton.addActionListener(actionListener);
-
         doneEditingPostButton.addActionListener(actionListener);
 
+        importPostButton.addActionListener(actionListener);
+        importFromCSVButton.addActionListener(actionListener);
     }
 
     public static void main(String[] args) {

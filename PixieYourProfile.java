@@ -54,7 +54,7 @@ public class PixieYourProfile extends JComponent {
      * The "Change Bio" panel - includes a title "Enter Your New Bio:" along with a JTextArea to house the new bio
      * information. And a "Save Bio" button.
      */
-    public void changeBioPage() {
+    private void changeBioPage() {
         changeBioPanel = new JPanel(null); //keep layout as null: Works well with setBounds()
 
         JLabel instructions = new JLabel("Enter Your New Bio:");
@@ -76,7 +76,7 @@ public class PixieYourProfile extends JComponent {
      * change username page: when the user chooses to change their username. Consists of a small text box to enter
      * new username, and a button to confirm the change.
      */
-    public void changeUsernamePage() {
+    private void changeUsernamePage() {
         changeUsernamePanel = new JPanel(null);
 
         //create title for the "change username" page
@@ -101,7 +101,7 @@ public class PixieYourProfile extends JComponent {
      * change password page: when the user chooses to change their password. Consists of a small text box to enter
      * new password, and a button to confirm the change.
      */
-    public void changePasswordPage() {
+    private void changePasswordPage() {
         changePasswordPanel = new JPanel(null);
 
         //create title for the "change password" page
@@ -135,7 +135,7 @@ public class PixieYourProfile extends JComponent {
      * an overall screen that displays the profile of the user. Includes 2 text labels: One for displaying username,
      * Another for displaying the biography
      */
-    public void yourProfilePage() {
+    private void yourProfilePage() {
         yourProfilePanel = new JPanel(null);
 
         JLabel usernameTitle = new JLabel("Your Username:");

@@ -126,6 +126,7 @@ public class PixieCreatePost extends JComponent {
         PixieCreatePost pixieCreatePost = new PixieCreatePost();
         JFrame frame = new JFrame();
         frame.setSize(500, 800);
+        frame.setLocationRelativeTo(null); //goes after setSize
         frame.add(pixieCreatePost.createNewPostPanel);
         frame.setVisible(true);
     }

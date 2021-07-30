@@ -15,7 +15,7 @@ public class PixieSearchUser extends JComponent {
     Frame frame = new Frame();
 
     /** after click the search button, if the username is found, then the main panel should pop up three options**/
-    public void showSearchOptionPage() {
+    private void showSearchOptionPage() {
         subSearchPanel = new JPanel();
         frame.add(subSearchPanel);
         subSearchPanel.setLayout(null);
@@ -34,7 +34,7 @@ public class PixieSearchUser extends JComponent {
         subSearchPanel.setVisible(false);
 
     }
-    public void showViewProfilePage() {
+    private void showViewProfilePage() {
         showProfilePanel = new JPanel(null);
         frame.add(showProfilePanel);
         String userSearched = "userSearch[" + userNameEnteredForSearch.getText() + "]";
@@ -45,7 +45,7 @@ public class PixieSearchUser extends JComponent {
         showProfilePanel.setVisible(false);
     }
 
-    public void showViewPosts() {
+    private void showViewPosts() {
         showPostsPanel = new JPanel(null);
         frame.add(showPostsPanel);
         String userPosts = "getUserPosts["+ userNameEnteredForSearch.getText() + "]";
@@ -56,7 +56,7 @@ public class PixieSearchUser extends JComponent {
         showPostsPanel.setVisible(false);
     }
 
-    public void showViewComments() {
+    private void showViewComments() {
         showCommentsPanel = new JPanel(null);
         frame.add(showCommentsPanel);
         //TODO:

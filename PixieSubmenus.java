@@ -174,7 +174,7 @@ public class PixieSubmenus extends JComponent {
         yourPostsSubmenuPanel.add(yourPostsSubmenuPanelGrid);
     } //todo: create the related page for after the user selects the post of interest
 
-    public void yourCommentsSubmenu() {
+    private void yourCommentsSubmenu() {
         /*
         Create the selection part of "Your Comments" page, where the user selects the comment to edit
          */
@@ -205,7 +205,7 @@ public class PixieSubmenus extends JComponent {
         yourCommentsSubmenuPanel.add(yourCommentsSubmenuPanelGrid);
     }
 
-    public void viewAllPostsSubmenu() {
+    private void viewAllPostsSubmenu() {
         /*
         Create the selection part of "View All Posts" page, where the user selects the post to edit
          */
@@ -236,7 +236,7 @@ public class PixieSubmenus extends JComponent {
         allPostsSubmenuPanel.add(allPostsSubmenuPanelGrid);
     }
 
-    public void searchUserSubmenu() {
+    private void searchUserSubmenu() {
         /*
         Create the search part of the "Search for User" page
          */
