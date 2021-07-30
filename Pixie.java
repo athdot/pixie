@@ -154,12 +154,13 @@ public class Pixie extends JComponent implements Runnable {
                             "Invalid", JOptionPane.ERROR_MESSAGE);
                 } else {
                     activeUsername = signInUsernameField.getText();
+                    String profile = CLIENT.streamReader("getProfile[" + activeUsername + "]");
+                    Account user = StreamParse.stringToAccount(profile);
+                    yourProfileUsernameLabel.setText(activeUsername);
+                    yourProfileBioLabel.setText("<html>" + user.getBio() + "</html>");
                     changeFrame(loginFrame, appFrame);
-                    //sets app frame to be blank other than the main screen
-                    switchPanel(appPanel, activeSubmenuPanel, blankSubmenuPanel, BorderLayout.WEST);
-                    activeSubmenuPanel = blankSubmenuPanel;
-                    switchPanel(appPanelContent, activeContentPanel, blankContentPanel, BorderLayout.CENTER);
-                    activeContentPanel = blankContentPanel;
+                    JOptionPane.showMessageDialog(null, "Welcome back to Pixie!",
+                            "Welcome", JOptionPane.INFORMATION_MESSAGE);
                 }
             }
 
@@ -193,12 +194,13 @@ public class Pixie extends JComponent implements Runnable {
                     JOptionPane.showMessageDialog(null, "New Account Created",
                             "Account Created", JOptionPane.INFORMATION_MESSAGE);
                     activeUsername = createAccountUsernameField.getText();
+                    String profile = CLIENT.streamReader("getProfile[" + activeUsername + "]");
+                    Account user = StreamParse.stringToAccount(profile);
+                    yourProfileUsernameLabel.setText(activeUsername);
+                    yourProfileBioLabel.setText("<html>" + user.getBio() + "</html>");
                     changeFrame(loginFrame, appFrame);
-                    //sets app frame to be blank other than the main screen
-                    switchPanel(appPanel, activeSubmenuPanel, blankSubmenuPanel, BorderLayout.WEST);
-                    activeSubmenuPanel = blankSubmenuPanel;
-                    switchPanel(appPanelContent, activeContentPanel, blankContentPanel, BorderLayout.CENTER);
-                    activeContentPanel = blankContentPanel;
+                    JOptionPane.showMessageDialog(null, "Welcome to Pixie!",
+                            "Welcome", JOptionPane.INFORMATION_MESSAGE);
                 } else {
                     JOptionPane.showMessageDialog(null, "Invalid Username or Password",
                             "Invalid", JOptionPane.ERROR_MESSAGE);

@@ -10,8 +10,7 @@ Steps:
 
 Expected Result: 
 
-The Pixie application main page will be loaded with the main menu on the left side of the screen and all other areas 
-empty.
+The Pixie application main page will be loaded with the main menu on the left side of the screen
 
 Test Status: Failed
 
