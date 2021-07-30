@@ -11,12 +11,13 @@ import java.awt.*;
 
 public class PixieYourProfile extends JComponent {
 
-    public JPanel blankPanel = new JPanel(null);
     //PANELS created for "Your Profile" page
     public JPanel changeBioPanel;
     public JPanel changeUsernamePanel;
     public JPanel changePasswordPanel;
     public JPanel yourProfilePanel;
+
+    public JPanel blankPanel = new JPanel(null);
 
     //CHANGE BIO - components of the change bio page
     public JTextField changeBioField;
@@ -41,10 +42,11 @@ public class PixieYourProfile extends JComponent {
         changeUsernamePage();
         changePasswordPage();
         yourProfilePage();
+
         blankContentPage();
     }
 
-
+    //?
     private void blankContentPage() {
         blankPanel.setBackground(Color.WHITE);
     }
@@ -63,7 +65,7 @@ public class PixieYourProfile extends JComponent {
         changeBioField.setBounds(100, 200, 250, 25);
 
         confirmChangeBioButton = new JButton("Save Bio");
-        confirmChangeBioButton.setBounds(100,250,130,30);
+        confirmChangeBioButton.setBounds(100, 250, 130, 30);
 
         changeBioPanel.add(instructions);
         changeBioPanel.add(changeBioField);
@@ -87,7 +89,7 @@ public class PixieYourProfile extends JComponent {
 
         //create the save changed-username button
         confirmChangeUsernameButton = new JButton("Save Username");
-        confirmChangeUsernameButton.setBounds(100,250,130,30);
+        confirmChangeUsernameButton.setBounds(100, 250, 130, 30);
 
         //add them to the changeUsernamePanel in correct order
         changeUsernamePanel.add(changeUsername);
@@ -102,26 +104,26 @@ public class PixieYourProfile extends JComponent {
     public void changePasswordPage() {
         changePasswordPanel = new JPanel(null);
 
-        //create title for the "change username" page
+        //create title for the "change password" page
         JLabel changePassword = new JLabel("Old password:");
         changePassword.setBounds(100, 50, 300, 25);
 
-        //create the text field for the "change username" page
+        //create the text field for the "change password" page
         oldPasswordField = new JTextField();
         oldPasswordField.setBounds(100, 100, 250, 25);
 
         JLabel newPassword = new JLabel("New password:");
         newPassword.setBounds(100, 150, 300, 25);
 
-        //create the text field for the "change username" page
+        //create the text field for the "change password" page
         newPasswordField = new JTextField();
         newPasswordField.setBounds(100, 200, 250, 25);
 
-        //create the save changed-username button
+        //create the save changed-password button
         confirmChangePasswordButton = new JButton("Save Password");
-        confirmChangePasswordButton.setBounds(100,250,130,30);
+        confirmChangePasswordButton.setBounds(100, 250, 130, 30);
 
-        //add them to the changeUsernamePanel in correct order
+        //add them to the changePassowrdPanel in correct order
         changePasswordPanel.add(changePassword);
         changePasswordPanel.add(oldPasswordField);
         changePasswordPanel.add(newPassword);
@@ -140,21 +142,22 @@ public class PixieYourProfile extends JComponent {
         usernameTitle.setBounds(100, 100, 100, 25);
 
         yourProfileUsernameLabel = new JLabel("your username goes here");
-        yourProfileUsernameLabel.setBounds(200, 100, 200, 25);
+        yourProfileUsernameLabel.setBounds(100, 120, 200, 25);
 
         JLabel biographyTitle = new JLabel("Your Biography:");
         biographyTitle.setBounds(100, 200, 300, 25);
 
         //DEBUGGED: wrapping in html tags will automatically display runoff text on a new line for JLabel
-        JPanel bioContainerPanel = new JPanel(null);
-        bioContainerPanel.setBounds(100, 225, 300, 300);
         yourProfileBioLabel = new JLabel("<html>your bio stuff goes here i think." +
                 "Here's to test what the scroll pane is like??? Here's just more test text." +
                 "Here's more text to test this bit of the label." +
                 "THis label is going to be replaced with the actual bio in Pixie.java</html>");
         yourProfileBioLabel.setBounds(0, 0, 300, 300);
-        bioContainerPanel.add(yourProfileBioLabel);
         yourProfileBioLabel.setVerticalAlignment(JLabel.TOP);
+
+        JPanel bioContainerPanel = new JPanel(null);
+        bioContainerPanel.setBounds(100, 225, 300, 300);
+        bioContainerPanel.add(yourProfileBioLabel);
 
         yourProfilePanel.add(usernameTitle);
         yourProfilePanel.add(yourProfileUsernameLabel);

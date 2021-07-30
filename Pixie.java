@@ -10,7 +10,9 @@ import java.awt.event.*;
  * their external classes. Also listens for all actions across the program.
  *
  * NOTE: DON'T FORGET TO RUN Server.java FIRST
- * https://fsymbols.com/generators/tarty/ -- for large comments
+ *
+ * Large comments -- https://fsymbols.com/generators/tarty/ -- 2nd option down, replace all   character with " "
+ * Don't overuse! Only use this if a section becomes annoying to navigate!
  *
  * @author Group 8
  * @version July 27, 2021
@@ -44,7 +46,7 @@ public class Pixie extends JComponent implements Runnable {
 
     //APP FRAME: panels for "mapping" purposes
     JPanel appPanel; //panel containing all sub-menus and the content that they lead to
-    JPanel appPanelContent;
+    JPanel appPanelContent; //content currently on the right-most panel of the appFrame
 
     //LOGIN FRAME: bring the panels and their components created for the login page from PixieLoginPage class
 
@@ -72,12 +74,15 @@ public class Pixie extends JComponent implements Runnable {
     JPanel yourCommentsSubmenuPanel = pixieSubmenus.yourCommentsSubmenuPanel;
     JPanel allPostsSubmenuPanel = pixieSubmenus.allPostsSubmenuPanel;
     JPanel searchUserSubmenuPanel = pixieSubmenus.searchUserSubmenuPanel;
-    JPanel blankSubmenuPanel = pixieSubmenus.blankPanel;
+    JPanel blankSubmenuPanel = pixieSubmenus.blankPanel; //what is the purpose of this panel?
 
     JButton changeBioButton = pixieSubmenus.changeBioButton;
     JButton changeUsernameButton = pixieSubmenus.changeUsernameButton;
     JButton changePasswordButton = pixieSubmenus.changePasswordButton;
     JButton deleteAccountButton = pixieSubmenus.deleteAccountButton;
+
+    JButton writePostButton = pixieSubmenus.writePostButton;
+    JButton importPostButton = pixieSubmenus.importPostButton;
 
     //YOUR PROFILE: bring panel setups for "Your Profile" page from PixieYourProfile
 
@@ -87,7 +92,7 @@ public class Pixie extends JComponent implements Runnable {
     JPanel changeUsernamePanel = pixieYourProfile.changeUsernamePanel;
     JPanel changePasswordPanel = pixieYourProfile.changePasswordPanel;
     JPanel yourProfilePanel = pixieYourProfile.yourProfilePanel;
-    JPanel blankContentPanel = pixieYourProfile.blankPanel;
+    JPanel blankContentPanel = pixieYourProfile.blankPanel; //what is the purpose of this panel?
 
     JTextField changeBioField = pixieYourProfile.changeBioField;
     JButton confirmChangeBioButton = pixieYourProfile.confirmChangeBioButton;
@@ -121,10 +126,8 @@ public class Pixie extends JComponent implements Runnable {
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            /*
-            LOGIN FRAME FUNCTIONALITY
-            Include all functionality related to the frame loginFrame directly below
-             */
+            //█░░ █▀█ █▀▀ █ █▄░█
+            //█▄▄ █▄█ █▄█ █ █░▀█
 
             //user chooses to navigate to the sign-in page
             if (e.getSource() == signInButton) {
@@ -159,8 +162,16 @@ public class Pixie extends JComponent implements Runnable {
                     yourProfileUsernameLabel.setText(activeUsername);
                     yourProfileBioLabel.setText("<html>" + user.getBio() + "</html>");
                     changeFrame(loginFrame, appFrame);
-                    JOptionPane.showMessageDialog(null, "Welcome back to Pixie!",
-                            "Welcome", JOptionPane.INFORMATION_MESSAGE);
+
+                    JOptionPane.showMessageDialog(null,
+                            String.format("Welcome back, %s!", user.getUsername()), "Welcome",
+                            JOptionPane.INFORMATION_MESSAGE);
+
+                    signInUsernameField.setText("");
+                    signInPasswordField.setText("");
+                    createAccountUsernameField.setText("");
+                    createAccountPasswordField.setText("");
+                    confirmPasswordField.setText("");
                 }
             }
 
@@ -199,18 +210,25 @@ public class Pixie extends JComponent implements Runnable {
                     yourProfileUsernameLabel.setText(activeUsername);
                     yourProfileBioLabel.setText("<html>" + user.getBio() + "</html>");
                     changeFrame(loginFrame, appFrame);
-                    JOptionPane.showMessageDialog(null, "Welcome to Pixie!",
-                            "Welcome", JOptionPane.INFORMATION_MESSAGE);
+
+                    JOptionPane.showMessageDialog(null,
+                            String.format("Welcome, %s!", user.getUsername()), "Welcome",
+                            JOptionPane.INFORMATION_MESSAGE);
+
+                    signInUsernameField.setText("");
+                    signInPasswordField.setText("");
+                    createAccountUsernameField.setText("");
+                    createAccountPasswordField.setText("");
+                    confirmPasswordField.setText("");
+
                 } else {
                     JOptionPane.showMessageDialog(null, "Invalid Username or Password",
                             "Invalid", JOptionPane.ERROR_MESSAGE);
                 }
             }
 
-            /*
-            APP FRAME FUNCTIONALITY
-            Include all functionality related to appFrame directly below
-             */
+            //█▄█ █▀█ █░█ █▀█   █▀█ █▀█ █▀█ █▀▀ █ █░░ █▀▀
+            //░█░ █▄█ █▄█ █▀▄   █▀▀ █▀▄ █▄█ █▀░ █ █▄▄ ██▄
 
             //user clicks main menu button to go to "your profile" page
             if (e.getSource() == yourProfileButton) {
@@ -230,25 +248,27 @@ public class Pixie extends JComponent implements Runnable {
                 activeContentPanel = changeBioPanel;
             }
 
-            if(e.getSource() == confirmChangeBioButton) {
+            if (e.getSource() == confirmChangeBioButton) {
                 String changeBio = "changeBio[" + changeBioField.getText() + "]";
-
                 changeBio = CLIENT.streamReader(changeBio);
 
                 if (changeBio.equalsIgnoreCase("false")) {
                     JOptionPane.showMessageDialog(null, "Something went wrong",
                             "Invalid", JOptionPane.ERROR_MESSAGE);
-                } 
-                changeBioField.setText("");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Biography changed successfully!",
+                            "Biography changed", JOptionPane.INFORMATION_MESSAGE);
+                    changeBioField.setText("");
+                }
             }
             
-            // YOUR PROFILE: CHANGE USERNAME BUTTONS
+            // YOUR PROFILE: CHANGE USERNAME BUTTON -- user wants to go to change username page
             if (e.getSource() == changeUsernameButton) {
                 switchPanel(appPanelContent, activeContentPanel, changeUsernamePanel, BorderLayout.CENTER);
                 activeContentPanel = changeUsernamePanel;
             }
 
-            if(e.getSource() == confirmChangeUsernameButton) {
+            if (e.getSource() == confirmChangeUsernameButton) {
                 String newUsername = "changeUsername[" + changeUsernameField.getText() + "]";
 
                 newUsername = CLIENT.streamReader(newUsername);
@@ -267,7 +287,7 @@ public class Pixie extends JComponent implements Runnable {
                     return;
                 }
 
-                if(newUsername.equalsIgnoreCase("false") || changeUsernameField.getText().equals(activeUsername)) {
+                if (newUsername.equalsIgnoreCase("false") || changeUsernameField.getText().equals(activeUsername)) {
                     JOptionPane.showMessageDialog(null, "Username is taken",
                             "Invalid", JOptionPane.ERROR_MESSAGE);
                 } else {
@@ -278,7 +298,7 @@ public class Pixie extends JComponent implements Runnable {
                 }
             }
             
-            // YOUR PROFILE: CHANGE PASSWORD BUTTONS
+            // YOUR PROFILE: CHANGE PASSWORD BUTTON -- user wants to go to change password page
             if (e.getSource() == changePasswordButton) {
                 switchPanel(appPanelContent, activeContentPanel, changePasswordPanel, BorderLayout.CENTER);
                 activeContentPanel = changePasswordPanel;
@@ -308,6 +328,8 @@ public class Pixie extends JComponent implements Runnable {
                     JOptionPane.showMessageDialog(null, "Old password was incorrect",
                             "Invalid", JOptionPane.ERROR_MESSAGE);
                 } else {
+                    JOptionPane.showMessageDialog(null, "Password changed successfully!",
+                            "Password changed", JOptionPane.ERROR_MESSAGE);
                     oldPasswordField.setText("");
                     newPasswordField.setText("");
                 }
@@ -329,11 +351,26 @@ public class Pixie extends JComponent implements Runnable {
                     changeFrame(appFrame, loginFrame);
                 }
             }
-            
-            // CREATE POSTS: WRITE POST BUTTON
+
+            //█▀▀ █▀█ █▀▀ ▄▀█ ▀█▀ █▀▀   █▀█ █▀█ █▀ ▀█▀
+            //█▄▄ █▀▄ ██▄ █▀█ ░█░ ██▄   █▀▀ █▄█ ▄█ ░█░
+
+            //user clicks main menu button to go to "create post" page
+            if (e.getSource() == createPostButton) {
+                switchPanel(appPanel, activeSubmenuPanel, createPostSubmenuPanel, BorderLayout.WEST);
+                activeSubmenuPanel = createPostSubmenuPanel;
+            }
+
+            //create post: user wants to write a new post
             if (e.getSource() == writePostButton) {
                 switchPanel(appPanelContent, activeContentPanel, createNewPostPanel, BorderLayout.CENTER);
                 activeContentPanel = createNewPostPanel;
+            }
+
+            //create post: user wants to go to import post from CSV page
+            if (e.getSource() == importPostButton) {
+                switchPanel(appPanelContent, activeContentPanel, importFromCSVPanel, BorderLayout.CENTER);
+                activeContentPanel = importFromCSVPanel;
             }
 
             if (e.getSource() == doneEditingPostButton) {
@@ -347,20 +384,10 @@ public class Pixie extends JComponent implements Runnable {
                     JOptionPane.showMessageDialog(null, "Post was unable to be added",
                             "Something went wrong", JOptionPane.INFORMATION_MESSAGE);
                 }
-
             }
 
-            // CREATE POSTS: IMPORT CSV BUTTON
-            if (e.getSource() == importPostButton) {
-                switchPanel(appPanelContent, activeContentPanel, importFromCSVPanel, BorderLayout.CENTER);
-                activeContentPanel = importFromCSVPanel;
-            }
-
-            //user clicks main menu button to go to "create post" page
-            if (e.getSource() == createPostButton) {
-                switchPanel(appPanel, activeSubmenuPanel, createPostSubmenuPanel, BorderLayout.WEST);
-                activeSubmenuPanel = createPostSubmenuPanel;
-            }
+            //█░█ █ █▀▀ █░█░█   █▄█ █▀█ █░█ █▀█   █▀█ █▀█ █▀ ▀█▀ █▀
+            //▀▄▀ █ ██▄ ▀▄▀▄▀   ░█░ █▄█ █▄█ █▀▄   █▀▀ █▄█ ▄█ ░█░ ▄█
 
             //user clicks main menu button to go to "your posts" page
             if (e.getSource() == yourPostsButton) {
@@ -368,11 +395,17 @@ public class Pixie extends JComponent implements Runnable {
                 activeSubmenuPanel = yourPostsSubmenuPanel;
             }
 
+            //█░█ █ █▀▀ █░█░█   █▄█ █▀█ █░█ █▀█   █▀▀ █▀█ █▀▄▀█ █▀▄▀█ █▀▀ █▄░█ ▀█▀ █▀
+            //▀▄▀ █ ██▄ ▀▄▀▄▀   ░█░ █▄█ █▄█ █▀▄   █▄▄ █▄█ █░▀░█ █░▀░█ ██▄ █░▀█ ░█░ ▄█
+
             //user clicks main menu button to go to "your comments" page
             if (e.getSource() == yourCommentsButton) {
                 switchPanel(appPanel, activeSubmenuPanel, yourCommentsSubmenuPanel, BorderLayout.WEST);
                 activeSubmenuPanel = yourCommentsSubmenuPanel;
             }
+
+            //█░█ █ █▀▀ █░█░█   ▄▀█ █░░ █░░   █▀█ █▀█ █▀ ▀█▀ █▀
+            //▀▄▀ █ ██▄ ▀▄▀▄▀   █▀█ █▄▄ █▄▄   █▀▀ █▄█ ▄█ ░█░ ▄█
 
             //user clicks main menu button to go to "view all posts" page
             if (e.getSource() == allPostsButton) {
@@ -380,13 +413,16 @@ public class Pixie extends JComponent implements Runnable {
                 activeSubmenuPanel = allPostsSubmenuPanel;
             }
 
+            //█▀ █▀▀ ▄▀█ █▀█ █▀▀ █░█   █░█ █▀ █▀▀ █▀█
+            //▄█ ██▄ █▀█ █▀▄ █▄▄ █▀█   █▄█ ▄█ ██▄ █▀▄
+
             //user clicks main menu button for search user
             if (e.getSource() == searchUserButton) {
                 switchPanel(appPanel, activeSubmenuPanel, searchUserSubmenuPanel, BorderLayout.WEST);
                 activeSubmenuPanel = searchUserSubmenuPanel;
             }
 
-            //user clicks main menu logout button
+            //LOGOUT -- user clicks main menu logout button
             if (e.getSource() == logoutButton) {
                 //make sure user didn't click by accident
                 int choice = JOptionPane.showConfirmDialog(null,
@@ -450,20 +486,15 @@ public class Pixie extends JComponent implements Runnable {
     public void changeFrame(JFrame oldFrame, JFrame newFrame) {
         oldFrame.dispose();
         newFrame.setVisible(true);
-
-        //todo: reset fields for the appFrame -- that's a lot of fields to clear
-
-        signInUsernameField.setText(""); //don't remember username and password after logging out/deleting account
-        signInPasswordField.setText("");
-        createAccountUsernameField.setText("");
-        createAccountPasswordField.setText("");
-        confirmPasswordField.setText("");
     }
 
     /**
      * idea: let there be 2 JFrames in total. One JFrame is for the login page, another for the app itself.
      * Create the base layout of these frames here (e.g., login page has a side panel containing options to sign in
      * or create a new account.
+     *
+     * JFrames use EXIT_ON_CLOSE: program should end when the user closes a frame. Only one frame will be shown at a
+     * time in this program. Closing a frame means the user wants to quit entirely.
      */
     public void run() {
 
@@ -476,7 +507,7 @@ public class Pixie extends JComponent implements Runnable {
 
         loginFrame = new JFrame("Pixie Login");
         loginFrame.setSize(500, 400);
-        loginFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         loginFrame.addWindowListener(windowAdapter);
         loginFrame.setLocationRelativeTo(null);
 
@@ -517,8 +548,8 @@ public class Pixie extends JComponent implements Runnable {
         */
 
         appFrame = new JFrame("Pixie App");
-        appFrame.setSize(800, 500); //we will probably want the actual app to be larger
-        appFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        appFrame.setSize(810, 500); //we will probably want the actual app to be larger
+        appFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         appFrame.addWindowListener(windowAdapter);
         appFrame.setLocationRelativeTo(null);
 

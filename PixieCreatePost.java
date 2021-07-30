@@ -46,24 +46,24 @@ public class PixieCreatePost extends JComponent {
         createNewPostPanel = new JPanel();
         createNewPostPanel.setLayout(null);
 
-        Font instructionFont = new Font(Font.SANS_SERIF,  Font.PLAIN, 12);
+        Font instructionFont = new Font(Font.SANS_SERIF,  Font.BOLD, 12);
 
         JLabel titleInstruction = new JLabel("Post Title:");
         titleInstruction.setFont(instructionFont);
-        titleInstruction.setBounds(100, 100, 300, 25);
+        titleInstruction.setBounds(100, 50, 300, 25);
 
         createPostTitleField = new JTextField();
-        createPostTitleField.setBounds(100, 150, 250, 25);
+        createPostTitleField.setBounds(100, 100, 250, 25);
 
         JLabel contentInstruction = new JLabel("Post Content:");
         contentInstruction.setFont(instructionFont);
-        contentInstruction.setBounds(100, 200, 300, 25);
+        contentInstruction.setBounds(100, 150, 300, 25);
 
         createPostContentField = new JTextField();
-        createPostContentField.setBounds(100, 250, 250, 25);
+        createPostContentField.setBounds(100, 200, 250, 25);
 
         doneEditingPostButton = new JButton("Create Post");
-        doneEditingPostButton.setBounds(100, 320, 200, 30);
+        doneEditingPostButton.setBounds(100, 250, 130, 30);
 
 //        ImageIcon icon = new ImageIcon("icons8-decrease-font-24.png");
 //        adjustText12Button = new JButton(icon);
@@ -110,7 +110,7 @@ public class PixieCreatePost extends JComponent {
 
         //create the save changed-username button
         importFromCSVButton = new JButton("Confirm");
-        importFromCSVButton.setBounds(100,250,130,30);
+        importFromCSVButton.setBounds(100, 250, 130, 30);
 
         //add them to the changeUsernamePanel in correct order
         importFromCSVPanel.add(importFromCSV);
@@ -126,7 +126,7 @@ public class PixieCreatePost extends JComponent {
         PixieCreatePost pixieCreatePost = new PixieCreatePost();
         JFrame frame = new JFrame();
         frame.setSize(500, 800);
-        frame.add(pixieCreatePost.importFromCSVPanel);
+        frame.add(pixieCreatePost.createNewPostPanel);
         frame.setVisible(true);
     }
 
