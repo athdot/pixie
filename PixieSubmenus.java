@@ -255,5 +255,9 @@ public class PixieSubmenus extends JComponent {
 
         searchUserSubmenuPanel.add(searchUserSubmenuPanelGrid);
     }
+    
+        public String getSearchUserFieldText() {
+        return searchUserField.getText();
+    }
 
 }
