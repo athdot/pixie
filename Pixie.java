@@ -162,6 +162,19 @@ public class Pixie extends JComponent implements Runnable {
     JPanel commentOnPostPanel = pixieViewPost.commentOnPostPanel; //create/edit comment page
     JTextField commentOnPostField = pixieViewPost.commentOnPostField;
     JButton confirmCommentButton = pixieViewPost.confirmCommentButton;
+    
+    /**Search user function: to pop up on the activecontent panel with two buttons that "View Profile" and "View Posts"**/
+    PixieSearchUser ps = new PixieSearchUser();
+    JPanel subSearchPanel = ps.subSearchPanel;
+    JPanel showProfilePanel = ps.showProfilePanel;
+    JPanel showPostsPanel = ps.showPostsPanel;
+
+    JButton viewProfile = ps.viewProfile;
+    JButton viewPosts = ps.viewPosts;
+
+    JTextField userNameEnteredForSearch = ps.userNameEnteredForSearch;
+    JLabel userProfilePrompt = ps.userProfilePrompt;
+    JLabel userPostsPrompt = ps.userPostsPrompt;
 
     //FOR THE ENTIRE PROGRAM: Action listeners for all components that require action listeners
     ActionListener actionListener = new ActionListener() {
@@ -634,7 +647,28 @@ public class Pixie extends JComponent implements Runnable {
                 switchPanel(appPanelContent, activeContentPanel, blankContentPanel, BorderLayout.CENTER);
                 activeContentPanel = blankContentPanel;
             }
+           
+            /**Search user**/
+            //to show "View Profile" and "View Posts" buttons
+            /*if (e.getSource() == searchUserConfirmButton) {
+                switchPanel(appPanel, activeSubmenuPanel, subSearchPanel, BorderLayout.CENTER);
+                activeContentPanel = subSearchPanel;
+                subSearchPanel.setVisible(true);
+            }
+            if (e.getSource() == viewProfile) {
+                //appFrame.remove(subSearchPanel);
+                switchPanel(appPanel, activeSubmenuPanel, showProfilePanel, BorderLayout.CENTER);
+                activeContentPanel = showProfilePanel;
+                String userSearched = "userSearch[" + userNameEnteredForSearch.getText() + "]";
+                if (userSearched == null) {
+                    JOptionPane.showMessageDialog(null, "User not found",
+                            "search user", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    userProfilePrompt = new JLabel(CLIENT.streamReader(userSearched));
+                    System.out.println(CLIENT.streamReader(userSearched));
+                }
 
+            }*/
             //LOGOUT -- user clicks main menu logout button
             if (e.getSource() == logoutButton) {
                 //make sure user didn't click by accident
