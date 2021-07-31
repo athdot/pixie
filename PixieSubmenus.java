@@ -51,7 +51,7 @@ public class PixieSubmenus extends JComponent {
     //"SEARCH USER" submenu components
     public JPanel searchUserSubmenuPanel;
     public JTextField searchUserField;
-    public JButton searchUserButton;
+    public JButton searchUserConfirmButton;
 
     public JButton searchUserViewProfile; //these options appear after searching and finding a user
     public JButton searchUserViewPosts;
@@ -246,12 +246,12 @@ public class PixieSubmenus extends JComponent {
         searchUserInstructionLabel.setForeground(Color.white);
 
         searchUserField = new JTextField(5);
-        searchUserButton = new JButton("Confirm");
+        searchUserConfirmButton = new JButton("Confirm");
 
         searchUserSubmenuPanelGrid.add(searchUserLabel);
         searchUserSubmenuPanelGrid.add(searchUserInstructionLabel);
         searchUserSubmenuPanelGrid.add(searchUserField);
-        searchUserSubmenuPanelGrid.add(searchUserButton);
+        searchUserSubmenuPanelGrid.add(searchUserConfirmButton);
 
         searchUserSubmenuPanel.add(searchUserSubmenuPanelGrid);
     }
