@@ -166,10 +166,9 @@ public class PixieYourProfile extends JComponent {
     public static void main(String[] args) {
         PixieYourProfile pixieYourProfile = new PixieYourProfile();
         JFrame frame = new JFrame();
+        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         frame.setSize(1200, 800);
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.add(pixieYourProfile.yourProfilePanel);
-        frame.add(panel);
+        frame.add(pixieYourProfile.yourProfilePanel);
         frame.setVisible(true);
     }
 }

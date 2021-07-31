@@ -41,6 +41,10 @@ public class Comment {
     public String getAuthor() {
     	return author;
     }
+
+    public String getContent() {
+        return content;
+    }
     
     
     public String toFile() {
@@ -53,7 +57,7 @@ public class Comment {
         String output = "";
         output += " [Author]: " + author + "\n";
         output += " [Timestamp]: " + timestamp.toString() + "\n";
-        output += " [Commented]: " + content + "\n";
+        output += " > " + content + "\n";
         return output;
     }
     

@@ -14,7 +14,8 @@ import java.util.ArrayList;
  * NOTE: DON'T FORGET TO RUN Server.java FIRST
  *
  * Large comments -- https://fsymbols.com/generators/tarty/ -- 2nd option down, replace all   character with " "
- * Don't overuse! Only use this if a section becomes annoying to navigate!
+ * Don't overuse! Only use this if a section becomes annoying to navigate. Additional navigation tips: collapse all
+ * blocks which you're not interested in.
  *
  * @author Group 8
  * @version July 27, 2021
@@ -29,15 +30,15 @@ public class Pixie extends JComponent implements Runnable {
     JPanel activeSubmenuPanel; //the submenus of the main menu options: which one is currently shown?
     JPanel activeContentPanel; //the right-most panel of the app: what's currently on it?
 
-    //store total number of posts/comments that showed up in "your posts", "your comments", and "all posts"
-    int yourPostsNumTotal;
-    int yourCommentsNumTotal;
-    int allPostsNumTotal;
+    //total number of posts that showed up in "your posts", "your comments", and "all posts"
+    //only used for "View Your ..." | editing and creating are not done at the same time for a single user
+    int postsNumTotal;
+    int postsChosenNum;
+    int commentsChosenNum;
 
-    //store chosen numbers for posts/comments -- remember the numbers that appeared
-    int yourPostsChosenNum;
-    int yourCommentsChosenNum;
-    int allPostsChosenNum;
+    //post selected from "view all posts" -- USER CONCURRENCY | only used for "View All Posts" main menu option
+    //REASON: in case post #s may shift when someone else adds a new post
+    Post postChosenFromAllPosts;
 
     //LOGIN FRAME: baseline features -- the login menu
     JFrame loginFrame; //login page frame
@@ -83,8 +84,6 @@ public class Pixie extends JComponent implements Runnable {
 
     JPanel blankSubmenuPanel = pixieSubmenus.blankPanel; //?
 
-    JPanel yourCommentsSubmenuPanel = pixieSubmenus.yourCommentsSubmenuPanel;
-    JPanel allPostsSubmenuPanel = pixieSubmenus.allPostsSubmenuPanel;
     JPanel searchUserSubmenuPanel = pixieSubmenus.searchUserSubmenuPanel;
 
     JPanel yourProfileSubmenuPanel = pixieSubmenus.yourProfileSubmenuPanel;
@@ -100,6 +99,16 @@ public class Pixie extends JComponent implements Runnable {
     JPanel yourPostsSubmenuPanel = pixieSubmenus.yourPostsSubmenuPanel;
     JTextField selectYourPostField = pixieSubmenus.selectYourPostField;
     JButton selectYourPostButton = pixieSubmenus.selectYourPostButton;
+
+    JPanel yourCommentsSubmenuPanel = pixieSubmenus.yourCommentsSubmenuPanel;
+    JTextField selectCommentPostField = pixieSubmenus.selectCommentPostField;
+    JTextField selectCommentField = pixieSubmenus.selectCommentField;
+    JButton selectCommentButton = pixieSubmenus.selectCommentButton;
+
+    JPanel allPostsSubmenuPanel = pixieSubmenus.allPostsSubmenuPanel;
+    JTextField selectPostField = pixieSubmenus.selectPostField;
+    JButton selectPostButton = pixieSubmenus.selectPostButton;
+
 
     /**
      * YOUR PROFILE: bring panel setups for "Your Profile" page from PixieYourProfile
@@ -147,21 +156,36 @@ public class Pixie extends JComponent implements Runnable {
 
     PixieViewPost pixieViewPost = new PixieViewPost();
 
-    JPanel viewPostsOutlinePanel = pixieViewPost.viewPostsOutlinePanel; //parent panel for viewing posts
-    JPanel viewPostsContainerPanel = pixieViewPost.viewPostsContainerPanel; //add the JLabel posts into here
+    //outline panel: content panel--view posts, comments | container panel: add JLabel posts/comments in here
+    JPanel viewPostsCommentsOutlinePanel = pixieViewPost.viewPostsCommentsOutlinePanel;
+    JPanel viewPostsCommentsContainerPanel = pixieViewPost.viewPostsCommentsContainerPanel;
 
-    JPanel viewYourPostOptionsPanel = pixieViewPost.viewYourPostOptionsPanel; //panel appears after selecting post
+    JPanel yourPostOptionsPanel = pixieViewPost.yourPostOptionsPanel; //panel appears after selecting post
     JButton editYourPostButton = pixieViewPost.editYourPostButton; //buttons appear after selecting your post
     JButton commentOnYourPostButton = pixieViewPost.commentOnYourPostButton;
     JButton exportYourPostButton = pixieViewPost.exportYourPostButton;
     JButton deleteYourPostButton = pixieViewPost.deleteYourPostButton;
 
-    JPanel viewAllPostOptionsPanel = pixieViewPost.viewAllPostOptionsPanel; //panel appears after selecting post
-    JButton commentOnAllPostButton = pixieViewPost.commentOnAllPostButton; //appears after selecting a post
+    JPanel allPostOptionsPanel = pixieViewPost.allPostOptionsPanel; //panel appears after selecting post
+    JButton allPostCommentButton = pixieViewPost.allPostCommentButton; //appears after selecting a post
 
     JPanel commentOnPostPanel = pixieViewPost.commentOnPostPanel; //create/edit comment page
     JTextField commentOnPostField = pixieViewPost.commentOnPostField;
     JButton confirmCommentButton = pixieViewPost.confirmCommentButton;
+
+    /**
+     * VIEW YOUR COMMENTS: bring panel setups and components from PixieViewComment
+     */
+
+    PixieViewComment pixieViewComment = new PixieViewComment();
+
+    JPanel yourCommentOptionsPanel = pixieViewComment.yourCommentOptionsPanel;
+    JButton editCommentButton = pixieViewComment.editCommentButton;
+    JButton deleteCommentButton = pixieViewComment.deleteCommentButton;
+
+    JPanel editCommentPanel = pixieViewComment.editCommentPanel;
+    JTextField editCommentField = pixieViewComment.editCommentField;
+    JButton confirmEditCommentButton = pixieViewComment.confirmEditCommentButton;
 
     //FOR THE ENTIRE PROGRAM: Action listeners for all components that require action listeners
     ActionListener actionListener = new ActionListener() {
@@ -281,6 +305,11 @@ public class Pixie extends JComponent implements Runnable {
                 Account user = StreamParse.stringToAccount(profile);
                 yourProfileUsernameLabel.setText(activeUsername);
                 yourProfileBioLabel.setText("<html>" + user.getBio() + "</html>");
+
+                if (user.getBio().equals("")) { //if biography is empty
+                    yourProfileBioLabel.setText("[empty]");
+                }
+
                 switchPanel(appPanelContent, activeContentPanel, yourProfilePanel, BorderLayout.CENTER);
                 activeContentPanel = yourProfilePanel;
             }
@@ -468,7 +497,7 @@ public class Pixie extends JComponent implements Runnable {
                     e.getSource() == yourPostsButton || e.getSource() == yourCommentsButton ||
                     e.getSource() == allPostsButton || e.getSource() == searchUserButton) {
                 //NOTE: keep this statement in-front of all logic that lists out the posts
-                viewPostsContainerPanel.removeAll();
+                viewPostsCommentsContainerPanel.removeAll();
             }
 
             //user clicks main menu button to go to "your posts" page
@@ -476,16 +505,16 @@ public class Pixie extends JComponent implements Runnable {
                 switchPanel(appPanel, activeSubmenuPanel, yourPostsSubmenuPanel, BorderLayout.WEST);
                 activeSubmenuPanel = yourPostsSubmenuPanel;
 
-                switchPanel(appPanelContent, activeContentPanel, viewPostsOutlinePanel, BorderLayout.CENTER);
-                activeContentPanel = viewPostsOutlinePanel;
+                switchPanel(appPanelContent, activeContentPanel, viewPostsCommentsOutlinePanel, BorderLayout.CENTER);
+                activeContentPanel = viewPostsCommentsOutlinePanel;
 
                 String getYourPosts = CLIENT.streamReader("getUserPosts[" + activeUsername + "]");
                 ArrayList<Post> yourPosts = StreamParse.stringToPosts(getYourPosts);
 
-                yourPostsNumTotal = 0;
+                postsNumTotal = 0;
                 for (int i = 0; i < yourPosts.size(); i++) { //start from the back, to get latest posts first
                     Post post = yourPosts.get(i);
-                    String formattedPost =  "<html>" + "[Post #" + ++yourPostsNumTotal + "]: " +
+                    String formattedPost =  "<html>" + "[Post #" + ++postsNumTotal + "]: " +
                             post.toString().replace("\n", "<br/>") + "</html>";
 
                     JLabel postLabel = new JLabel(formattedPost); //each post is displayed within a label
@@ -498,30 +527,30 @@ public class Pixie extends JComponent implements Runnable {
                             JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
                     jsp.setPreferredSize(new Dimension(285, 170));
 
-                    viewPostsContainerPanel.add(jsp);
+                    viewPostsCommentsContainerPanel.add(jsp);
                 }
             }
 
             //user clicks button to select a post number
             if (e.getSource() == selectYourPostButton) {
-                yourPostsChosenNum = 0;
+                postsChosenNum = 0;
                 try {
-                    yourPostsChosenNum = Integer.parseInt(selectYourPostField.getText());
+                    postsChosenNum = Integer.parseInt(selectYourPostField.getText());
                 } catch (Exception exception) {
                     JOptionPane.showMessageDialog(null, "Please provide a valid post number",
                             "Select post", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
-                if (1 <= yourPostsChosenNum && yourPostsChosenNum <= yourPostsNumTotal) {
-                    switchPanel(appPanel, activeSubmenuPanel, viewYourPostOptionsPanel, BorderLayout.WEST);
-                    activeSubmenuPanel = viewYourPostOptionsPanel;
+                if (1 <= postsChosenNum && postsChosenNum <= postsNumTotal) {
+                    switchPanel(appPanel, activeSubmenuPanel, yourPostOptionsPanel, BorderLayout.WEST);
+                    activeSubmenuPanel = yourPostOptionsPanel;
                     selectYourPostField.setText("");
                 } else {
                     JOptionPane.showMessageDialog(null, "Please provide a valid post number",
                             "Select post", JOptionPane.ERROR_MESSAGE);
                     selectYourPostField.setText("");
-                    yourPostsChosenNum = 0;
+                    postsChosenNum = 0;
                 }
             }
 
@@ -532,7 +561,7 @@ public class Pixie extends JComponent implements Runnable {
 
                 String getYourPosts = CLIENT.streamReader("getUserPosts[" + activeUsername + "]");
                 ArrayList<Post> yourPosts = StreamParse.stringToPosts(getYourPosts);
-                Post selectedPost = yourPosts.get(yourPostsChosenNum - 1); //post numbers are 1-based
+                Post selectedPost = yourPosts.get(postsChosenNum - 1); //post numbers are 1-based
 
                 writePostTitleField.setText(selectedPost.getTitle());
                 writePostContentField.setText(selectedPost.getContent());
@@ -556,7 +585,7 @@ public class Pixie extends JComponent implements Runnable {
 
                 String getYourPosts = CLIENT.streamReader("getUserPosts[" + activeUsername + "]");
                 ArrayList<Post> yourPosts = StreamParse.stringToPosts(getYourPosts);
-                Post selectedPost = yourPosts.get(yourPostsChosenNum - 1);
+                Post selectedPost = yourPosts.get(postsChosenNum - 1);
 
                 CLIENT.streamReader("addComment[" + selectedPost.getTitle() +
                         "," + selectedPost.getAuthor() + "," + commentOnPostField.getText() + "]");
@@ -569,7 +598,7 @@ public class Pixie extends JComponent implements Runnable {
             if (e.getSource() == exportYourPostButton) {
                 String getYourPosts = CLIENT.streamReader("getUserPosts[" + activeUsername + "]");
                 ArrayList<Post> yourPosts = StreamParse.stringToPosts(getYourPosts);
-                Post selectedPost = yourPosts.get(yourPostsChosenNum - 1);
+                Post selectedPost = yourPosts.get(postsChosenNum - 1);
 
                 String filename = selectedPost.getAuthor() + " - " + selectedPost.getTitle() + ".csv";
                 ArrayList<String[]> exportFormat = new ArrayList<>();
@@ -593,7 +622,7 @@ public class Pixie extends JComponent implements Runnable {
 
                 String getYourPosts = CLIENT.streamReader("getUserPosts[" + activeUsername + "]");
                 ArrayList<Post> yourPosts = StreamParse.stringToPosts(getYourPosts);
-                Post selectedPost = yourPosts.get(yourPostsChosenNum - 1);
+                Post selectedPost = yourPosts.get(postsChosenNum - 1);
 
                 CLIENT.streamReader("deletePost[" + selectedPost.getTitle() + "," +
                         selectedPost.getAuthor() + "]");
@@ -612,6 +641,149 @@ public class Pixie extends JComponent implements Runnable {
             if (e.getSource() == yourCommentsButton) {
                 switchPanel(appPanel, activeSubmenuPanel, yourCommentsSubmenuPanel, BorderLayout.WEST);
                 activeSubmenuPanel = yourCommentsSubmenuPanel;
+
+                switchPanel(appPanelContent, activeContentPanel, viewPostsCommentsOutlinePanel, BorderLayout.CENTER);
+                activeContentPanel = viewPostsCommentsOutlinePanel;
+
+                String getPostsYouCommented = CLIENT.streamReader("getUserComments[" + activeUsername + "]");
+                ArrayList<Post> postsYouCommented = StreamParse.stringToPosts(getPostsYouCommented);
+
+                postsNumTotal = 0;
+                for (int i = 0; i < postsYouCommented.size(); i++) { //start from the back, to get latest posts first
+                    Post post = postsYouCommented.get(i);
+                    String formattedPost = "<html>" + "[Post #" + ++postsNumTotal + "]: " +
+                            post.toString().replace("\n", "<br/>") + "</html>";
+
+                    JLabel postLabel = new JLabel(formattedPost); //each post is displayed within a label
+                    postLabel.setBorder(BorderFactory.createLineBorder(Color.black, 1));
+                    postLabel.setVerticalAlignment(JLabel.CENTER);
+                    postLabel.revalidate();
+
+                    //hardcoded -- incorporate nested JScrollPane, allowing user to see all of a post
+                    JScrollPane jsp = new JScrollPane(postLabel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                            JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+                    jsp.setPreferredSize(new Dimension(285, 170));
+
+                    viewPostsCommentsContainerPanel.add(jsp);
+                }
+            }
+
+            //user selects a post number and the comment number
+            if (e.getSource() == selectCommentButton) {
+                try {
+                    postsChosenNum = Integer.parseInt(selectCommentPostField.getText());
+                    commentsChosenNum = Integer.parseInt(selectCommentField.getText());
+                } catch (Exception exception) {
+                    JOptionPane.showMessageDialog(null, "Please provide a valid post number",
+                            "Select comment", JOptionPane.ERROR_MESSAGE);
+                    selectCommentPostField.setText("");
+                    selectCommentField.setText("");
+                    return;
+                }
+
+                //make sure the post exists
+                if (1 > postsChosenNum || postsChosenNum > postsNumTotal) {
+                    JOptionPane.showMessageDialog(null, "Please provide a valid post number",
+                            "Select comment", JOptionPane.ERROR_MESSAGE);
+                    selectCommentPostField.setText("");
+                    selectCommentField.setText("");
+                    return;
+                }
+
+                //find how many comments are in the select post by this user
+                String getPostsYouCommented = CLIENT.streamReader("getUserComments[" + activeUsername + "]");
+                ArrayList<Post> postsYouCommented = StreamParse.stringToPosts(getPostsYouCommented);
+                Post selectedPost = postsYouCommented.get(postsChosenNum - 1);
+
+                ArrayList<Integer> validCommentNum = new ArrayList<>();
+                for (int i = 0; i < selectedPost.getComments().size(); i++) {
+                    if (selectedPost.getComments().get(i).getAuthor().equalsIgnoreCase(activeUsername)) {
+                        validCommentNum.add(i + 1); //comment # is 1-based
+                    }
+                }
+
+                //check if the user even has comments on this post
+                if (validCommentNum.size() == 0) {
+                    JOptionPane.showMessageDialog(null, "You have no comments on this post",
+                            "Select comment", JOptionPane.ERROR_MESSAGE);
+                    selectCommentPostField.setText("");
+                    selectCommentField.setText("");
+                    return;
+                }
+
+                //make sure the select comment is the current user's
+                if (validCommentNum.contains(commentsChosenNum)) {
+                    switchPanel(appPanel, activeSubmenuPanel, yourCommentOptionsPanel, BorderLayout.WEST);
+                    activeSubmenuPanel = yourCommentOptionsPanel;
+                    selectCommentPostField.setText("");
+                    selectCommentField.setText("");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Enter a valid comment number",
+                            "Select comment", JOptionPane.ERROR_MESSAGE);
+                    selectCommentPostField.setText("");
+                    selectCommentField.setText("");
+                    return;
+                }
+            }
+
+            //user wants to edit selected comment
+            if (e.getSource() == editCommentButton) {
+                switchPanel(appPanelContent, activeContentPanel, editCommentPanel, BorderLayout.CENTER);
+                activeContentPanel = editCommentPanel;
+
+                String getPostsYouCommented = CLIENT.streamReader("getUserComments[" + activeUsername + "]");
+                ArrayList<Post> postsYouCommented = StreamParse.stringToPosts(getPostsYouCommented);
+                Post selectedPost = postsYouCommented.get(postsChosenNum - 1);
+                Comment selectedComment = selectedPost.getComments().get(commentsChosenNum - 1);
+
+                editCommentField.setText(selectedComment.getContent());
+            }
+
+            //user wants to confirm edit of selected comment
+            if (e.getSource() == confirmEditCommentButton) {
+
+                //get the post details required for editing comment with CLIENT.streamReader()
+                String getPostsYouCommented = CLIENT.streamReader("getUserComments[" + activeUsername + "]");
+                ArrayList<Post> postsYouCommented = StreamParse.stringToPosts(getPostsYouCommented);
+                Post selectedPost = postsYouCommented.get(postsChosenNum - 1);
+
+                String postTitle = selectedPost.getTitle();
+                String postAuthor = selectedPost.getAuthor();
+
+                CLIENT.streamReader("editComment[" + postTitle + "," + postAuthor + "," +
+                        commentsChosenNum + "," + editCommentField.getText() + "]");
+
+                JOptionPane.showMessageDialog(null, "Comment updated successfully!",
+                        "Edit comment", JOptionPane.INFORMATION_MESSAGE);
+                editCommentField.setText("");
+            }
+
+            //user wants to delete the selected comment
+            if (e.getSource() == deleteCommentButton) {
+                //make sure user didn't click by accident
+                int choice = JOptionPane.showConfirmDialog(null,
+                        "Are you sure you want to delete this comment?", "Delete comment?",
+                        JOptionPane.YES_NO_OPTION);
+
+                if (choice == JOptionPane.YES_OPTION) {
+                    //get the post details required by CLIENT.streamReader() for deleting comment
+                    String getPostsYouCommented = CLIENT.streamReader("getUserComments[" + activeUsername + "]");
+                    ArrayList<Post> postsYouCommented = StreamParse.stringToPosts(getPostsYouCommented);
+                    Post selectedPost = postsYouCommented.get(postsChosenNum - 1);
+
+                    String postTitle = selectedPost.getTitle();
+                    String postAuthor = selectedPost.getAuthor();
+
+                    //todo: THIS CRASHES THE APP -- CHARLES HELP
+                    CLIENT.streamReader("deleteComment[" + postTitle + "," + postAuthor + "," +
+                            (commentsChosenNum - 1) + "]"); //comment # is 1-based
+
+                    JOptionPane.showMessageDialog(null, "Comment deleted successfully!",
+                            "Delete comment", JOptionPane.INFORMATION_MESSAGE);
+
+                    //comment has been deleted. Return user to "view your comments" initial screen
+                    yourCommentsButton.doClick();
+                }
             }
 
             //█░█ █ █▀▀ █░█░█   ▄▀█ █░░ █░░   █▀█ █▀█ █▀ ▀█▀ █▀
@@ -621,6 +793,35 @@ public class Pixie extends JComponent implements Runnable {
             if (e.getSource() == allPostsButton) {
                 switchPanel(appPanel, activeSubmenuPanel, allPostsSubmenuPanel, BorderLayout.WEST);
                 activeSubmenuPanel = allPostsSubmenuPanel;
+
+                switchPanel(appPanelContent, activeContentPanel, viewPostsCommentsOutlinePanel, BorderLayout.CENTER);
+                activeContentPanel = viewPostsCommentsOutlinePanel;
+
+                String getAllPosts = CLIENT.streamReader("getAllPosts");
+                ArrayList<Post> allPosts = StreamParse.stringToPosts(getAllPosts);
+
+                postsNumTotal = 0;
+                for (int i = 0; i < allPosts.size(); i++) { //start from the back, to get latest posts first
+                    Post post = allPosts.get(i);
+                    String formattedPost =  "<html>" + "[Post #" + ++postsNumTotal + "]: " +
+                            post.toString().replace("\n", "<br/>") + "</html>";
+
+                    JLabel postLabel = new JLabel(formattedPost); //each post is displayed within a label
+                    postLabel.setBorder(BorderFactory.createLineBorder(Color.black, 1));
+                    postLabel.setVerticalAlignment(JLabel.CENTER);
+                    postLabel.revalidate();
+
+                    //hardcoded -- incorporate nested JScrollPane, allowing user to see all of a post
+                    JScrollPane jsp = new JScrollPane(postLabel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                            JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+                    jsp.setPreferredSize(new Dimension(285, 170));
+
+                    viewPostsCommentsContainerPanel.add(jsp);
+                }
+            }
+
+            if (e.getSource() == selectPostButton) {
+
             }
 
             //█▀ █▀▀ ▄▀█ █▀█ █▀▀ █░█   █░█ █▀ █▀▀ █▀█
@@ -761,7 +962,7 @@ public class Pixie extends JComponent implements Runnable {
         */
 
         appFrame = new JFrame("Pixie App");
-        appFrame.setSize(810, 500); //we will probably want the actual app to be larger
+        appFrame.setSize(815, 500); //we will probably want the actual app to be larger
         appFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         appFrame.addWindowListener(windowAdapter);
         appFrame.setLocationRelativeTo(null);
@@ -815,8 +1016,6 @@ public class Pixie extends JComponent implements Runnable {
         appPanel.add(appPanelContent);
         appFrame.add(appPanel);
 
-//        appFrame.setVisible(true); //for testing app layout, bypass sign in phase
-
         /*
         All JComponents that need action listeners (e.g., buttons) need to have action listeners instantiated within
         this class. This includes components from other classes that helped create panels for the JFrames. Add their
@@ -835,8 +1034,6 @@ public class Pixie extends JComponent implements Runnable {
         //APP FRAME
 
         //user can navigate to 6 different pages using the main menu (similar to Application.java from PJ04)
-        yourCommentsButton.addActionListener(actionListener);
-        allPostsButton.addActionListener(actionListener);
         searchUserButton.addActionListener(actionListener);
         logoutButton.addActionListener(actionListener);
 
@@ -865,6 +1062,16 @@ public class Pixie extends JComponent implements Runnable {
         confirmCommentButton.addActionListener(actionListener);
         exportYourPostButton.addActionListener(actionListener);
         deleteYourPostButton.addActionListener(actionListener);
+
+        //YOUR COMMENTS
+        yourCommentsButton.addActionListener(actionListener);
+        selectCommentButton.addActionListener(actionListener);
+        editCommentButton.addActionListener(actionListener);
+        confirmEditCommentButton.addActionListener(actionListener);
+        deleteCommentButton.addActionListener(actionListener);
+
+        //ALL POSTS
+        allPostsButton.addActionListener(actionListener);
     }
 
     public static void main(String[] args) {

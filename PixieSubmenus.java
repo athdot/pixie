@@ -37,11 +37,9 @@ public class PixieSubmenus extends JComponent {
 
     //"VIEW YOUR COMMENTS" submenu components
     public JPanel yourCommentsSubmenuPanel;
-    public JTextField selectYourCommentField;
-    public JButton selectYourCommentButton;
-
-    public JButton editYourCommentContentButton; //these buttons appear after selecting a comment
-    public JButton deleteYourCommentButton;
+    public JTextField selectCommentPostField; //post number of interest
+    public JTextField selectCommentField; //comment number on that post
+    public JButton selectCommentButton;
 
     //"VIEW ALL POSTS" submenu components
     public JPanel allPostsSubmenuPanel;
@@ -74,11 +72,11 @@ public class PixieSubmenus extends JComponent {
         blankPanel.setBackground(subMenuColor);
     }
 
+    /**
+     * Create the "Your Profile" submenu that will appear when the user clicks the "Your Profile" button that's on the
+     * main menu. This panel will be a panel that appears on the side, listing out options on the "Your Profile" page.
+     */
     private void yourProfileSubmenu() {
-        /*
-        Create the "Your Profile" submenu that will appear when the user clicks the "Your Profile" button that's on the
-        main menu. This panel will be a panel that appears on the side, listing out options on the "Your Profile" page.
-         */
         yourProfileSubmenuPanel = new JPanel();
         yourProfileSubmenuPanel.setLayout(new FlowLayout(FlowLayout.TRAILING, 4, 4));
         yourProfileSubmenuPanel.setBackground(subMenuColor);
@@ -87,14 +85,14 @@ public class PixieSubmenus extends JComponent {
         yourProfileSubmenuPanelGrid.setLayout(new GridLayout(5, 1, 5, 5));
         yourProfileSubmenuPanelGrid.setBackground(subMenuColor);
 
+        JLabel yourProfileLabel = new JLabel("Your Profile");
+        yourProfileLabel.setHorizontalAlignment(JLabel.CENTER);
+        yourProfileLabel.setForeground(Color.white);
+
         changeBioButton = new JButton("Change Biography");
         changeUsernameButton = new JButton("Change Username");
         changePasswordButton = new JButton("Change Password");
         deleteAccountButton = new JButton("Delete Account");
-
-        JLabel yourProfileLabel = new JLabel("Your Profile");
-        yourProfileLabel.setHorizontalAlignment(JLabel.CENTER);
-        yourProfileLabel.setForeground(Color.white);
 
         yourProfileSubmenuPanelGrid.add(yourProfileLabel);
         yourProfileSubmenuPanelGrid.add(changeBioButton);
@@ -105,11 +103,11 @@ public class PixieSubmenus extends JComponent {
         yourProfileSubmenuPanel.add(yourProfileSubmenuPanelGrid);
     }
 
+    /**
+     * Create the "Create Post" submenu that will appear when the user clicks the "Create Post" button that's on the
+     * main menu. Appears when user selects "Create Post" option
+     */
     private void createPostSubmenu() {
-        /*
-        Create the "Create Post" submenu that will appear when the user clicks the "Create Post" button that's on the
-        main menu. Appears when user selects "Create Post" option
-         */
         createPostSubmenuPanel = new JPanel();
         createPostSubmenuPanel.setLayout(new FlowLayout(FlowLayout.TRAILING, 4, 4));
         createPostSubmenuPanel.setBackground(subMenuColor);
@@ -118,12 +116,12 @@ public class PixieSubmenus extends JComponent {
         createPostSubmenuPanelGrid.setLayout(new GridLayout(3, 1, 5, 5));
         createPostSubmenuPanelGrid.setBackground(subMenuColor);
 
-        writePostButton = new JButton("Write New Post");
-        importPostButton = new JButton("Import CSV Post");
-
         JLabel createPostLabel = new JLabel("Create Post");
         createPostLabel.setHorizontalAlignment(JLabel.CENTER);
         createPostLabel.setForeground(Color.white);
+
+        writePostButton = new JButton("Write New Post");
+        importPostButton = new JButton("Import CSV Post");
 
         createPostSubmenuPanelGrid.add(createPostLabel);
         createPostSubmenuPanelGrid.add(writePostButton);
@@ -132,10 +130,10 @@ public class PixieSubmenus extends JComponent {
         createPostSubmenuPanel.add(createPostSubmenuPanelGrid);
     }
 
+    /**
+     * Create the selection part of "Your Posts" page, where the user selects the post to edit
+     */
     private void yourPostsSubmenu() {
-        /*
-        Create the selection part of "Your Posts" page, where the user selects the post to edit
-         */
         yourPostsSubmenuPanel = new JPanel();
         yourPostsSubmenuPanel.setLayout(new FlowLayout(FlowLayout.TRAILING, 4, 4));
         yourPostsSubmenuPanel.setBackground(subMenuColor);
@@ -144,11 +142,11 @@ public class PixieSubmenus extends JComponent {
         yourPostsSubmenuPanelGrid.setLayout(new GridLayout(4, 1, 5, 5));
         yourPostsSubmenuPanelGrid.setBackground(subMenuColor);
 
-        JLabel yourPostsLabel = new JLabel("View Your Posts");
+        JLabel yourPostsLabel = new JLabel("Your Posts");
         yourPostsLabel.setHorizontalAlignment(JLabel.CENTER);
         yourPostsLabel.setForeground(Color.white);
 
-        JLabel selectPostLabel = new JLabel("Select Post Number:");
+        JLabel selectPostLabel = new JLabel("Select Post #:");
         selectPostLabel.setHorizontalAlignment(JLabel.CENTER);
         selectPostLabel.setForeground(Color.white);
 
@@ -161,43 +159,53 @@ public class PixieSubmenus extends JComponent {
         yourPostsSubmenuPanelGrid.add(selectYourPostButton);
 
         yourPostsSubmenuPanel.add(yourPostsSubmenuPanelGrid);
-    } //todo: create the related page for after the user selects the post of interest
+    }
 
+    /**
+     * Create the selection part of "Your Comments" page, where the user selects the comment to edit
+     */
     private void yourCommentsSubmenu() {
-        /*
-        Create the selection part of "Your Comments" page, where the user selects the comment to edit
-         */
         yourCommentsSubmenuPanel = new JPanel();
         yourCommentsSubmenuPanel.setLayout(new FlowLayout(FlowLayout.TRAILING, 4, 4));
         yourCommentsSubmenuPanel.setBackground(subMenuColor);
 
         JPanel yourCommentsSubmenuPanelGrid = new JPanel();
-        yourCommentsSubmenuPanelGrid.setLayout(new GridLayout(4, 1, 5, 5));
+        yourCommentsSubmenuPanelGrid.setLayout(new GridLayout(6, 1, 5, 5));
         yourCommentsSubmenuPanelGrid.setBackground(subMenuColor);
 
+        //title of the submenu panel
         JLabel yourCommentsLabel = new JLabel("Your Comments");
         yourCommentsLabel.setHorizontalAlignment(JLabel.CENTER);
         yourCommentsLabel.setForeground(Color.white);
 
-        JLabel selectCommentLabel = new JLabel("Select Comment Number:");
+        //select post part
+        JLabel selectPostLabel = new JLabel("Select Post #:");
+        selectPostLabel.setHorizontalAlignment(JLabel.CENTER);
+        selectPostLabel.setForeground(Color.white);
+        selectCommentPostField = new JTextField(5);
+
+        //select comment part
+        JLabel selectCommentLabel = new JLabel("Select Comment #:");
         selectCommentLabel.setHorizontalAlignment(JLabel.CENTER);
         selectCommentLabel.setForeground(Color.white);
+        selectCommentField = new JTextField(5);
 
-        selectYourCommentField = new JTextField(5);
-        selectYourCommentButton = new JButton("Confirm");
+        selectCommentButton = new JButton("Confirm");
 
-        yourCommentsSubmenuPanelGrid.add(yourCommentsLabel);
+        yourCommentsSubmenuPanelGrid.add(yourCommentsLabel); //panel title
+        yourCommentsSubmenuPanelGrid.add(selectPostLabel); //instruction and fields
+        yourCommentsSubmenuPanelGrid.add(selectCommentPostField);
         yourCommentsSubmenuPanelGrid.add(selectCommentLabel);
-        yourCommentsSubmenuPanelGrid.add(selectYourCommentField);
-        yourCommentsSubmenuPanelGrid.add(selectYourCommentButton);
+        yourCommentsSubmenuPanelGrid.add(selectCommentField);
+        yourCommentsSubmenuPanelGrid.add(selectCommentButton); //select comment button
 
         yourCommentsSubmenuPanel.add(yourCommentsSubmenuPanelGrid);
     }
 
+    /**
+     * Create the selection part of "View All Posts" page, where the user selects the post to edit
+     */
     private void viewAllPostsSubmenu() {
-        /*
-        Create the selection part of "View All Posts" page, where the user selects the post to edit
-         */
         allPostsSubmenuPanel = new JPanel();
         allPostsSubmenuPanel.setLayout(new FlowLayout(FlowLayout.TRAILING, 4, 4));
         allPostsSubmenuPanel.setBackground(subMenuColor);
@@ -206,11 +214,11 @@ public class PixieSubmenus extends JComponent {
         allPostsSubmenuPanelGrid.setLayout(new GridLayout(4, 1, 5, 5));
         allPostsSubmenuPanelGrid.setBackground(subMenuColor);
 
-        JLabel allPostsLabel = new JLabel("View All Posts");
+        JLabel allPostsLabel = new JLabel("All Posts");
         allPostsLabel.setHorizontalAlignment(JLabel.CENTER);
         allPostsLabel.setForeground(Color.white);
 
-        JLabel selectPostLabel = new JLabel("Select Post Number:");
+        JLabel selectPostLabel = new JLabel("Select Post #:");
         selectPostLabel.setHorizontalAlignment(JLabel.CENTER);
         selectPostLabel.setForeground(Color.white);
 
@@ -225,10 +233,10 @@ public class PixieSubmenus extends JComponent {
         allPostsSubmenuPanel.add(allPostsSubmenuPanelGrid);
     }
 
+    /**
+     * Create the search part of the "Search for User" page
+     */
     private void searchUserSubmenu() {
-        /*
-        Create the search part of the "Search for User" page
-         */
         searchUserSubmenuPanel = new JPanel();
         searchUserSubmenuPanel.setLayout(new FlowLayout(FlowLayout.TRAILING, 4, 4));
         searchUserSubmenuPanel.setBackground(subMenuColor);
@@ -237,11 +245,11 @@ public class PixieSubmenus extends JComponent {
         searchUserSubmenuPanelGrid.setLayout(new GridLayout(5, 1, 5, 5));
         searchUserSubmenuPanelGrid.setBackground(subMenuColor);
 
-        JLabel searchUserLabel = new JLabel("Search For User");
+        JLabel searchUserLabel = new JLabel("Search User");
         searchUserLabel.setHorizontalAlignment(JLabel.CENTER);
         searchUserLabel.setForeground(Color.white);
 
-        JLabel searchUserInstructionLabel = new JLabel("Provide Account Username:");
+        JLabel searchUserInstructionLabel = new JLabel("Provide Username:");
         searchUserInstructionLabel.setHorizontalAlignment(JLabel.CENTER);
         searchUserInstructionLabel.setForeground(Color.white);
 
@@ -256,7 +264,7 @@ public class PixieSubmenus extends JComponent {
         searchUserSubmenuPanel.add(searchUserSubmenuPanelGrid);
     }
     
-        public String getSearchUserFieldText() {
+    public String getSearchUserFieldText() {
         return searchUserField.getText();
     }
 

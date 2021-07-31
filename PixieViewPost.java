@@ -4,6 +4,9 @@ import java.awt.*;
 /**
  * carries all panel setups related to viewing posts: "View Your Posts" and "View All Posts".
  * Includes the panels that will replace the submenu panel when user enters a given post number
+ *
+ * @author Group 8
+ * @version July 31, 2021
  */
 
 public class PixieViewPost extends JComponent {
@@ -11,19 +14,19 @@ public class PixieViewPost extends JComponent {
     Color subMenuColor = new Color(114, 90, 122, 255);
 
     //layout for displaying posts in "View Your Post" and "View All Posts" -- posts will be added in Pixie.java
-    public JPanel viewPostsOutlinePanel;
-    public JPanel viewPostsContainerPanel; //panel inside of viewPostOutlinePanel to contain JLabels for posts
+    public JPanel viewPostsCommentsOutlinePanel;
+    public JPanel viewPostsCommentsContainerPanel; //panel inside of viewPostOutlinePanel to contain JLabels for posts
 
     //layout for after the user selects a post from "view your post"
-    public JPanel viewYourPostOptionsPanel;
+    public JPanel yourPostOptionsPanel;
     public JButton editYourPostButton; //these buttons appear after selecting your post
     public JButton commentOnYourPostButton;
     public JButton exportYourPostButton;
     public JButton deleteYourPostButton;
 
     //layout for after the user selects a post from "view all posts"
-    public JPanel viewAllPostOptionsPanel;
-    public JButton commentOnAllPostButton; //this button appears after selecting a post
+    public JPanel allPostOptionsPanel;
+    public JButton allPostCommentButton; //this button appears after selecting a post
 
     //layout for page where user can comment on selected post
     public JPanel commentOnPostPanel;
@@ -31,45 +34,46 @@ public class PixieViewPost extends JComponent {
     public JButton confirmCommentButton;
 
     public PixieViewPost() {
-        viewPostPanel();
-        viewYourPostOptionsPanel();
-        viewAllPostOptionsPanel();
+        viewPostsCommentsPanel();
+        yourPostOptionsPanel();
+        allPostOptionsPanel();
         commentOnPostPanel();
     }
 
     /**
      * a post panel that can be used for both "view all posts" and "view your post" page. Logic to add the posts
      * will be done in Pixie.java because this class doesn't know how many posts there are at a given time.
+     * NEW: used for listing out "your posts", posts with your comments ("your comments"), and "all posts".
      */
-    private void viewPostPanel() {
-        //idea: posts are added in a grid-fashion, from top to bottom, within viewPostsContainerPanel
+    private void viewPostsCommentsPanel() {
+        //idea: posts are added in a grid-fashion, from top to bottom, within viewPostsCommentsContainerPanel
         JPanel boundingBox = new JPanel(new BorderLayout());
 
         JScrollPane jsp = new JScrollPane(boundingBox);
         jsp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         jsp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        jsp.setBounds(100, 100, 315, 250);
+        jsp.setSize(360, 310);
 
         //inside jsp, add another JPanel to constrict JLabel posts that will be added
-        viewPostsContainerPanel = new JPanel(new GridLayout(0, 1));
-        boundingBox.add(viewPostsContainerPanel, BorderLayout.CENTER);
+        viewPostsCommentsContainerPanel = new JPanel(new GridLayout(0, 1));
+        boundingBox.add(viewPostsCommentsContainerPanel, BorderLayout.CENTER);
 
-        //viewPostsOutlinePanel serves as a simple aesthetic empty border, added later to Pixie.java appPanelContent
-        viewPostsOutlinePanel = new JPanel(null);
-        viewPostsOutlinePanel.add(jsp);
+        //viewPostsCommentsOutlinePanel serves as a simple aesthetic empty border, added later to Pixie.java appPanelContent
+        viewPostsCommentsOutlinePanel = new JPanel(new BorderLayout());
+        viewPostsCommentsOutlinePanel.add(jsp, BorderLayout.CENTER);
     }
 
     /**
      * similar to submenu layout. This panel replaces the "view YOUR posts" submenu panel after selecting a post.
      */
-    private void viewYourPostOptionsPanel() {
-        viewYourPostOptionsPanel = new JPanel();
-        viewYourPostOptionsPanel.setLayout(new FlowLayout(FlowLayout.TRAILING, 4, 4));
-        viewYourPostOptionsPanel.setBackground(subMenuColor);
+    private void yourPostOptionsPanel() {
+        yourPostOptionsPanel = new JPanel();
+        yourPostOptionsPanel.setLayout(new FlowLayout(FlowLayout.TRAILING, 4, 4));
+        yourPostOptionsPanel.setBackground(subMenuColor);
 
-        JPanel viewYourPostOptionsPanelGrid = new JPanel();
-        viewYourPostOptionsPanelGrid.setLayout(new GridLayout(5, 1, 5, 5));
-        viewYourPostOptionsPanelGrid.setBackground(subMenuColor);
+        JPanel yourPostOptionsPanelGrid = new JPanel();
+        yourPostOptionsPanelGrid.setLayout(new GridLayout(5, 1, 5, 5));
+        yourPostOptionsPanelGrid.setBackground(subMenuColor);
 
         //these buttons appear after selecting your post
         editYourPostButton = new JButton("Edit Post");
@@ -81,38 +85,38 @@ public class PixieViewPost extends JComponent {
         optionsTitle.setHorizontalAlignment(JLabel.CENTER);
         optionsTitle.setForeground(Color.white);
 
-        viewYourPostOptionsPanelGrid.add(optionsTitle);
-        viewYourPostOptionsPanelGrid.add(editYourPostButton);
-        viewYourPostOptionsPanelGrid.add(commentOnYourPostButton);
-        viewYourPostOptionsPanelGrid.add(exportYourPostButton);
-        viewYourPostOptionsPanelGrid.add(deleteYourPostButton);
+        yourPostOptionsPanelGrid.add(optionsTitle);
+        yourPostOptionsPanelGrid.add(editYourPostButton);
+        yourPostOptionsPanelGrid.add(commentOnYourPostButton);
+        yourPostOptionsPanelGrid.add(exportYourPostButton);
+        yourPostOptionsPanelGrid.add(deleteYourPostButton);
 
-        viewYourPostOptionsPanel.add(viewYourPostOptionsPanelGrid);
+        yourPostOptionsPanel.add(yourPostOptionsPanelGrid);
     }
 
     /**
      * similar to submenu layout. This panel replaces the "view ALL posts" submenu panel when user has selected
      * a given post from the screen displaying all posts
      */
-    private void viewAllPostOptionsPanel() {
-        viewAllPostOptionsPanel = new JPanel();
-        viewAllPostOptionsPanel.setLayout(new FlowLayout(FlowLayout.TRAILING, 4, 4));
-        viewAllPostOptionsPanel.setBackground(subMenuColor);
+    private void allPostOptionsPanel() {
+        allPostOptionsPanel = new JPanel();
+        allPostOptionsPanel.setLayout(new FlowLayout(FlowLayout.TRAILING, 4, 4));
+        allPostOptionsPanel.setBackground(subMenuColor);
 
-        JPanel viewAllPostOptionsPanelGrid = new JPanel();
-        viewAllPostOptionsPanelGrid.setLayout(new GridLayout(5, 1, 5, 5));
-        viewAllPostOptionsPanelGrid.setBackground(subMenuColor);
+        JPanel allPostOptionsPanelGrid = new JPanel();
+        allPostOptionsPanelGrid.setLayout(new GridLayout(5, 1, 5, 5));
+        allPostOptionsPanelGrid.setBackground(subMenuColor);
 
-        commentOnAllPostButton = new JButton("Create Comment"); //this button appears after selecting a post
+        allPostCommentButton = new JButton("Create Comment"); //this button appears after selecting a post
 
         JLabel optionsTitle = new JLabel("Options");
         optionsTitle.setHorizontalAlignment(JLabel.CENTER);
         optionsTitle.setForeground(Color.white);
 
-        viewAllPostOptionsPanelGrid.add(optionsTitle);
-        viewAllPostOptionsPanelGrid.add(commentOnAllPostButton);
+        allPostOptionsPanelGrid.add(optionsTitle);
+        allPostOptionsPanelGrid.add(allPostCommentButton);
 
-        viewAllPostOptionsPanel.add(viewAllPostOptionsPanelGrid);
+        allPostOptionsPanel.add(allPostOptionsPanelGrid);
     }
 
     /**
@@ -121,15 +125,15 @@ public class PixieViewPost extends JComponent {
     private void commentOnPostPanel() {
         commentOnPostPanel = new JPanel(null);
 
-        //create title for the "change username" page
+        //create title for the "create comment" page
         JLabel commentInstruction = new JLabel("Type your comment:");
         commentInstruction.setBounds(100, 150, 300, 25);
 
-        //create the text field for the "change username" page
+        //create the text field for the "create comment" page
         commentOnPostField = new JTextField();
         commentOnPostField.setBounds(100, 200, 250, 25);
 
-        //create the save changed-username button
+        //create the save created comment button
         confirmCommentButton = new JButton("Confirm");
         confirmCommentButton.setBounds(100, 250, 130, 30);
 
@@ -147,9 +151,10 @@ public class PixieViewPost extends JComponent {
         PixieViewPost pixieViewPost = new PixieViewPost();
 
         JFrame frame = new JFrame();
+        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         frame.setSize(810, 500);
         frame.setLocationRelativeTo(null);
-        frame.add(pixieViewPost.viewPostsOutlinePanel);
+        frame.add(pixieViewPost.viewPostsCommentsOutlinePanel);
         frame.setVisible(true);
 
         for (int i = 0; i < 10; i++) { //pretend there are 10 posts
@@ -171,13 +176,14 @@ public class PixieViewPost extends JComponent {
             currentPostLabel.setBorder(BorderFactory.createLineBorder(Color.black, 1));
             currentPostLabel.setVerticalAlignment(JLabel.CENTER);
 
-            pixieViewPost.viewPostsContainerPanel.add(currentPostLabel);
+            pixieViewPost.viewPostsCommentsContainerPanel.add(currentPostLabel);
         }
 
         JFrame frame2 = new JFrame();
+        frame2.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         frame2.setSize(810, 500);
         frame2.setLocationRelativeTo(null);
-        frame2.add(pixieViewPost.viewYourPostOptionsPanel, BorderLayout.WEST);
+        frame2.add(pixieViewPost.yourPostOptionsPanel, BorderLayout.WEST);
         frame2.setVisible(true);
     }
 

@@ -100,16 +100,17 @@ public class Post {
         output += " [Title]: " + title.replace("123COMMA_REP321", ",") + "\n";
         output += " [Author]: " + author + "\n";
         output += " [Time]: " + timeStamp.toString() + "\n";
-        output += " [Content]: " + content + "\n";
-        
+        output += " > " + content + "\n";
+
+        int commentIndex = 0;
         if (comments.size() > 0) {
         	output += "\n";
-        	output += "[Comments]: \n";
+        	output += "[Comment #" + ++commentIndex + "]:\n";
         	output += comments.get(0).toString();
         }
         
         for (int i = 1; i < comments.size(); i++) {
-        	output += "|\n" + comments.get(i).toString();
+        	output += "\n[Comment #" + ++commentIndex + "]:\n" + comments.get(i).toString();
         }
         return output;
     }
