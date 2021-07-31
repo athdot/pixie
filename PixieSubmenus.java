@@ -144,7 +144,7 @@ public class PixieSubmenus extends JComponent {
         yourPostsSubmenuPanelGrid.setLayout(new GridLayout(4, 1, 5, 5));
         yourPostsSubmenuPanelGrid.setBackground(subMenuColor);
 
-        JLabel yourPostsLabel = new JLabel("Your Posts");
+        JLabel yourPostsLabel = new JLabel("View Your Posts");
         yourPostsLabel.setHorizontalAlignment(JLabel.CENTER);
         yourPostsLabel.setForeground(Color.white);
 

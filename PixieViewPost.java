@@ -23,7 +23,7 @@ public class PixieViewPost extends JComponent {
 
     //layout for after the user selects a post from "view all posts"
     public JPanel viewAllPostOptionsPanel;
-    public JButton commentOnPostButton; //this button appears after selecting a post
+    public JButton commentOnAllPostButton; //this button appears after selecting a post
 
     //layout for page where user can comment on selected post
     public JPanel commentOnPostPanel;
@@ -48,7 +48,7 @@ public class PixieViewPost extends JComponent {
         JScrollPane jsp = new JScrollPane(boundingBox);
         jsp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         jsp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        jsp.setBounds(100, 100, 300, 250);
+        jsp.setBounds(100, 100, 315, 250);
 
         //inside jsp, add another JPanel to constrict JLabel posts that will be added
         viewPostsContainerPanel = new JPanel(new GridLayout(0, 1));
@@ -103,14 +103,14 @@ public class PixieViewPost extends JComponent {
         viewAllPostOptionsPanelGrid.setLayout(new GridLayout(5, 1, 5, 5));
         viewAllPostOptionsPanelGrid.setBackground(subMenuColor);
 
-        commentOnPostButton = new JButton("Create Comment"); //this button appears after selecting a post
+        commentOnAllPostButton = new JButton("Create Comment"); //this button appears after selecting a post
 
         JLabel optionsTitle = new JLabel("Options");
         optionsTitle.setHorizontalAlignment(JLabel.CENTER);
         optionsTitle.setForeground(Color.white);
 
         viewAllPostOptionsPanelGrid.add(optionsTitle);
-        viewAllPostOptionsPanelGrid.add(commentOnPostButton);
+        viewAllPostOptionsPanelGrid.add(commentOnAllPostButton);
 
         viewAllPostOptionsPanel.add(viewAllPostOptionsPanelGrid);
     }
@@ -160,9 +160,11 @@ public class PixieViewPost extends JComponent {
             //the <br/> is for break line. Added only for displaying JLabel. Should not affect actual post
             JLabel currentPostLabel = new JLabel("<html>Here's some text" +
                     "<br/>Hope this works. What if I write a new line???? This goes to the next line" +
-                    " Yes! Finally! It goes to the next line. thank God<br/></html>");
+                    " Yes! Finally! It goes to the next line.--NEW ISSUE: Variable size???<br/></html>");
 
             //DEBUGGED: fluid dimensions can be achieved with setMinimumSize, setMaximumSize, and setPreferredSize
+            //COUGH; -- never mind it doesn't work; ignore this
+            //ended up hardcoding a nested JScrollPane in Pixie.java -- "View Your Posts" page, etc.
             currentPostLabel.setMinimumSize(new Dimension(300, 0));
             currentPostLabel.setPreferredSize(new Dimension(300, 100));
             currentPostLabel.setMaximumSize(new Dimension(300, 500));

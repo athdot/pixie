@@ -12,13 +12,13 @@ import java.awt.*;
 public class PixieCreatePost extends JComponent {
 
     //All panels related to the "Create Post" option
-    public JPanel createNewPostPanel;
+    public JPanel writePostPanel;
     public JPanel importFromCSVPanel;
 
     //"CREATE NEW POST" (NEW!)
-    public JTextField createPostTitleField;
-    public JTextField createPostContentField;
-    public JButton doneEditingPostButton;
+    public JTextField writePostTitleField;
+    public JTextField writePostContentField;
+    public JButton doneWritingPostButton;
 
     //IMPORT FROM CSV OPTION -- components
     public JTextField importFromCSVField;
@@ -43,8 +43,8 @@ public class PixieCreatePost extends JComponent {
      */
     public void createNewPost() {
 
-        createNewPostPanel = new JPanel();
-        createNewPostPanel.setLayout(null);
+        writePostPanel = new JPanel();
+        writePostPanel.setLayout(null);
 
         Font instructionFont = new Font(Font.SANS_SERIF,  Font.BOLD, 12);
 
@@ -52,18 +52,18 @@ public class PixieCreatePost extends JComponent {
         titleInstruction.setFont(instructionFont);
         titleInstruction.setBounds(100, 50, 300, 25);
 
-        createPostTitleField = new JTextField();
-        createPostTitleField.setBounds(100, 100, 250, 25);
+        writePostTitleField = new JTextField();
+        writePostTitleField.setBounds(100, 100, 250, 25);
 
         JLabel contentInstruction = new JLabel("Post Content:");
         contentInstruction.setFont(instructionFont);
         contentInstruction.setBounds(100, 150, 300, 25);
 
-        createPostContentField = new JTextField();
-        createPostContentField.setBounds(100, 200, 250, 25);
+        writePostContentField = new JTextField();
+        writePostContentField.setBounds(100, 200, 250, 25);
 
-        doneEditingPostButton = new JButton("Create Post");
-        doneEditingPostButton.setBounds(100, 250, 130, 30);
+        doneWritingPostButton = new JButton("Confirm");
+        doneWritingPostButton.setBounds(100, 250, 130, 30);
 
 //        ImageIcon icon = new ImageIcon("icons8-decrease-font-24.png");
 //        adjustText12Button = new JButton(icon);
@@ -81,17 +81,17 @@ public class PixieCreatePost extends JComponent {
 //        emojiButton = new JButton(icon4);
 //        emojiButton.setBounds(200,550,100,35);
 //
-//        createNewPostPanel.add(emojiButton);
-//        createNewPostPanel.add(adjustText12Button);
-//        createNewPostPanel.add(adjustText14Button);
-//        createNewPostPanel.add(adjustText16Button);
+//        writePostPanel.add(emojiButton);
+//        writePostPanel.add(adjustText12Button);
+//        writePostPanel.add(adjustText14Button);
+//        writePostPanel.add(adjustText16Button);
 
-        createNewPostPanel.add(titleInstruction);
-        createNewPostPanel.add(createPostTitleField);
+        writePostPanel.add(titleInstruction);
+        writePostPanel.add(writePostTitleField);
 
-        createNewPostPanel.add(contentInstruction);
-        createNewPostPanel.add(createPostContentField);
-        createNewPostPanel.add(doneEditingPostButton);
+        writePostPanel.add(contentInstruction);
+        writePostPanel.add(writePostContentField);
+        writePostPanel.add(doneWritingPostButton);
     }
 
     /**
@@ -127,7 +127,7 @@ public class PixieCreatePost extends JComponent {
         JFrame frame = new JFrame();
         frame.setSize(500, 800);
         frame.setLocationRelativeTo(null); //goes after setSize
-        frame.add(pixieCreatePost.createNewPostPanel);
+        frame.add(pixieCreatePost.writePostPanel);
         frame.setVisible(true);
     }
 

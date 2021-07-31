@@ -97,14 +97,14 @@ public class Post {
     //Display message
     public String toString() {
         String output = "\n";
-        output += "| -- " + title.replace("123COMMA_REP321", ",") + " --\n";
-        output += "| Author: " + author + "\n";
-        output += "| Posted: " + timeStamp.toString() + "\n";
-        output += "| >> " + content + "\n";
+        output += " [Title]: " + title.replace("123COMMA_REP321", ",") + "\n";
+        output += " [Author]: " + author + "\n";
+        output += " [Time]: " + timeStamp.toString() + "\n";
+        output += " [Content]: " + content + "\n";
         
         if (comments.size() > 0) {
-        	output += "|\n";
-        	output += "| Comments: \n";
+        	output += "\n";
+        	output += "[Comments]: \n";
         	output += comments.get(0).toString();
         }
         
