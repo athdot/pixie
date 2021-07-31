@@ -38,7 +38,7 @@ Test Status: Passed
 Steps:
 
 1. Choose the "your profile" button under the main menu.
-2. Choose the "change Username" button under the "your profile" menu.
+2. Choose the "Change Username" button under the "your profile" menu.
 3. Enter a new username and confirm the change.
 
 Expected Result:
@@ -56,10 +56,26 @@ Test Status: Passed
 Steps:
 
 1. Choose the "your profile" button under the main menu.
-2. Choose the "change Password" button under the "your profile" menu.
+2. Choose the "Change Password" button under the "your profile" menu.
 3. Enter the old password and the new password and confirm the change.
 
 Expected Result:
 
-If the old password was entered incorrectly, the user will be given an error JPanel notifying them that the password
-was incorrect. If the old password was correct, the new password will become the user's password
+If the entered old password was incorrect, the user will be given an error JPanel notifying them that the password
+was incorrect. If the old password was correct, the new password will become the user's password and will be stored in
+the system as such. 
+
+Test Status: Passed
+
+###Test 5: Delete Account
+
+Steps:
+
+1. Choose the "your profile" button under the main menu.
+2. Choose the "Delete Account" button under the "your profile" menu.
+3. Confirm the removal of your account by choosing "yes" on the pop-up menu
+
+Expected Result:
+
+The active user will be logged out, and their account will be deleted, removing their
+information from the system.
