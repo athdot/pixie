@@ -36,9 +36,9 @@ public class Pixie extends JComponent implements Runnable {
     int postsChosenNum;
     int commentsChosenNum;
 
-    //post selected from "view all posts" -- USER CONCURRENCY | only used for "View All Posts" main menu option
-    //REASON: in case post #s may shift when someone else adds a new post
-    Post postChosenFromAllPosts;
+    //store a COPY of most recently displayed posts -- USER CONCURRENCY AND REAL-TIME SOLUTION
+    //primarily used for "view all posts" option because post numbers may shift/update during the commenting process
+    ArrayList<Post> postsTemp;
 
     //LOGIN FRAME: baseline features -- the login menu
     JFrame loginFrame; //login page frame
@@ -63,117 +63,138 @@ public class Pixie extends JComponent implements Runnable {
      * LOGIN FRAME: bring the panels and their components created for the login page from PixieLoginPage class
      */
 
-    PixieLoginPage pixieLoginPage = new PixieLoginPage();
+    PixieLoginPage plp = new PixieLoginPage();
 
-    JPanel signInPanel = pixieLoginPage.signInPanel;
-    JTextField signInUsernameField = pixieLoginPage.signInUsernameField;
-    JTextField signInPasswordField = pixieLoginPage.signInPasswordField;
-    JButton signInConfirmButton = pixieLoginPage.signInConfirmButton;
+    JPanel signInPanel = plp.signInPanel;
+    JTextField signInUsernameField = plp.signInUsernameField;
+    JTextField signInPasswordField = plp.signInPasswordField;
+    JButton signInConfirmButton = plp.signInConfirmButton;
 
-    JPanel createAccountPanel = pixieLoginPage.createAccountPanel;
-    JTextField createAccountUsernameField = pixieLoginPage.createAccountUsernameField;
-    JTextField createAccountPasswordField = pixieLoginPage.createAccountPasswordField;
-    JTextField confirmPasswordField = pixieLoginPage.confirmPasswordField;
-    JButton createAccountConfirmButton = pixieLoginPage.createAccountConfirmButton;
+    JPanel createAccountPanel = plp.createAccountPanel;
+    JTextField createAccountUsernameField = plp.createAccountUsernameField;
+    JTextField createAccountPasswordField = plp.createAccountPasswordField;
+    JTextField confirmPasswordField = plp.confirmPasswordField;
+    JButton createAccountConfirmButton = plp.createAccountConfirmButton;
 
     /**
      * MAIN MENU'S SUBMENUS: bring the side-panel "sub-menus" and their components from PixieSubmenus.java
      */
 
-    PixieSubmenus pixieSubmenus = new PixieSubmenus();
+    PixieSubmenus psm = new PixieSubmenus();
 
-    JPanel blankSubmenuPanel = pixieSubmenus.blankPanel; //?
+    JPanel blankSubmenuPanel = psm.blankPanel; //?
 
-    JPanel searchUserSubmenuPanel = pixieSubmenus.searchUserSubmenuPanel;
+    JPanel searchUserSubmenuPanel = psm.searchUserSubmenuPanel;
 
-    JPanel yourProfileSubmenuPanel = pixieSubmenus.yourProfileSubmenuPanel;
-    JButton changeBioButton = pixieSubmenus.changeBioButton;
-    JButton changeUsernameButton = pixieSubmenus.changeUsernameButton;
-    JButton changePasswordButton = pixieSubmenus.changePasswordButton;
-    JButton deleteAccountButton = pixieSubmenus.deleteAccountButton;
+    JPanel yourProfileSubmenuPanel = psm.yourProfileSubmenuPanel;
+    JButton changeBioButton = psm.changeBioButton;
+    JButton changeUsernameButton = psm.changeUsernameButton;
+    JButton changePasswordButton = psm.changePasswordButton;
+    JButton deleteAccountButton = psm.deleteAccountButton;
 
-    JPanel createPostSubmenuPanel = pixieSubmenus.createPostSubmenuPanel;
-    JButton writePostButton = pixieSubmenus.writePostButton;
-    JButton importPostButton = pixieSubmenus.importPostButton;
+    JPanel createPostSubmenuPanel = psm.createPostSubmenuPanel;
+    JButton createNewPostButton = psm.createNewPostButton;
+    JButton importPostButton = psm.importPostButton;
 
-    JPanel yourPostsSubmenuPanel = pixieSubmenus.yourPostsSubmenuPanel;
-    JTextField selectYourPostField = pixieSubmenus.selectYourPostField;
-    JButton selectYourPostButton = pixieSubmenus.selectYourPostButton;
+    JPanel yourPostsSubmenuPanel = psm.yourPostsSubmenuPanel;
+    JTextField selectYourPostField = psm.selectYourPostField;
+    JButton selectYourPostButton = psm.selectYourPostButton;
 
-    JPanel yourCommentsSubmenuPanel = pixieSubmenus.yourCommentsSubmenuPanel;
-    JTextField selectCommentPostField = pixieSubmenus.selectCommentPostField;
-    JTextField selectCommentField = pixieSubmenus.selectCommentField;
-    JButton selectCommentButton = pixieSubmenus.selectCommentButton;
+    JPanel yourCommentsSubmenuPanel = psm.yourCommentsSubmenuPanel;
+    JTextField selectCommentPostField = psm.selectCommentPostField;
+    JTextField selectCommentField = psm.selectCommentField;
+    JButton selectCommentButton = psm.selectCommentButton;
 
-    JPanel allPostsSubmenuPanel = pixieSubmenus.allPostsSubmenuPanel;
-    JTextField selectPostField = pixieSubmenus.selectPostField;
-    JButton selectPostButton = pixieSubmenus.selectPostButton;
+    JPanel allPostsSubmenuPanel = psm.allPostsSubmenuPanel;
+    JTextField selectPostField = psm.selectPostField;
+    JButton selectPostButton = psm.selectPostButton;
 
 
     /**
      * YOUR PROFILE: bring panel setups for "Your Profile" page from PixieYourProfile
      */
 
-    PixieYourProfile pixieYourProfile = new PixieYourProfile();
+    PixieYourProfile pyp = new PixieYourProfile();
 
-    JPanel blankContentPanel = pixieYourProfile.blankPanel; //if you want the menu to be empty
+    JPanel blankContentPanel = pyp.blankPanel; //if you want the menu to be empty
 
-    JPanel changeBioPanel = pixieYourProfile.changeBioPanel; //change bio page
-    JTextField changeBioField = pixieYourProfile.changeBioField;
-    JButton confirmChangeBioButton = pixieYourProfile.confirmChangeBioButton;
+    JPanel changeBioPanel = pyp.changeBioPanel; //change bio page
+    JTextField changeBioField = pyp.changeBioField;
+    JButton confirmChangeBioButton = pyp.confirmChangeBioButton;
 
-    JPanel changeUsernamePanel = pixieYourProfile.changeUsernamePanel; //change username page
-    JTextField changeUsernameField = pixieYourProfile.changeUsernameField;
-    JButton confirmChangeUsernameButton = pixieYourProfile.confirmChangeUsernameButton;
+    JPanel changeUsernamePanel = pyp.changeUsernamePanel; //change username page
+    JTextField changeUsernameField = pyp.changeUsernameField;
+    JButton confirmChangeUsernameButton = pyp.confirmChangeUsernameButton;
 
-    JPanel changePasswordPanel = pixieYourProfile.changePasswordPanel; //change password page
-    JTextField oldPasswordField = pixieYourProfile.oldPasswordField;
-    JTextField newPasswordField = pixieYourProfile.newPasswordField;
-    JButton confirmChangePasswordButton = pixieYourProfile.confirmChangePasswordButton;
+    JPanel changePasswordPanel = pyp.changePasswordPanel; //change password page
+    JTextField oldPasswordField = pyp.oldPasswordField;
+    JTextField newPasswordField = pyp.newPasswordField;
+    JButton confirmChangePasswordButton = pyp.confirmChangePasswordButton;
 
-    JPanel yourProfilePanel = pixieYourProfile.yourProfilePanel; //viewing your profile
-    JLabel yourProfileUsernameLabel = pixieYourProfile.yourProfileUsernameLabel;
-    JLabel yourProfileBioLabel = pixieYourProfile.yourProfileBioLabel;
+    JPanel yourProfilePanel = pyp.yourProfilePanel; //viewing your profile
+    JLabel yourProfileUsernameLabel = pyp.yourProfileUsernameLabel;
+    JLabel yourProfileBioLabel = pyp.yourProfileBioLabel;
 
     /**
      * CREATE POST: bring panel setups for "Create Post" page from PixieCreatePost
      */
 
-    PixieCreatePost pixieCreatePost = new PixieCreatePost();
+    PixieCreatePost pcp = new PixieCreatePost();
     
-    JPanel writePostPanel = pixieCreatePost.writePostPanel; //"write new post" page
-    JTextField writePostTitleField = pixieCreatePost.writePostTitleField;
-    JTextField writePostContentField = pixieCreatePost.writePostContentField;
-    JButton doneWritingPostButton = pixieCreatePost.doneWritingPostButton;
+    JPanel createNewPostPanel = pcp.createNewPostPanel; //"write new post" page
+    JTextField createNewPostTitleField = pcp.createNewPostTitleField;
+    JTextField createNewPostContentField = pcp.createNewPostContentField;
+    JButton doneWritingPostButton = pcp.doneWritingPostButton;
 
-    JPanel importFromCSVPanel = pixieCreatePost.importFromCSVPanel; //"import from CSV" page
-    JTextField importFromCSVField = pixieCreatePost.importFromCSVField;
-    JButton importFromCSVButton = pixieCreatePost.importFromCSVButton;
+    JPanel importFromCSVPanel = pcp.importFromCSVPanel; //"import from CSV" page
+    JTextField importFromCSVField = pcp.importFromCSVField;
+    JButton importFromCSVButton = pcp.importFromCSVButton;
 
     /**
      * VIEW YOUR POST/VIEW ALL POSTS: bring panel setups and components from PixieViewPost
      */
 
-    PixieViewPost pixieViewPost = new PixieViewPost();
+    PixieViewPost pvp = new PixieViewPost();
 
     //outline panel: content panel--view posts, comments | container panel: add JLabel posts/comments in here
-    JPanel viewPostsCommentsOutlinePanel = pixieViewPost.viewPostsCommentsOutlinePanel;
-    JPanel viewPostsCommentsContainerPanel = pixieViewPost.viewPostsCommentsContainerPanel;
+    JPanel viewPostsCommentsOutlinePanel = pvp.viewPostsCommentsOutlinePanel;
+    JPanel viewPostsCommentsContainerPanel = pvp.viewPostsCommentsContainerPanel;
 
-    JPanel yourPostOptionsPanel = pixieViewPost.yourPostOptionsPanel; //panel appears after selecting post
-    JButton editYourPostButton = pixieViewPost.editYourPostButton; //buttons appear after selecting your post
-    JButton commentOnYourPostButton = pixieViewPost.commentOnYourPostButton;
-    JButton exportYourPostButton = pixieViewPost.exportYourPostButton;
-    JButton deleteYourPostButton = pixieViewPost.deleteYourPostButton;
+    JPanel yourPostOptionsPanel = pvp.yourPostOptionsPanel; //panel appears after selecting post
+    JButton editYourPostButton = pvp.editYourPostButton; //buttons appear after selecting your post
+    JButton commentOnYourPostButton = pvp.commentOnYourPostButton;
+    JButton exportYourPostButton = pvp.exportYourPostButton;
+    JButton deleteYourPostButton = pvp.deleteYourPostButton;
 
-    JPanel allPostOptionsPanel = pixieViewPost.allPostOptionsPanel; //panel appears after selecting post
-    JButton allPostCommentButton = pixieViewPost.allPostCommentButton; //appears after selecting a post
+    JPanel allPostsOptionsPanel = pvp.allPostsOptionsPanel; //panel appears after selecting post
+    JButton allPostsCommentButton = pvp.allPostsCommentButton; //appears after selecting a post
 
-    JPanel commentOnPostPanel = pixieViewPost.commentOnPostPanel; //create/edit comment page
-    JTextField commentOnPostField = pixieViewPost.commentOnPostField;
-    JButton confirmCommentButton = pixieViewPost.confirmCommentButton;
-    
-    /**Search user function: to pop up on the activecontent panel with two buttons that "View Profile" and "View Posts"**/
+    JPanel editPostPanel = pvp.editPostPanel;
+    JTextField editPostTitleField = pvp.editPostTitleField;
+    JTextField editPostContentField = pvp.editPostContentField;
+    JButton confirmEditPostButton = pvp.confirmEditPostButton;
+
+    JPanel commentOnPostPanel = pvp.commentOnPostPanel; //create/edit comment page
+    JTextField commentOnPostField = pvp.commentOnPostField;
+    JButton confirmCommentButton = pvp.confirmCommentButton;
+
+    /**
+     * VIEW YOUR COMMENTS: bring panel setups and components from PixieViewComment
+     */
+
+    PixieViewComment pvc = new PixieViewComment();
+
+    JPanel yourCommentOptionsPanel = pvc.yourCommentOptionsPanel;
+    JButton editCommentButton = pvc.editCommentButton;
+    JButton deleteCommentButton = pvc.deleteCommentButton;
+
+    JPanel editCommentPanel = pvc.editCommentPanel;
+    JTextField editCommentField = pvc.editCommentField;
+    JButton confirmEditCommentButton = pvc.confirmEditCommentButton;
+
+    /**
+     * SEARCH USER: to pop up on the active content panel with two buttons that "View Profile" and "View Posts"
+     * **/
     PixieSearchUser ps = new PixieSearchUser();
     JPanel subSearchPanel = ps.subSearchPanel;
     JPanel showProfilePanel = ps.showProfilePanel;
@@ -186,19 +207,6 @@ public class Pixie extends JComponent implements Runnable {
     JLabel userProfilePrompt = ps.userProfilePrompt;
     JLabel userPostsPrompt = ps.userPostsPrompt;
 
-    /**
-     * VIEW YOUR COMMENTS: bring panel setups and components from PixieViewComment
-     */
-
-    PixieViewComment pixieViewComment = new PixieViewComment();
-
-    JPanel yourCommentOptionsPanel = pixieViewComment.yourCommentOptionsPanel;
-    JButton editCommentButton = pixieViewComment.editCommentButton;
-    JButton deleteCommentButton = pixieViewComment.deleteCommentButton;
-
-    JPanel editCommentPanel = pixieViewComment.editCommentPanel;
-    JTextField editCommentField = pixieViewComment.editCommentField;
-    JButton confirmEditCommentButton = pixieViewComment.confirmEditCommentButton;
 
     //FOR THE ENTIRE PROGRAM: Action listeners for all components that require action listeners
     ActionListener actionListener = new ActionListener() {
@@ -442,23 +450,23 @@ public class Pixie extends JComponent implements Runnable {
             }
 
             //create post: user wants to write a new post
-            if (e.getSource() == writePostButton) {
-                switchPanel(appPanelContent, activeContentPanel, writePostPanel, BorderLayout.CENTER);
-                activeContentPanel = writePostPanel;
+            if (e.getSource() == createNewPostButton) {
+                switchPanel(appPanelContent, activeContentPanel, createNewPostPanel, BorderLayout.CENTER);
+                activeContentPanel = createNewPostPanel;
             }
 
             //user is done editing the post and wants to save/create it
             if (e.getSource() == doneWritingPostButton) {
-                String post = "post[" + writePostTitleField.getText() + "," + writePostContentField.getText() + "]";
+                String post = "post[" + createNewPostTitleField.getText() + "," + createNewPostContentField.getText() + "]";
                 String worked = CLIENT.streamReader(post);
 
                 if (worked.equals("true")) {
-                    JOptionPane.showMessageDialog(null, "Post has been created successfully!",
-                            "Post added", JOptionPane.INFORMATION_MESSAGE);
-                    writePostTitleField.setText("");
-                    writePostContentField.setText("");
+                    JOptionPane.showMessageDialog(null, "Post has been written successfully!",
+                            "Post written", JOptionPane.INFORMATION_MESSAGE);
+                    createNewPostTitleField.setText("");
+                    createNewPostContentField.setText("");
                 } else {
-                    JOptionPane.showMessageDialog(null, "Post was unable to be created",
+                    JOptionPane.showMessageDialog(null, "Post was unable to be written",
                             "Something went wrong", JOptionPane.INFORMATION_MESSAGE);
                 }
             }
@@ -509,7 +517,7 @@ public class Pixie extends JComponent implements Runnable {
             if (e.getSource() == yourProfileButton || e.getSource() == createPostButton ||
                     e.getSource() == yourPostsButton || e.getSource() == yourCommentsButton ||
                     e.getSource() == allPostsButton || e.getSource() == searchUserButton) {
-                //NOTE: keep this statement in-front of all logic that lists out the posts
+                //NOTE: keep this statement in-front of all logic that lists out posts
                 viewPostsCommentsContainerPanel.removeAll();
             }
 
@@ -522,26 +530,8 @@ public class Pixie extends JComponent implements Runnable {
                 activeContentPanel = viewPostsCommentsOutlinePanel;
 
                 String getYourPosts = CLIENT.streamReader("getUserPosts[" + activeUsername + "]");
-                ArrayList<Post> yourPosts = StreamParse.stringToPosts(getYourPosts);
-
-                postsNumTotal = 0;
-                for (int i = 0; i < yourPosts.size(); i++) { //start from the back, to get latest posts first
-                    Post post = yourPosts.get(i);
-                    String formattedPost =  "<html>" + "[Post #" + ++postsNumTotal + "]: " +
-                            post.toString().replace("\n", "<br/>") + "</html>";
-
-                    JLabel postLabel = new JLabel(formattedPost); //each post is displayed within a label
-                    postLabel.setBorder(BorderFactory.createLineBorder(Color.black, 1));
-                    postLabel.setVerticalAlignment(JLabel.CENTER);
-                    postLabel.revalidate();
-
-                    //hardcoded -- incorporate nested JScrollPane, allowing user to see all of a post
-                    JScrollPane jsp = new JScrollPane(postLabel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-                            JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-                    jsp.setPreferredSize(new Dimension(285, 170));
-
-                    viewPostsCommentsContainerPanel.add(jsp);
-                }
+                postsTemp = StreamParse.stringToPosts(getYourPosts);
+                displayPosts(postsTemp);
             }
 
             //user clicks button to select a post number
@@ -567,17 +557,44 @@ public class Pixie extends JComponent implements Runnable {
                 }
             }
 
-            //user wants to edit the selected post -- almost same functionality as writing a new post
+            //user wants to edit the selected post
             if (e.getSource() == editYourPostButton) {
-                switchPanel(appPanelContent, activeContentPanel, writePostPanel, BorderLayout.CENTER);
-                activeContentPanel = writePostPanel;
+                switchPanel(appPanelContent, activeContentPanel, editPostPanel, BorderLayout.CENTER);
+                activeContentPanel = editPostPanel;
 
-                String getYourPosts = CLIENT.streamReader("getUserPosts[" + activeUsername + "]");
-                ArrayList<Post> yourPosts = StreamParse.stringToPosts(getYourPosts);
-                Post selectedPost = yourPosts.get(postsChosenNum - 1); //post numbers are 1-based
+                Post selectedPost = postsTemp.get(postsChosenNum - 1); //post numbers are 1-based
+                editPostTitleField.setText(selectedPost.getTitle());
+                editPostContentField.setText(selectedPost.getContent());
+            }
 
-                writePostTitleField.setText(selectedPost.getTitle());
-                writePostContentField.setText(selectedPost.getContent());
+            if (e.getSource() == confirmEditPostButton) {
+
+                if (editPostContentField.getText().length() == 0 || editPostTitleField.getText().length() == 0) {
+                    JOptionPane.showMessageDialog(null, "Title or content is too short!",
+                            "Edit post", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                Post selectedPost = postsTemp.get(postsChosenNum - 1);
+
+                //first check if this edit is valid; try to change the post title
+                String worked = CLIENT.streamReader("editTitle[" + selectedPost.getTitle() + "," +
+                        selectedPost.getAuthor() + "," + editPostTitleField.getText() + "]");
+
+                if (worked.equals("false")) { //edit is not valid
+                    JOptionPane.showMessageDialog(null, "Two of your posts cannot have the" +
+                                    " same name", "Edit post", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                CLIENT.streamReader("editPost[" + selectedPost.getTitle() + "," +
+                        selectedPost.getAuthor() + "," + editPostContentField.getText() + "]");
+
+                JOptionPane.showMessageDialog(null, "Post updated successfully!",
+                        "Edit post", JOptionPane.INFORMATION_MESSAGE);
+
+                editPostTitleField.setText("");
+                editPostContentField.setText("");
             }
 
             //user clicks button to comment on his/her post
@@ -596,22 +613,18 @@ public class Pixie extends JComponent implements Runnable {
                     return;
                 }
 
-                String getYourPosts = CLIENT.streamReader("getUserPosts[" + activeUsername + "]");
-                ArrayList<Post> yourPosts = StreamParse.stringToPosts(getYourPosts);
-                Post selectedPost = yourPosts.get(postsChosenNum - 1);
+                Post selectedPost = postsTemp.get(postsChosenNum - 1); //post numbers are 1-based
 
                 CLIENT.streamReader("addComment[" + selectedPost.getTitle() +
                         "," + selectedPost.getAuthor() + "," + commentOnPostField.getText() + "]");
 
-                JOptionPane.showMessageDialog(null, "Comment added successfully!",
+                JOptionPane.showMessageDialog(null, "Comment written successfully!",
                         "Comment", JOptionPane.INFORMATION_MESSAGE);
                 commentOnPostField.setText("");
             }
 
             if (e.getSource() == exportYourPostButton) {
-                String getYourPosts = CLIENT.streamReader("getUserPosts[" + activeUsername + "]");
-                ArrayList<Post> yourPosts = StreamParse.stringToPosts(getYourPosts);
-                Post selectedPost = yourPosts.get(postsChosenNum - 1);
+                Post selectedPost = postsTemp.get(postsChosenNum - 1); //post numbers are 1-based
 
                 String filename = selectedPost.getAuthor() + " - " + selectedPost.getTitle() + ".csv";
                 ArrayList<String[]> exportFormat = new ArrayList<>();
@@ -633,9 +646,7 @@ public class Pixie extends JComponent implements Runnable {
                     return;
                 }
 
-                String getYourPosts = CLIENT.streamReader("getUserPosts[" + activeUsername + "]");
-                ArrayList<Post> yourPosts = StreamParse.stringToPosts(getYourPosts);
-                Post selectedPost = yourPosts.get(postsChosenNum - 1);
+                Post selectedPost = postsTemp.get(postsChosenNum - 1); //post numbers are 1-based
 
                 CLIENT.streamReader("deletePost[" + selectedPost.getTitle() + "," +
                         selectedPost.getAuthor() + "]");
@@ -659,26 +670,8 @@ public class Pixie extends JComponent implements Runnable {
                 activeContentPanel = viewPostsCommentsOutlinePanel;
 
                 String getPostsYouCommented = CLIENT.streamReader("getUserComments[" + activeUsername + "]");
-                ArrayList<Post> postsYouCommented = StreamParse.stringToPosts(getPostsYouCommented);
-
-                postsNumTotal = 0;
-                for (int i = 0; i < postsYouCommented.size(); i++) { //start from the back, to get latest posts first
-                    Post post = postsYouCommented.get(i);
-                    String formattedPost = "<html>" + "[Post #" + ++postsNumTotal + "]: " +
-                            post.toString().replace("\n", "<br/>") + "</html>";
-
-                    JLabel postLabel = new JLabel(formattedPost); //each post is displayed within a label
-                    postLabel.setBorder(BorderFactory.createLineBorder(Color.black, 1));
-                    postLabel.setVerticalAlignment(JLabel.CENTER);
-                    postLabel.revalidate();
-
-                    //hardcoded -- incorporate nested JScrollPane, allowing user to see all of a post
-                    JScrollPane jsp = new JScrollPane(postLabel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-                            JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-                    jsp.setPreferredSize(new Dimension(285, 170));
-
-                    viewPostsCommentsContainerPanel.add(jsp);
-                }
+                postsTemp = StreamParse.stringToPosts(getPostsYouCommented);
+                displayPosts(postsTemp);
             }
 
             //user selects a post number and the comment number
@@ -694,7 +687,7 @@ public class Pixie extends JComponent implements Runnable {
                     return;
                 }
 
-                //make sure the post exists
+                //make sure the post exists -- selection is not out of bounds
                 if (1 > postsChosenNum || postsChosenNum > postsNumTotal) {
                     JOptionPane.showMessageDialog(null, "Please provide a valid post number",
                             "Select comment", JOptionPane.ERROR_MESSAGE);
@@ -704,9 +697,7 @@ public class Pixie extends JComponent implements Runnable {
                 }
 
                 //find how many comments are in the select post by this user
-                String getPostsYouCommented = CLIENT.streamReader("getUserComments[" + activeUsername + "]");
-                ArrayList<Post> postsYouCommented = StreamParse.stringToPosts(getPostsYouCommented);
-                Post selectedPost = postsYouCommented.get(postsChosenNum - 1);
+                Post selectedPost = postsTemp.get(postsChosenNum - 1); //post numbers are 1-based
 
                 ArrayList<Integer> validCommentNum = new ArrayList<>();
                 for (int i = 0; i < selectedPost.getComments().size(); i++) {
@@ -744,9 +735,7 @@ public class Pixie extends JComponent implements Runnable {
                 switchPanel(appPanelContent, activeContentPanel, editCommentPanel, BorderLayout.CENTER);
                 activeContentPanel = editCommentPanel;
 
-                String getPostsYouCommented = CLIENT.streamReader("getUserComments[" + activeUsername + "]");
-                ArrayList<Post> postsYouCommented = StreamParse.stringToPosts(getPostsYouCommented);
-                Post selectedPost = postsYouCommented.get(postsChosenNum - 1);
+                Post selectedPost = postsTemp.get(postsChosenNum - 1); //post numbers are 1-based
                 Comment selectedComment = selectedPost.getComments().get(commentsChosenNum - 1);
 
                 editCommentField.setText(selectedComment.getContent());
@@ -756,9 +745,7 @@ public class Pixie extends JComponent implements Runnable {
             if (e.getSource() == confirmEditCommentButton) {
 
                 //get the post details required for editing comment with CLIENT.streamReader()
-                String getPostsYouCommented = CLIENT.streamReader("getUserComments[" + activeUsername + "]");
-                ArrayList<Post> postsYouCommented = StreamParse.stringToPosts(getPostsYouCommented);
-                Post selectedPost = postsYouCommented.get(postsChosenNum - 1);
+                Post selectedPost = postsTemp.get(postsChosenNum - 1); //post numbers are 1-based
 
                 String postTitle = selectedPost.getTitle();
                 String postAuthor = selectedPost.getAuthor();
@@ -780,10 +767,7 @@ public class Pixie extends JComponent implements Runnable {
 
                 if (choice == JOptionPane.YES_OPTION) {
                     //get the post details required by CLIENT.streamReader() for deleting comment
-                    String getPostsYouCommented = CLIENT.streamReader("getUserComments[" + activeUsername + "]");
-                    ArrayList<Post> postsYouCommented = StreamParse.stringToPosts(getPostsYouCommented);
-                    Post selectedPost = postsYouCommented.get(postsChosenNum - 1);
-
+                    Post selectedPost = postsTemp.get(postsChosenNum - 1); //post numbers are 1-based
                     String postTitle = selectedPost.getTitle();
                     String postAuthor = selectedPost.getAuthor();
 
@@ -811,30 +795,38 @@ public class Pixie extends JComponent implements Runnable {
                 activeContentPanel = viewPostsCommentsOutlinePanel;
 
                 String getAllPosts = CLIENT.streamReader("getAllPosts");
-                ArrayList<Post> allPosts = StreamParse.stringToPosts(getAllPosts);
-
-                postsNumTotal = 0;
-                for (int i = 0; i < allPosts.size(); i++) { //start from the back, to get latest posts first
-                    Post post = allPosts.get(i);
-                    String formattedPost =  "<html>" + "[Post #" + ++postsNumTotal + "]: " +
-                            post.toString().replace("\n", "<br/>") + "</html>";
-
-                    JLabel postLabel = new JLabel(formattedPost); //each post is displayed within a label
-                    postLabel.setBorder(BorderFactory.createLineBorder(Color.black, 1));
-                    postLabel.setVerticalAlignment(JLabel.CENTER);
-                    postLabel.revalidate();
-
-                    //hardcoded -- incorporate nested JScrollPane, allowing user to see all of a post
-                    JScrollPane jsp = new JScrollPane(postLabel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-                            JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-                    jsp.setPreferredSize(new Dimension(285, 170));
-
-                    viewPostsCommentsContainerPanel.add(jsp);
-                }
+                postsTemp = StreamParse.stringToPosts(getAllPosts);
+                displayPosts(postsTemp);
             }
 
+            //user tries to select a post from "view all posts"
             if (e.getSource() == selectPostButton) {
+                try {
+                    postsChosenNum = Integer.parseInt(selectPostField.getText());
+                } catch (Exception exception) {
+                    JOptionPane.showMessageDialog(null, "Enter a valid post number",
+                            "Select post", JOptionPane.ERROR_MESSAGE);
+                    selectPostField.setText("");
+                    return;
+                }
 
+                //make sure selected number is not out of bounds
+                if (1 > postsChosenNum || postsChosenNum > postsNumTotal) {
+                    JOptionPane.showMessageDialog(null, "Enter a valid post number",
+                            "Select post", JOptionPane.ERROR_MESSAGE);
+                    selectPostField.setText("");
+                    return;
+                }
+
+                switchPanel(appPanel, activeSubmenuPanel, allPostsOptionsPanel, BorderLayout.WEST);
+                activeSubmenuPanel = allPostsOptionsPanel;
+                selectPostField.setText("");
+            }
+
+            //user wants to comment on a post in "all posts" page -- reuse logic from "your posts"
+            if (e.getSource() == allPostsCommentButton) {
+                switchPanel(appPanelContent, activeContentPanel, commentOnPostPanel, BorderLayout.CENTER);
+                activeContentPanel = commentOnPostPanel;
             }
 
             //█▀ █▀▀ ▄▀█ █▀█ █▀▀ █░█   █░█ █▀ █▀▀ █▀█
@@ -870,6 +862,7 @@ public class Pixie extends JComponent implements Runnable {
                 }
 
             }*/
+
             //LOGOUT -- user clicks main menu logout button
             if (e.getSource() == logoutButton) {
                 //make sure user didn't click by accident
@@ -895,6 +888,31 @@ public class Pixie extends JComponent implements Runnable {
             CLIENT.end();
         }
     };
+
+    /**
+     * takes a formatted ArrayList of posts returned originally from CLIENT.streamReader
+     * @param posts - ArrayList of posts
+     */
+    public void displayPosts(ArrayList<Post> posts) {
+        postsNumTotal = 0;
+        for (int i = 0; i < posts.size(); i++) { //start from the back, to get latest posts first
+            Post post = posts.get(i);
+            String formattedPost =  "<html>" + "[Post #" + ++postsNumTotal + "]: " +
+                    post.toString().replace("\n", "<br/>") + "</html>";
+
+            JLabel postLabel = new JLabel(formattedPost); //each post is displayed within a label
+            postLabel.setBorder(BorderFactory.createLineBorder(Color.black, 1));
+            postLabel.setVerticalAlignment(JLabel.CENTER);
+            postLabel.revalidate();
+
+            //hardcoded -- incorporate nested JScrollPane, allowing user to see all of a post
+            JScrollPane jsp = new JScrollPane(postLabel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                    JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            jsp.setPreferredSize(new Dimension(285, 170));
+
+            viewPostsCommentsContainerPanel.add(jsp);
+        }
+    }
 
     /**
      * Call this method when you want to switch from one panel to another on the given frame
@@ -1083,7 +1101,7 @@ public class Pixie extends JComponent implements Runnable {
 
         //CREATE POST buttons for writing/editing and importing a post
         createPostButton.addActionListener(actionListener);
-        writePostButton.addActionListener(actionListener);
+        createNewPostButton.addActionListener(actionListener);
         doneWritingPostButton.addActionListener(actionListener);
         importPostButton.addActionListener(actionListener);
         importFromCSVButton.addActionListener(actionListener);
@@ -1106,6 +1124,10 @@ public class Pixie extends JComponent implements Runnable {
 
         //ALL POSTS
         allPostsButton.addActionListener(actionListener);
+        selectPostButton.addActionListener(actionListener);
+        allPostsCommentButton.addActionListener(actionListener);
+        editYourPostButton.addActionListener(actionListener);
+        confirmEditPostButton.addActionListener(actionListener);
     }
 
     public static void main(String[] args) {

@@ -25,8 +25,14 @@ public class PixieViewPost extends JComponent {
     public JButton deleteYourPostButton;
 
     //layout for after the user selects a post from "view all posts"
-    public JPanel allPostOptionsPanel;
-    public JButton allPostCommentButton; //this button appears after selecting a post
+    public JPanel allPostsOptionsPanel;
+    public JButton allPostsCommentButton; //this button appears after selecting a post
+
+    //layout for "edit post" page -- cannot reuse "create post" panel because editing post algorithm is different
+    public JPanel editPostPanel;
+    public JTextField editPostTitleField;
+    public JTextField editPostContentField;
+    public JButton confirmEditPostButton;
 
     //layout for page where user can comment on selected post
     public JPanel commentOnPostPanel;
@@ -36,7 +42,8 @@ public class PixieViewPost extends JComponent {
     public PixieViewPost() {
         viewPostsCommentsPanel();
         yourPostOptionsPanel();
-        allPostOptionsPanel();
+        allPostsOptionsPanel();
+        editPostPanel();
         commentOnPostPanel();
     }
 
@@ -98,25 +105,60 @@ public class PixieViewPost extends JComponent {
      * similar to submenu layout. This panel replaces the "view ALL posts" submenu panel when user has selected
      * a given post from the screen displaying all posts
      */
-    private void allPostOptionsPanel() {
-        allPostOptionsPanel = new JPanel();
-        allPostOptionsPanel.setLayout(new FlowLayout(FlowLayout.TRAILING, 4, 4));
-        allPostOptionsPanel.setBackground(subMenuColor);
+    private void allPostsOptionsPanel() {
+        allPostsOptionsPanel = new JPanel();
+        allPostsOptionsPanel.setLayout(new FlowLayout(FlowLayout.TRAILING, 4, 4));
+        allPostsOptionsPanel.setBackground(subMenuColor);
 
-        JPanel allPostOptionsPanelGrid = new JPanel();
-        allPostOptionsPanelGrid.setLayout(new GridLayout(5, 1, 5, 5));
-        allPostOptionsPanelGrid.setBackground(subMenuColor);
+        JPanel allPostsOptionsPanelGrid = new JPanel();
+        allPostsOptionsPanelGrid.setLayout(new GridLayout(5, 1, 5, 5));
+        allPostsOptionsPanelGrid.setBackground(subMenuColor);
 
-        allPostCommentButton = new JButton("Create Comment"); //this button appears after selecting a post
+        allPostsCommentButton = new JButton("Create Comment"); //this button appears after selecting a post
 
         JLabel optionsTitle = new JLabel("Options");
         optionsTitle.setHorizontalAlignment(JLabel.CENTER);
         optionsTitle.setForeground(Color.white);
 
-        allPostOptionsPanelGrid.add(optionsTitle);
-        allPostOptionsPanelGrid.add(allPostCommentButton);
+        allPostsOptionsPanelGrid.add(optionsTitle);
+        allPostsOptionsPanelGrid.add(allPostsCommentButton);
 
-        allPostOptionsPanel.add(allPostOptionsPanelGrid);
+        allPostsOptionsPanel.add(allPostsOptionsPanelGrid);
+    }
+
+    /**
+     * layout for editing the post (practically identical to "write new post" page)
+     * Requires a duplicate panel because editing post logic is different than creating post
+     */
+    private void editPostPanel() {
+        editPostPanel = new JPanel();
+        editPostPanel.setLayout(null);
+
+        Font instructionFont = new Font(Font.SANS_SERIF,  Font.BOLD, 12);
+
+        JLabel titleInstruction = new JLabel("Post Title:");
+        titleInstruction.setFont(instructionFont);
+        titleInstruction.setBounds(100, 50, 300, 25);
+
+        editPostTitleField = new JTextField();
+        editPostTitleField.setBounds(100, 100, 250, 25);
+
+        JLabel contentInstruction = new JLabel("Post Content:");
+        contentInstruction.setFont(instructionFont);
+        contentInstruction.setBounds(100, 150, 300, 25);
+
+        editPostContentField = new JTextField();
+        editPostContentField.setBounds(100, 200, 250, 25);
+
+        confirmEditPostButton = new JButton("Finish Editing");
+        confirmEditPostButton.setBounds(100, 250, 130, 30);
+
+        editPostPanel.add(titleInstruction);
+        editPostPanel.add(editPostTitleField);
+
+        editPostPanel.add(contentInstruction);
+        editPostPanel.add(editPostContentField);
+        editPostPanel.add(confirmEditPostButton);
     }
 
     /**

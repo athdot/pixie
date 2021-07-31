@@ -27,7 +27,7 @@ public class PixieSubmenus extends JComponent {
 
     //"CREATE POST SUBMENU" submenu components
     public JPanel createPostSubmenuPanel;
-    public JButton writePostButton;
+    public JButton createNewPostButton;
     public JButton importPostButton;
 
     //"VIEW YOUR POSTS" submenu components
@@ -120,11 +120,11 @@ public class PixieSubmenus extends JComponent {
         createPostLabel.setHorizontalAlignment(JLabel.CENTER);
         createPostLabel.setForeground(Color.white);
 
-        writePostButton = new JButton("Write New Post");
+        createNewPostButton = new JButton("Write New Post");
         importPostButton = new JButton("Import CSV Post");
 
         createPostSubmenuPanelGrid.add(createPostLabel);
-        createPostSubmenuPanelGrid.add(writePostButton);
+        createPostSubmenuPanelGrid.add(createNewPostButton);
         createPostSubmenuPanelGrid.add(importPostButton);
 
         createPostSubmenuPanel.add(createPostSubmenuPanelGrid);

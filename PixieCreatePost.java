@@ -12,12 +12,12 @@ import java.awt.*;
 public class PixieCreatePost extends JComponent {
 
     //All panels related to the "Create Post" option
-    public JPanel writePostPanel;
+    public JPanel createNewPostPanel;
     public JPanel importFromCSVPanel;
 
     //"CREATE NEW POST" (NEW!)
-    public JTextField writePostTitleField;
-    public JTextField writePostContentField;
+    public JTextField createNewPostTitleField;
+    public JTextField createNewPostContentField;
     public JButton doneWritingPostButton;
 
     //IMPORT FROM CSV OPTION -- components
@@ -43,8 +43,8 @@ public class PixieCreatePost extends JComponent {
      */
     public void createNewPost() {
 
-        writePostPanel = new JPanel();
-        writePostPanel.setLayout(null);
+        createNewPostPanel = new JPanel();
+        createNewPostPanel.setLayout(null);
 
         Font instructionFont = new Font(Font.SANS_SERIF,  Font.BOLD, 12);
 
@@ -52,17 +52,17 @@ public class PixieCreatePost extends JComponent {
         titleInstruction.setFont(instructionFont);
         titleInstruction.setBounds(100, 50, 300, 25);
 
-        writePostTitleField = new JTextField();
-        writePostTitleField.setBounds(100, 100, 250, 25);
+        createNewPostTitleField = new JTextField();
+        createNewPostTitleField.setBounds(100, 100, 250, 25);
 
         JLabel contentInstruction = new JLabel("Post Content:");
         contentInstruction.setFont(instructionFont);
         contentInstruction.setBounds(100, 150, 300, 25);
 
-        writePostContentField = new JTextField();
-        writePostContentField.setBounds(100, 200, 250, 25);
+        createNewPostContentField = new JTextField();
+        createNewPostContentField.setBounds(100, 200, 250, 25);
 
-        doneWritingPostButton = new JButton("Confirm");
+        doneWritingPostButton = new JButton("Create Post");
         doneWritingPostButton.setBounds(100, 250, 130, 30);
 
 //        ImageIcon icon = new ImageIcon("icons8-decrease-font-24.png");
@@ -81,17 +81,17 @@ public class PixieCreatePost extends JComponent {
 //        emojiButton = new JButton(icon4);
 //        emojiButton.setBounds(200,550,100,35);
 //
-//        writePostPanel.add(emojiButton);
-//        writePostPanel.add(adjustText12Button);
-//        writePostPanel.add(adjustText14Button);
-//        writePostPanel.add(adjustText16Button);
+//        createNewPostPanel.add(emojiButton);
+//        createNewPostPanel.add(adjustText12Button);
+//        createNewPostPanel.add(adjustText14Button);
+//        createNewPostPanel.add(adjustText16Button);
 
-        writePostPanel.add(titleInstruction);
-        writePostPanel.add(writePostTitleField);
+        createNewPostPanel.add(titleInstruction);
+        createNewPostPanel.add(createNewPostTitleField);
 
-        writePostPanel.add(contentInstruction);
-        writePostPanel.add(writePostContentField);
-        writePostPanel.add(doneWritingPostButton);
+        createNewPostPanel.add(contentInstruction);
+        createNewPostPanel.add(createNewPostContentField);
+        createNewPostPanel.add(doneWritingPostButton);
     }
 
     /**
@@ -128,7 +128,7 @@ public class PixieCreatePost extends JComponent {
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         frame.setSize(500, 800);
         frame.setLocationRelativeTo(null); //goes after setSize
-        frame.add(pixieCreatePost.writePostPanel);
+        frame.add(pixieCreatePost.createNewPostPanel);
         frame.setVisible(true);
     }
 

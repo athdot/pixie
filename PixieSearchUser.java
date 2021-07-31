@@ -16,7 +16,7 @@ public class PixieSearchUser extends JComponent {
     JTextField userNameEnteredForSearch;
     JLabel userProfilePrompt;
     JLabel userPostsPrompt;
-    Frame frame = new Frame();
+//    Frame frame = new Frame();
 
     public PixieSearchUser() {
         showSearchOptionPage();
@@ -27,7 +27,7 @@ public class PixieSearchUser extends JComponent {
     /** after click the search button, if the username is found, then the main panel should pop up three options**/
     public void showSearchOptionPage() {
         subSearchPanel = new JPanel();
-        frame.add(subSearchPanel);
+//        frame.add(subSearchPanel);
         subSearchPanel.setLayout(null);
 
         viewProfile = new JButton("View profile");
@@ -35,18 +35,16 @@ public class PixieSearchUser extends JComponent {
         viewPosts = new JButton("View posts");
         viewPosts.setBounds(180, 150, 150, 25);
 
-
-
         subSearchPanel.add(viewProfile);
         subSearchPanel.add(viewPosts);
 
         subSearchPanel.setVisible(false);
-        frame.setVisible(true);
+//        frame.setVisible(true);
 
     }
     public void showViewProfilePage() {
         showProfilePanel = new JPanel(null);
-        frame.add(showProfilePanel);
+//        frame.add(showProfilePanel);
 
         String userSearched = "userSearch[" + pSubmenus.getSearchUserFieldText() + "]";
         userProfilePrompt = new JLabel(client.streamReader(userSearched));
@@ -54,19 +52,19 @@ public class PixieSearchUser extends JComponent {
         showProfilePanel.add(userProfilePrompt);
         //TODO: add the actionlistener
         showProfilePanel.setVisible(false);
-        frame.setVisible(true);
+//        frame.setVisible(true);
     }
 
     public void showViewPosts() {
         showPostsPanel = new JPanel(null);
-        frame.add(showPostsPanel);
+//        frame.add(showPostsPanel);
         String userPosts = "getUserPosts["+ pSubmenus.getSearchUserFieldText() + "]";
         userPostsPrompt = new JLabel(client.streamReader(userPosts));
         userPostsPrompt.setBounds(80, 150, 200, 30);
         showPostsPanel.add(userPostsPrompt);
         //TODO: add the actionlistener
         showPostsPanel.setVisible(false);
-        frame.setVisible(true);
+//        frame.setVisible(true);
     }
 
 }
