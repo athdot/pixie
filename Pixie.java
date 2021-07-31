@@ -84,8 +84,6 @@ public class Pixie extends JComponent implements Runnable {
 
     JPanel blankSubmenuPanel = psm.blankPanel; //?
 
-    JPanel searchUserSubmenuPanel = psm.searchUserSubmenuPanel;
-
     JPanel yourProfileSubmenuPanel = psm.yourProfileSubmenuPanel;
     JButton changeBioButton = psm.changeBioButton;
     JButton changeUsernameButton = psm.changeUsernameButton;
@@ -109,6 +107,8 @@ public class Pixie extends JComponent implements Runnable {
     JTextField selectPostField = psm.selectPostField;
     JButton selectPostButton = psm.selectPostButton;
 
+    JPanel searchUserSubmenuPanel = psm.searchUserSubmenuPanel;
+    JButton searchUserConfirmButton = psm.searchUserConfirmButton;
 
     /**
      * YOUR PROFILE: bring panel setups for "Your Profile" page from PixieYourProfile
@@ -840,6 +840,11 @@ public class Pixie extends JComponent implements Runnable {
                 switchPanel(appPanelContent, activeContentPanel, blankContentPanel, BorderLayout.CENTER);
                 activeContentPanel = blankContentPanel;
             }
+
+            if (e.getSource() == searchUserConfirmButton) {
+                switchPanel(appPanelContent, activeContentPanel, subSearchPanel, BorderLayout.CENTER);
+                activeContentPanel = subSearchPanel;
+            }
            
             /**Search user**/
             //to show "View Profile" and "View Posts" buttons
@@ -1086,7 +1091,6 @@ public class Pixie extends JComponent implements Runnable {
         //APP FRAME
 
         //user can navigate to 6 different pages using the main menu (similar to Application.java from PJ04)
-        searchUserButton.addActionListener(actionListener);
         logoutButton.addActionListener(actionListener);
 
         //YOUR PROFILE options if user goes to "Your Profile" submenu
@@ -1128,6 +1132,10 @@ public class Pixie extends JComponent implements Runnable {
         allPostsCommentButton.addActionListener(actionListener);
         editYourPostButton.addActionListener(actionListener);
         confirmEditPostButton.addActionListener(actionListener);
+
+        //SEARCH USER
+        searchUserButton.addActionListener(actionListener);
+        searchUserConfirmButton.addActionListener(actionListener);
     }
 
     public static void main(String[] args) {

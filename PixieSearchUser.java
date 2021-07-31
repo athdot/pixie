@@ -38,7 +38,7 @@ public class PixieSearchUser extends JComponent {
         subSearchPanel.add(viewProfile);
         subSearchPanel.add(viewPosts);
 
-        subSearchPanel.setVisible(false);
+//        subSearchPanel.setVisible(false);
 //        frame.setVisible(true);
 
     }
@@ -51,7 +51,7 @@ public class PixieSearchUser extends JComponent {
         userProfilePrompt.setBounds(80, 150, 200, 30);
         showProfilePanel.add(userProfilePrompt);
         //TODO: add the actionlistener
-        showProfilePanel.setVisible(false);
+//        showProfilePanel.setVisible(false);
 //        frame.setVisible(true);
     }
 
@@ -63,8 +63,18 @@ public class PixieSearchUser extends JComponent {
         userPostsPrompt.setBounds(80, 150, 200, 30);
         showPostsPanel.add(userPostsPrompt);
         //TODO: add the actionlistener
-        showPostsPanel.setVisible(false);
+//        showPostsPanel.setVisible(false);
 //        frame.setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        PixieSearchUser psu = new PixieSearchUser();
+        JFrame frame = new JFrame();
+        frame.setLayout(new BorderLayout());
+        frame.setLocationRelativeTo(null);
+        frame.setSize(800, 500);
+        frame.add(psu.subSearchPanel);
+        frame.setVisible(true);
     }
 
 }
