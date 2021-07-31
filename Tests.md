@@ -37,7 +37,7 @@ Test Status: Passed
 
 Steps:
 
-1. Choose the "your profile" button under the main menu.
+1. Choose the "Your Profile" button under the main menu.
 2. Choose the "Change Username" button under the "your profile" menu.
 3. Enter a new username and confirm the change.
 
@@ -55,7 +55,7 @@ Test Status: Passed
 
 Steps:
 
-1. Choose the "your profile" button under the main menu.
+1. Choose the "Your Profile" button under the main menu.
 2. Choose the "Change Password" button under the "your profile" menu.
 3. Enter the old password and the new password and confirm the change.
 
@@ -71,11 +71,94 @@ Test Status: Passed
 
 Steps:
 
-1. Choose the "your profile" button under the main menu.
+1. Choose the "Your Profile" button under the main menu.
 2. Choose the "Delete Account" button under the "your profile" menu.
 3. Confirm the removal of your account by choosing "yes" on the pop-up menu
 
 Expected Result:
 
 The active user will be logged out, and their account will be deleted, removing their
-information from the system.
+information from the system. If they then try to log in with that account, the system should
+not recognize their username as a valid username.
+
+Test Status: Passed
+
+###Test 6: Create New Post
+
+Steps:
+
+1.
+
+Expected Result:
+
+Test Status: Passed
+
+###Test 7: Import Post from CSV File
+
+Steps:
+
+1.
+
+Expected Result:
+
+Test Status: Passed
+
+###Test 8: Comment on a Post
+
+Steps:
+
+1.
+
+Expected Result:
+
+Test Status: Failed
+
+###Test 9: Export Post to CSV File
+
+Steps:
+
+1.
+
+Expected Result:
+
+Test Status: Failed
+
+###Test 10: Delete Post
+
+Steps:
+
+1.
+
+Expected Result:
+
+Test Status: Failed
+
+###Test 11: Edit Post
+
+Steps:
+
+1.
+
+Expected Result:
+
+Test Status: Failed
+
+###Test 12: Search for User
+
+Steps:
+
+1.
+
+Expected Result:
+
+Test Status: Failed
+
+###Test 13: Logout of Account
+
+Steps:
+
+1. 
+
+Expected Result:
+
+Test Status: Failed
