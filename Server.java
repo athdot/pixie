@@ -353,8 +353,6 @@ public class Server implements Runnable {
 				}
 				digit++;
 			} while(!resolved);
-			
-			System.out.println(versionUpdate);
 		}
 	}
 }
