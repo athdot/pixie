@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * within different classes for organization. Pixie.java creates an instance of all these panels to call them from
  * their external classes. Also listens for all actions across the program.
  *
- * NOTE: DON'T FORGET TO RUN Server.java FIRST
+ * NOTE: DON'T FORGET TO RUN Server.java FIRST.
  *
  * Large comments -- https://fsymbols.com/generators/tarty/ -- 2nd option down, replace all   character with " "
  * Don't overuse! Only use this if a section becomes annoying to navigate. Additional navigation tips: collapse all
@@ -210,7 +210,9 @@ public class Pixie extends JComponent implements Runnable {
     JLabel searchUserUsernameLabel = psu.searchUserUsernameLabel;
     JLabel searchUserBioLabel = psu.searchUserBioLabel;
 
-    //FOR THE ENTIRE PROGRAM: Action listeners for all components that require action listeners
+    /**
+     * for the entire program: action listeners for every button on the GUI. Organized by main menu option
+     */
     ActionListener actionListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -922,7 +924,9 @@ public class Pixie extends JComponent implements Runnable {
         }
     };
 
-    //FOR THE ENTIRE PROGRAM: safe end the program a user after user X's out
+    /**
+     * Safe end the program if a user closes out of a frame: logout of the account and shutdown client
+     */
     WindowAdapter windowAdapter = new WindowAdapter() {
         @Override
         public void windowClosing(WindowEvent e) {
