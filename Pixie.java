@@ -461,8 +461,15 @@ public class Pixie extends JComponent implements Runnable {
 
             //user is done editing the post and wants to save/create it
             if (e.getSource() == doneWritingPostButton) {
-                String post = "post[" + createNewPostTitleField.getText() + "," + createNewPostContentField.getText() + "]";
+                String post = "post[" + createNewPostTitleField.getText() + "," +
+                        createNewPostContentField.getText() + "]";
                 String worked = CLIENT.streamReader(post);
+
+                if (createNewPostTitleField.getText().length() == 0 ||
+                        createNewPostContentField.getText().length() == 0) {
+                    JOptionPane.showMessageDialog(null, "Title/content is too short!",
+                            "Create post error", JOptionPane.INFORMATION_MESSAGE);
+                }
 
                 if (worked.equals("true")) {
                     JOptionPane.showMessageDialog(null, "Post has been written successfully!",
@@ -876,8 +883,6 @@ public class Pixie extends JComponent implements Runnable {
 
             //you want to see the searched user's profile
             if (e.getSource() == searchUserViewProfileButton) {
-                switchPanel(appPanelContent, activeContentPanel, searchUserProfilePanel, BorderLayout.CENTER);
-                activeContentPanel = searchUserProfilePanel;
 
                 String searchedAccountString = CLIENT.streamReader("getProfile[" + searchedUser + "]");
                 Account searchedAccount = StreamParse.stringToAccount(searchedAccountString);
@@ -885,8 +890,11 @@ public class Pixie extends JComponent implements Runnable {
                 searchUserBioLabel.setText("<html>" + searchedAccount.getBio() + "</html>");
 
                 if (searchedAccount.getBio().equals("")) { //if biography is empty
-                    yourProfileBioLabel.setText("[empty]");
+                    searchUserBioLabel.setText("[empty]");
                 }
+
+                switchPanel(appPanelContent, activeContentPanel, searchUserProfilePanel, BorderLayout.CENTER);
+                activeContentPanel = searchUserProfilePanel;
             }
 
             //view the searched user's posts
