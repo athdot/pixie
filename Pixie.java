@@ -842,31 +842,37 @@ public class Pixie extends JComponent implements Runnable {
             }
 
             if (e.getSource() == searchUserConfirmButton) {
-                switchPanel(appPanelContent, activeContentPanel, subSearchPanel, BorderLayout.CENTER);
-                activeContentPanel = subSearchPanel;
-            }
-           
-            /**Search user**/
-            //to show "View Profile" and "View Posts" buttons
-            /*if (e.getSource() == searchUserConfirmButton) {
-                switchPanel(appPanel, activeSubmenuPanel, subSearchPanel, BorderLayout.CENTER);
-                activeContentPanel = subSearchPanel;
-                subSearchPanel.setVisible(true);
-            }
-            if (e.getSource() == viewProfile) {
-                //appFrame.remove(subSearchPanel);
-                switchPanel(appPanel, activeSubmenuPanel, showProfilePanel, BorderLayout.CENTER);
-                activeContentPanel = showProfilePanel;
-                String userSearched = "userSearch[" + userNameEnteredForSearch.getText() + "]";
-                if (userSearched == null) {
-                    JOptionPane.showMessageDialog(null, "User not found",
-                            "search user", JOptionPane.INFORMATION_MESSAGE);
+                String userSearched = "userSearch[" + searchUserField.getText() + "]";
+                userSearched = CLIENT.streamReader(userSearched);
+                if (userSearched.replaceAll(",", "").replaceAll("\\s", "").equals("")) {
+                    //TODO: the if statement cannot check whether the username is existing
+                    JOptionPane.showMessageDialog(null, "Enter a valid username",
+                            "Search User", JOptionPane.ERROR_MESSAGE);
                 } else {
-                    userProfilePrompt = new JLabel(CLIENT.streamReader(userSearched));
-                    System.out.println(CLIENT.streamReader(userSearched));
+                    switchPanel(appPanelContent, activeContentPanel, subSearchPanel, BorderLayout.CENTER);
+                    activeContentPanel = subSearchPanel;
                 }
+                //System.out.println(searchUserField.getText());
+            }
 
-            }*/
+            if (e.getSource() == viewProfile) {
+                String userProfile = CLIENT.streamReader("getProfile[" + searchUserField.getText() + "]");
+                Account userSearched = StreamParse.stringToAccount(userProfile);
+                userNameShowLabel.setText(searchUserField.getText());
+                userProfileShowLabel.setText("<html>" + userSearched.getBio() + "</html>");
+
+                switchPanel(appPanelContent, activeContentPanel, showProfilePanel, BorderLayout.CENTER);
+                activeContentPanel = showProfilePanel;
+            }
+
+            if (e.getSource() == viewPosts) {
+                switchPanel(appPanelContent, activeContentPanel, viewPostsCommentsOutlinePanel, BorderLayout.CENTER);
+                activeContentPanel = viewPostsCommentsOutlinePanel;
+
+                String getUserPosts = CLIENT.streamReader("getUserPosts[" + searchUserField.getText() + "]");
+                postsTemp = StreamParse.stringToPosts(getUserPosts);
+                displayPosts(postsTemp);
+            }
 
             //LOGOUT -- user clicks main menu logout button
             if (e.getSource() == logoutButton) {
@@ -1136,6 +1142,8 @@ public class Pixie extends JComponent implements Runnable {
         //SEARCH USER
         searchUserButton.addActionListener(actionListener);
         searchUserConfirmButton.addActionListener(actionListener);
+        viewProfile.addActionListener(actionListener);
+        viewPosts.addActionListener(actionListener);
     }
 
     public static void main(String[] args) {
