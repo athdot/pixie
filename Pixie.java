@@ -966,6 +966,7 @@ public class Pixie extends JComponent implements Runnable {
                     JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
             // Hacky way to scroll inside the pane without dragging anything
             jsp.removeMouseWheelListener(jsp.getMouseWheelListeners()[0]);
+            jsp.getVerticalScrollBar().setUnitIncrement(16);
             jsp.setPreferredSize(new Dimension(285, 170));
 
             viewPostsCommentsContainerPanel.add(jsp);
@@ -1038,6 +1039,13 @@ public class Pixie extends JComponent implements Runnable {
         loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         loginFrame.addWindowListener(windowAdapter);
         loginFrame.setLocationRelativeTo(null);
+        
+        try {
+        	ImageIcon img = new ImageIcon("images/ico.png");
+        	loginFrame.setIconImage(img.getImage());
+        } catch (Exception e) {
+        	// Could not load image, move on
+        }
 
         //side panel creation (called it "loginFrameMenu")
         JPanel loginFrameMenu = new JPanel();
@@ -1080,6 +1088,13 @@ public class Pixie extends JComponent implements Runnable {
         appFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         appFrame.addWindowListener(windowAdapter);
         appFrame.setLocationRelativeTo(null);
+        
+        try {
+        	ImageIcon img = new ImageIcon("images/ico.png");
+        	appFrame.setIconImage(img.getImage());
+        } catch (Exception e) {
+        	// Could not load image, move on
+        }
 
         //side panel creation
         JPanel appFrameMenu = new JPanel();
