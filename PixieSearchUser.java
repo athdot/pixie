@@ -85,14 +85,14 @@ public class PixieSearchUser extends JComponent {
         searchUserProfilePanel.add(bioContainerPanel);
     }
 
-    public static void main(String[] args) {
-        PixieSearchUser psu = new PixieSearchUser();
-        JFrame frame = new JFrame();
-        frame.setLayout(new BorderLayout());
-        frame.setLocationRelativeTo(null);
-        frame.setSize(800, 500);
-        frame.add(psu.searchUserProfilePanel);
-        frame.setVisible(true);
-    }
+//    public static void main(String[] args) {
+//        PixieSearchUser psu = new PixieSearchUser();
+//        JFrame frame = new JFrame();
+//        frame.setLayout(new BorderLayout());
+//        frame.setLocationRelativeTo(null);
+//        frame.setSize(800, 500);
+//        frame.add(psu.searchUserProfilePanel);
+//        frame.setVisible(true);
+//    }
 
 }

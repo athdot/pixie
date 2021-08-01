@@ -122,14 +122,13 @@ public class PixieCreatePost extends JComponent {
      * temporary main method to test layouts created above.
      * Comment out later to avoid confusion about running the program.
      */
-    public static void main(String[] args) {
-        PixieCreatePost pixieCreatePost = new PixieCreatePost();
-        JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        frame.setSize(500, 800);
-        frame.setLocationRelativeTo(null); //goes after setSize
-        frame.add(pixieCreatePost.createNewPostPanel);
-        frame.setVisible(true);
-    }
-
+//    public static void main(String[] args) {
+//        PixieCreatePost pixieCreatePost = new PixieCreatePost();
+//        JFrame frame = new JFrame();
+//        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+//        frame.setSize(500, 800);
+//        frame.setLocationRelativeTo(null); //goes after setSize
+//        frame.add(pixieCreatePost.createNewPostPanel);
+//        frame.setVisible(true);
+//    }
 }

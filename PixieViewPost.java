@@ -190,44 +190,44 @@ public class PixieViewPost extends JComponent {
      * temporary main method to test layouts created above.
      * Comment out later to avoid confusion about running the program.
      */
-    public static void main(String[] args) {
-        PixieViewPost pixieViewPost = new PixieViewPost();
-
-        JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        frame.setSize(810, 500);
-        frame.setLocationRelativeTo(null);
-        frame.add(pixieViewPost.viewPostsCommentsOutlinePanel);
-        frame.setVisible(true);
-
-        for (int i = 0; i < 10; i++) { //pretend there are 10 posts
-
-            //this logic structure will have to be recreated in Pixie.java because we don't know how many posts
-            //there are at a given time until we communicate with Server using Client
-
-            //the <br/> is for break line. Added only for displaying JLabel. Should not affect actual post
-            JLabel currentPostLabel = new JLabel("<html>Here's some text" +
-                    "<br/>Hope this works. What if I write a new line???? This goes to the next line" +
-                    " Yes! Finally! It goes to the next line.--NEW ISSUE: Variable size???<br/></html>");
-
-            //DEBUGGED: fluid dimensions can be achieved with setMinimumSize, setMaximumSize, and setPreferredSize
-            //COUGH; -- never mind it doesn't work; ignore this
-            //ended up hardcoding a nested JScrollPane in Pixie.java -- "View Your Posts" page, etc.
-            currentPostLabel.setMinimumSize(new Dimension(300, 0));
-            currentPostLabel.setPreferredSize(new Dimension(300, 100));
-            currentPostLabel.setMaximumSize(new Dimension(300, 500));
-            currentPostLabel.setBorder(BorderFactory.createLineBorder(Color.black, 1));
-            currentPostLabel.setVerticalAlignment(JLabel.CENTER);
-
-            pixieViewPost.viewPostsCommentsContainerPanel.add(currentPostLabel);
-        }
-
-        JFrame frame2 = new JFrame();
-        frame2.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        frame2.setSize(810, 500);
-        frame2.setLocationRelativeTo(null);
-        frame2.add(pixieViewPost.yourPostOptionsPanel, BorderLayout.WEST);
-        frame2.setVisible(true);
-    }
+//    public static void main(String[] args) {
+//        PixieViewPost pixieViewPost = new PixieViewPost();
+//
+//        JFrame frame = new JFrame();
+//        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+//        frame.setSize(810, 500);
+//        frame.setLocationRelativeTo(null);
+//        frame.add(pixieViewPost.viewPostsCommentsOutlinePanel);
+//        frame.setVisible(true);
+//
+//        for (int i = 0; i < 10; i++) { //pretend there are 10 posts
+//
+//            //this logic structure will have to be recreated in Pixie.java because we don't know how many posts
+//            //there are at a given time until we communicate with Server using Client
+//
+//            //the <br/> is for break line. Added only for displaying JLabel. Should not affect actual post
+//            JLabel currentPostLabel = new JLabel("<html>Here's some text" +
+//                    "<br/>Hope this works. What if I write a new line???? This goes to the next line" +
+//                    " Yes! Finally! It goes to the next line.--NEW ISSUE: Variable size???<br/></html>");
+//
+//            //DEBUGGED: fluid dimensions can be achieved with setMinimumSize, setMaximumSize, and setPreferredSize
+//            //COUGH; -- never mind it doesn't work; ignore this
+//            //ended up hardcoding a nested JScrollPane in Pixie.java -- "View Your Posts" page, etc.
+//            currentPostLabel.setMinimumSize(new Dimension(300, 0));
+//            currentPostLabel.setPreferredSize(new Dimension(300, 100));
+//            currentPostLabel.setMaximumSize(new Dimension(300, 500));
+//            currentPostLabel.setBorder(BorderFactory.createLineBorder(Color.black, 1));
+//            currentPostLabel.setVerticalAlignment(JLabel.CENTER);
+//
+//            pixieViewPost.viewPostsCommentsContainerPanel.add(currentPostLabel);
+//        }
+//
+//        JFrame frame2 = new JFrame();
+//        frame2.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+//        frame2.setSize(810, 500);
+//        frame2.setLocationRelativeTo(null);
+//        frame2.add(pixieViewPost.yourPostOptionsPanel, BorderLayout.WEST);
+//        frame2.setVisible(true);
+//    }
 
 }
