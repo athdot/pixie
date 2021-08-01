@@ -1,70 +1,88 @@
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * PixieSearchUser
+ * Contains basic panel layouts for search user function. Includes: search user option panel and buttons.
+ * Search user function will also use PixieViewPost -- container panel for displaying posts and comments
+ *
+ * @author Group 8
+ * @version July 31, 2021
+ */
+
 public class PixieSearchUser extends JComponent {
-    public JPanel subSearchPanel;  //show the three "view" options
-    public JPanel showProfilePanel;  //show user's profile, including names and bio
-    public JPanel showPostsPanel;  //show user's posts
-    public JPanel showCommentsPanel;
 
-    public JButton viewProfile;
-    public JButton viewPosts;
-    public JButton viewComments;
-    Client client = new Client();
-    PixieSubmenus pSubmenus = new PixieSubmenus();
+    Color subMenuColor = new Color(114, 90, 122, 255);
 
-    JTextField userNameEnteredForSearch;
-    JLabel userProfilePrompt;
-    JLabel userPostsPrompt;
-//    Frame frame = new Frame();
+    public JPanel searchUserOptionsPanel;  //show the three "view" options
+    public JButton searchUserViewProfileButton;
+    public JButton searchUserViewPostsButton;
+    public JButton searchUserViewCommentsButton;
+
+    public JPanel searchUserProfilePanel;
+    public JLabel searchUserUsernameLabel;
+    public JLabel searchUserBioLabel;
 
     public PixieSearchUser() {
-        showSearchOptionPage();
-        showViewProfilePage();
-        showViewPosts();
+        searchUserOptionsPanel();
+        searchUserProfilePanel();
     }
 
-    /** after click the search button, if the username is found, then the main panel should pop up three options**/
-    public void showSearchOptionPage() {
-        subSearchPanel = new JPanel();
-//        frame.add(subSearchPanel);
-        subSearchPanel.setLayout(null);
+    /**
+     * after click the search button, if the username is found, then the main panel should pop up three options
+     */
+    private void searchUserOptionsPanel() {
 
-        viewProfile = new JButton("View profile");
-        viewProfile.setBounds(180, 100, 150, 25);
-        viewPosts = new JButton("View posts");
-        viewPosts.setBounds(180, 150, 150, 25);
+        searchUserOptionsPanel = new JPanel();
+        searchUserOptionsPanel.setLayout(new FlowLayout(FlowLayout.TRAILING, 4, 4));
+        searchUserOptionsPanel.setBackground(subMenuColor);
 
-        subSearchPanel.add(viewProfile);
-        subSearchPanel.add(viewPosts);
+        JPanel searchUserOptionsPanelGrid = new JPanel();
+        searchUserOptionsPanelGrid.setLayout(new GridLayout(5, 1, 5, 5));
+        searchUserOptionsPanelGrid.setBackground(subMenuColor);
 
-//        subSearchPanel.setVisible(false);
-//        frame.setVisible(true);
+        //these buttons appear after selecting your post
+        searchUserViewProfileButton = new JButton("View Profile");
+        searchUserViewPostsButton = new JButton("View Posts");
+        searchUserViewCommentsButton = new JButton("View Comments");
 
+        JLabel optionsTitle = new JLabel("Options");
+        optionsTitle.setHorizontalAlignment(JLabel.CENTER);
+        optionsTitle.setForeground(Color.white);
+
+        searchUserOptionsPanelGrid.add(optionsTitle);
+        searchUserOptionsPanelGrid.add(searchUserViewProfileButton);
+        searchUserOptionsPanelGrid.add(searchUserViewPostsButton);
+        searchUserOptionsPanelGrid.add(searchUserViewCommentsButton);
+
+        searchUserOptionsPanel.add(searchUserOptionsPanelGrid);
     }
-    public void showViewProfilePage() {
-        showProfilePanel = new JPanel(null);
-//        frame.add(showProfilePanel);
 
-        String userSearched = "userSearch[" + pSubmenus.getSearchUserFieldText() + "]";
-        userProfilePrompt = new JLabel(client.streamReader(userSearched));
-        userProfilePrompt.setBounds(80, 150, 200, 30);
-        showProfilePanel.add(userProfilePrompt);
-        //TODO: add the actionlistener
-//        showProfilePanel.setVisible(false);
-//        frame.setVisible(true);
-    }
+    private void searchUserProfilePanel() {
+        searchUserProfilePanel = new JPanel(null);
 
-    public void showViewPosts() {
-        showPostsPanel = new JPanel(null);
-//        frame.add(showPostsPanel);
-        String userPosts = "getUserPosts["+ pSubmenus.getSearchUserFieldText() + "]";
-        userPostsPrompt = new JLabel(client.streamReader(userPosts));
-        userPostsPrompt.setBounds(80, 150, 200, 30);
-        showPostsPanel.add(userPostsPrompt);
-        //TODO: add the actionlistener
-//        showPostsPanel.setVisible(false);
-//        frame.setVisible(true);
+        JLabel usernameTitle = new JLabel("Username:");
+        usernameTitle.setBounds(100, 100, 100, 25);
+
+        searchUserUsernameLabel = new JLabel("your username goes here");
+        searchUserUsernameLabel.setBounds(100, 120, 200, 25);
+
+        JLabel biographyTitle = new JLabel("Biography:");
+        biographyTitle.setBounds(100, 200, 300, 25);
+
+        //DEBUGGED: wrapping in html tags will automatically display runoff text on a new line for JLabel
+        searchUserBioLabel = new JLabel("<html>your biography goes here</html>");
+        searchUserBioLabel.setBounds(0, 0, 300, 300);
+        searchUserBioLabel.setVerticalAlignment(JLabel.TOP);
+
+        JPanel bioContainerPanel = new JPanel(null);
+        bioContainerPanel.setBounds(100, 225, 300, 300);
+        bioContainerPanel.add(searchUserBioLabel);
+
+        searchUserProfilePanel.add(usernameTitle);
+        searchUserProfilePanel.add(searchUserUsernameLabel);
+        searchUserProfilePanel.add(biographyTitle);
+        searchUserProfilePanel.add(bioContainerPanel);
     }
 
     public static void main(String[] args) {
@@ -73,7 +91,7 @@ public class PixieSearchUser extends JComponent {
         frame.setLayout(new BorderLayout());
         frame.setLocationRelativeTo(null);
         frame.setSize(800, 500);
-        frame.add(psu.subSearchPanel);
+        frame.add(psu.searchUserProfilePanel);
         frame.setVisible(true);
     }
 

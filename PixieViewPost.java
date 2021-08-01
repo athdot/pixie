@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
+ * PixieViewPost
  * carries all panel setups related to viewing posts: "View Your Posts" and "View All Posts".
  * Includes the panels that will replace the submenu panel when user enters a given post number
  *
@@ -128,7 +129,7 @@ public class PixieViewPost extends JComponent {
 
     /**
      * layout for editing the post (practically identical to "write new post" page)
-     * Requires a duplicate panel because editing post logic is different than creating post
+     * REASON: Requires a duplicate panel because editing post logic is different than creating post
      */
     private void editPostPanel() {
         editPostPanel = new JPanel();
