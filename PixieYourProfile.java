@@ -163,12 +163,12 @@ public class PixieYourProfile extends JComponent {
      * temporary main method to test layouts created above.
      * Comment out later to avoid confusion about running the program.
      */
-    public static void main(String[] args) {
-        PixieYourProfile pixieYourProfile = new PixieYourProfile();
-        JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        frame.setSize(1200, 800);
-        frame.add(pixieYourProfile.yourProfilePanel);
-        frame.setVisible(true);
-    }
+//    public static void main(String[] args) {
+//        PixieYourProfile pixieYourProfile = new PixieYourProfile();
+//        JFrame frame = new JFrame();
+//        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+//        frame.setSize(1200, 800);
+//        frame.add(pixieYourProfile.yourProfilePanel);
+//        frame.setVisible(true);
+//    }
 }

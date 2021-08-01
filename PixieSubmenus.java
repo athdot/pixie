@@ -51,10 +51,6 @@ public class PixieSubmenus extends JComponent {
     public JTextField searchUserField;
     public JButton searchUserConfirmButton;
 
-    public JButton searchUserViewProfile; //these options appear after searching and finding a user
-    public JButton searchUserViewPosts;
-    public JButton searchUserViewComments;
-
     public PixieSubmenus() {
         //creating an instance of this class also creates the submenus that will show on the appFrame
         yourProfileSubmenu();

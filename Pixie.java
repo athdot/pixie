@@ -1,5 +1,4 @@
 import javax.swing.*;
-import javax.xml.crypto.Data;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -36,9 +35,12 @@ public class Pixie extends JComponent implements Runnable {
     int postsChosenNum;
     int commentsChosenNum;
 
-    //store a COPY of most recently displayed posts -- USER CONCURRENCY AND REAL-TIME SOLUTION
-    //primarily used for "view all posts" option because post numbers may shift/update during the commenting process
+    //store a COPY of most recently displayed posts/posts with comments -- USER CONCURRENCY AND REAL-TIME SOLUTION
+    //primarily used for "view all posts" and "search user" option because post numbers may shift/update
     ArrayList<Post> postsTemp;
+
+    //searchedUser is used across "search user" function to obtain info from Server
+    String searchedUser;
 
     //LOGIN FRAME: baseline features -- the login menu
     JFrame loginFrame; //login page frame
@@ -84,8 +86,6 @@ public class Pixie extends JComponent implements Runnable {
 
     JPanel blankSubmenuPanel = psm.blankPanel; //?
 
-    JPanel searchUserSubmenuPanel = psm.searchUserSubmenuPanel;
-
     JPanel yourProfileSubmenuPanel = psm.yourProfileSubmenuPanel;
     JButton changeBioButton = psm.changeBioButton;
     JButton changeUsernameButton = psm.changeUsernameButton;
@@ -109,6 +109,9 @@ public class Pixie extends JComponent implements Runnable {
     JTextField selectPostField = psm.selectPostField;
     JButton selectPostButton = psm.selectPostButton;
 
+    JPanel searchUserSubmenuPanel = psm.searchUserSubmenuPanel;
+    JTextField searchUserField = psm.searchUserField;
+    JButton searchUserConfirmButton = psm.searchUserConfirmButton;
 
     /**
      * YOUR PROFILE: bring panel setups for "Your Profile" page from PixieYourProfile
@@ -194,19 +197,18 @@ public class Pixie extends JComponent implements Runnable {
 
     /**
      * SEARCH USER: to pop up on the active content panel with two buttons that "View Profile" and "View Posts"
-     * **/
-    PixieSearchUser ps = new PixieSearchUser();
-    JPanel subSearchPanel = ps.subSearchPanel;
-    JPanel showProfilePanel = ps.showProfilePanel;
-    JPanel showPostsPanel = ps.showPostsPanel;
+     */
 
-    JButton viewProfile = ps.viewProfile;
-    JButton viewPosts = ps.viewPosts;
+    PixieSearchUser psu = new PixieSearchUser();
 
-    JTextField userNameEnteredForSearch = ps.userNameEnteredForSearch;
-    JLabel userProfilePrompt = ps.userProfilePrompt;
-    JLabel userPostsPrompt = ps.userPostsPrompt;
+    JPanel searchUserOptionsPanel = psu.searchUserOptionsPanel;  //show the three "view" options after finding user
+    JButton searchUserViewProfileButton = psu.searchUserViewProfileButton;
+    JButton searchUserViewPostsButton = psu.searchUserViewPostsButton;
+    JButton searchUserViewCommentsButton = psu.searchUserViewCommentsButton;
 
+    JPanel searchUserProfilePanel = psu.searchUserProfilePanel; //similar to "yourProfilePanel"
+    JLabel searchUserUsernameLabel = psu.searchUserUsernameLabel;
+    JLabel searchUserBioLabel = psu.searchUserBioLabel;
 
     //FOR THE ENTIRE PROGRAM: Action listeners for all components that require action listeners
     ActionListener actionListener = new ActionListener() {
@@ -516,7 +518,8 @@ public class Pixie extends JComponent implements Runnable {
             //remove any list of posts everytime you click a main menu option (except logout)
             if (e.getSource() == yourProfileButton || e.getSource() == createPostButton ||
                     e.getSource() == yourPostsButton || e.getSource() == yourCommentsButton ||
-                    e.getSource() == allPostsButton || e.getSource() == searchUserButton) {
+                    e.getSource() == allPostsButton || e.getSource() == searchUserButton ||
+                    e.getSource() == searchUserViewPostsButton || e.getSource() == searchUserViewCommentsButton) {
                 //NOTE: keep this statement in-front of all logic that lists out posts
                 viewPostsCommentsContainerPanel.removeAll();
             }
@@ -623,6 +626,7 @@ public class Pixie extends JComponent implements Runnable {
                 commentOnPostField.setText("");
             }
 
+            //user clicks on button to export the selected post
             if (e.getSource() == exportYourPostButton) {
                 Post selectedPost = postsTemp.get(postsChosenNum - 1); //post numbers are 1-based
 
@@ -840,28 +844,68 @@ public class Pixie extends JComponent implements Runnable {
                 switchPanel(appPanelContent, activeContentPanel, blankContentPanel, BorderLayout.CENTER);
                 activeContentPanel = blankContentPanel;
             }
-           
-            /**Search user**/
-            //to show "View Profile" and "View Posts" buttons
-            /*if (e.getSource() == searchUserConfirmButton) {
-                switchPanel(appPanel, activeSubmenuPanel, subSearchPanel, BorderLayout.CENTER);
-                activeContentPanel = subSearchPanel;
-                subSearchPanel.setVisible(true);
-            }
-            if (e.getSource() == viewProfile) {
-                //appFrame.remove(subSearchPanel);
-                switchPanel(appPanel, activeSubmenuPanel, showProfilePanel, BorderLayout.CENTER);
-                activeContentPanel = showProfilePanel;
-                String userSearched = "userSearch[" + userNameEnteredForSearch.getText() + "]";
-                if (userSearched == null) {
-                    JOptionPane.showMessageDialog(null, "User not found",
-                            "search user", JOptionPane.INFORMATION_MESSAGE);
-                } else {
-                    userProfilePrompt = new JLabel(CLIENT.streamReader(userSearched));
-                    System.out.println(CLIENT.streamReader(userSearched));
+
+            //user clicks button to search for provided username -- case insensitive
+            if (e.getSource() == searchUserConfirmButton) {
+                String searchReturn = CLIENT.streamReader("userSearch[" + searchUserField.getText() + "]");
+                String[] relatedUsernames = searchReturn.split(",");
+
+                boolean found = false;
+                for (String username : relatedUsernames) {
+                    if (searchUserField.getText().equalsIgnoreCase(username)) {
+                        found = true;
+                        searchedUser = username;
+                    }
                 }
 
-            }*/
+                if (found) {
+                    JOptionPane.showMessageDialog(null, "Found the user!",
+                            "Search User", JOptionPane.INFORMATION_MESSAGE);
+                    searchUserField.setText("");
+
+                    switchPanel(appPanel, activeSubmenuPanel, searchUserOptionsPanel, BorderLayout.WEST);
+                    activeSubmenuPanel = searchUserOptionsPanel;
+                } else {
+                    JOptionPane.showMessageDialog(null, "No search results for this name",
+                            "Search User", JOptionPane.ERROR_MESSAGE);
+                    searchUserField.setText("");
+                }
+            }
+
+            //you want to see the searched user's profile
+            if (e.getSource() == searchUserViewProfileButton) {
+                switchPanel(appPanelContent, activeContentPanel, searchUserProfilePanel, BorderLayout.CENTER);
+                activeContentPanel = searchUserProfilePanel;
+
+                String searchedAccountString = CLIENT.streamReader("getProfile[" + searchedUser + "]");
+                Account searchedAccount = StreamParse.stringToAccount(searchedAccountString);
+                searchUserUsernameLabel.setText(searchedAccount.getUsername());
+                searchUserBioLabel.setText("<html>" + searchedAccount.getBio() + "</html>");
+
+                if (searchedAccount.getBio().equals("")) { //if biography is empty
+                    yourProfileBioLabel.setText("[empty]");
+                }
+            }
+
+            //view the searched user's posts
+            if (e.getSource() == searchUserViewPostsButton) {
+                switchPanel(appPanelContent, activeContentPanel, viewPostsCommentsOutlinePanel, BorderLayout.CENTER);
+                activeContentPanel = viewPostsCommentsOutlinePanel;
+
+                String getUserPosts = CLIENT.streamReader("getUserPosts[" + searchedUser + "]");
+                postsTemp = StreamParse.stringToPosts(getUserPosts);
+                displayPosts(postsTemp);
+            }
+
+            //view the searched user's comments
+            if (e.getSource() == searchUserViewCommentsButton) {
+                switchPanel(appPanelContent, activeContentPanel, viewPostsCommentsOutlinePanel, BorderLayout.CENTER);
+                activeContentPanel = viewPostsCommentsOutlinePanel;
+
+                String getUserPosts = CLIENT.streamReader("getUserComments[" + searchedUser + "]");
+                postsTemp = StreamParse.stringToPosts(getUserPosts);
+                displayPosts(postsTemp);
+            }
 
             //LOGOUT -- user clicks main menu logout button
             if (e.getSource() == logoutButton) {
@@ -895,9 +939,8 @@ public class Pixie extends JComponent implements Runnable {
      */
     public void displayPosts(ArrayList<Post> posts) {
         postsNumTotal = 0;
-        for (int i = 0; i < posts.size(); i++) { //start from the back, to get latest posts first
-            Post post = posts.get(i);
-            String formattedPost =  "<html>" + "[Post #" + ++postsNumTotal + "]: " +
+        for (Post post : posts) { //start from the back, to get latest posts first
+            String formattedPost = "<html>" + "[Post #" + ++postsNumTotal + "]: " +
                     post.toString().replace("\n", "<br/>") + "</html>";
 
             JLabel postLabel = new JLabel(formattedPost); //each post is displayed within a label
@@ -1086,7 +1129,6 @@ public class Pixie extends JComponent implements Runnable {
         //APP FRAME
 
         //user can navigate to 6 different pages using the main menu (similar to Application.java from PJ04)
-        searchUserButton.addActionListener(actionListener);
         logoutButton.addActionListener(actionListener);
 
         //YOUR PROFILE options if user goes to "Your Profile" submenu
@@ -1128,6 +1170,13 @@ public class Pixie extends JComponent implements Runnable {
         allPostsCommentButton.addActionListener(actionListener);
         editYourPostButton.addActionListener(actionListener);
         confirmEditPostButton.addActionListener(actionListener);
+
+        //SEARCH USER
+        searchUserButton.addActionListener(actionListener);
+        searchUserConfirmButton.addActionListener(actionListener);
+        searchUserViewProfileButton.addActionListener(actionListener);
+        searchUserViewPostsButton.addActionListener(actionListener);
+        searchUserViewCommentsButton.addActionListener(actionListener);
     }
 
     public static void main(String[] args) {
