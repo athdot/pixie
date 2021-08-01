@@ -41,7 +41,6 @@ public class Client {
 			returnedValue = ois.readObject().toString();
 
 		} catch (IOException | ClassNotFoundException e) {
-			// TODO Auto-generated catch block - wat?
 			System.out.println("Client streamReader method error!");
 			e.printStackTrace();
 		}

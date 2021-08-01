@@ -25,11 +25,16 @@ public class Server implements Runnable {
 	private ObjectInputStream ois;
 
 	private static final int PORT = 31415; //easy to remember: digits of pi
+	private static final String V_ID = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+	
+	private static String versionUpdate;
+	private String localVersion;
 
 	public static void main(String[] args) {
 
 		data = new DataManagement();
 		ServerSocket serverSocket = null; //declare outside to expand scope
+		versionUpdate = "AAA";
 
 		try {
 			serverSocket = new ServerSocket(PORT);
@@ -66,6 +71,7 @@ public class Server implements Runnable {
 	@Override
 	public void run() {
 		try {
+			localVersion = versionUpdate;
 			this.oos = new ObjectOutputStream(connection.getOutputStream());
 			this.ois = new ObjectInputStream(connection.getInputStream());
 
@@ -85,7 +91,7 @@ public class Server implements Runnable {
 			try {
 				this.oos.close();
 				this.ois.close();
-				System.out.println("A server thread ended.");
+				System.out.println("A client has disconnected.");
 			} catch (IOException e1) {
 				e.printStackTrace();
 			}
@@ -119,10 +125,12 @@ public class Server implements Runnable {
 		} else if (request.indexOf("deleteAccount") == 0) {
 			data.deleteAccount(loggedAccount.getUsername());
 			loggedAccount = null;
+			iterateVersion();
 		} else if (request.indexOf("changeBio[") == 0) {
 			//changeBio[newBio]
 			loggedAccount.setBio(unpack(request, "changeBio["));
 			data.setAccount(loggedAccount);
+			iterateVersion();
 			return "true";
 		} else if (request.indexOf("changeUsername[") == 0) {
 			//changeUsername[newUser]
@@ -134,6 +142,7 @@ public class Server implements Runnable {
 			data.findAndReplaceAll("post.csv", loggedAccount.getUsername(), newUser);
 			loggedAccount.setUsername(newUser);
 			data.setAccount(loggedAccount);
+			iterateVersion();
 			return "true";
 		} else if (request.indexOf("changePassword[") == 0) {
 			//changePassword[oldPassword,newPassword]
@@ -157,6 +166,8 @@ public class Server implements Runnable {
 				titleContent[1] += "," + titleContent[i];
 			}
 			Post temp = new Post(titleContent[0], loggedAccount.getUsername(), titleContent[1]);
+			
+			iterateVersion();
 			
 			if (!data.postExists(temp)) {
 				data.setPost(temp);
@@ -200,6 +211,7 @@ public class Server implements Runnable {
 			comments.set(Integer.parseInt(textData[2]), newComment);
 			post.setComments(comments);
 			data.setPost(post);
+			iterateVersion();
 		} else if (request.indexOf("editPost[") == 0) {
 			//editPost[postTitle, postAuthor, content]
 			System.out.println(request);
@@ -210,12 +222,15 @@ public class Server implements Runnable {
 			Post post = data.getPost(textData[0], textData[1]);
 			post.setContent(textData[2]);
 			data.setPost(post);
+			iterateVersion();
 		} else if (request.indexOf("editTitle[") == 0) {
 			//editTitle[oldTitle, postAuthor, newTitle]
 			String[] textData = unpack(request, "editTitle[").split(",");
 			Post post = data.getPost(textData[0], textData[1]);
 			Post newPost = new Post(post);
 			newPost.setTitle(textData[2]);
+			
+			iterateVersion();
 			
 			if (!data.postExists(newPost)) {
 				data.deletePost(post);
@@ -229,6 +244,7 @@ public class Server implements Runnable {
 			String[] textData = unpack(request, "deletePost[").split(",");
 			Post post = data.getPost(textData[0], textData[1]);
 			data.deletePost(post);
+			iterateVersion();
 		} else if (request.indexOf("addComment[") == 0) {
 			//addComment[postTitle, postAuthor, commentText]
 			String[] textData = unpack(request, "addComment[").split(",");
@@ -238,6 +254,7 @@ public class Server implements Runnable {
 			}
 			post.addComment(new Comment(loggedAccount.getUsername(), textData[2]));
 			data.setPost(post);
+			iterateVersion();
 		} else if (request.indexOf("deleteComment[") == 0) {
 			//deleteComment[postTitle, postAuthor, commentIndex]
 			String[] textData = unpack(request, "deleteComment[").split(",");
@@ -246,6 +263,7 @@ public class Server implements Runnable {
 			comments.remove(Integer.parseInt(textData[2]));
 			post.setComments(comments);
 			data.setPost(post);
+			iterateVersion();
 		} else if (request.indexOf("getPost[") == 0) {
 			//getPost[postTitle, postAuthor]
 			String[] textData = unpack(request, "getPost[").split(",");
@@ -274,6 +292,12 @@ public class Server implements Runnable {
 				returnValue += "," + temp.get(i);
 			}
 			return returnValue;
+		} else if (request.indexOf("getsync") == 0) {
+			//Returns 1 if synched, returns 0 if a refresh is needed
+			return "" + (localVersion.equals(versionUpdate) ? 1 : 0);
+		} else if (request.indexOf("resynched") == 0) {
+			//Updates our local version
+			this.localVersion = versionUpdate;
 		}
 		
 		return "false";
@@ -298,5 +322,39 @@ public class Server implements Runnable {
 	
 	private void logout() {
 		loggedAccount = null;
+	}
+	
+	// This function takes the update sum and iterates it if the user does anything
+	private void iterateVersion () {
+		// Handle race conditions
+		synchronized(versionUpdate) {
+			// Start by looking at the first digit
+			String replace = "";
+			boolean resolved = false;
+			boolean loopedOver = true;
+			int digit = 0;
+			do {	
+				String indChar = versionUpdate.substring(versionUpdate.length() - digit - 1, 
+						versionUpdate.length() - digit);
+				int indexOfChar = V_ID.indexOf(indChar);
+				if (loopedOver) {
+					indexOfChar++;
+					loopedOver = false;
+				}
+				if (indexOfChar >= V_ID.length()) {
+					loopedOver = true;
+					indexOfChar = 0;
+				}
+				replace = V_ID.substring(indexOfChar, indexOfChar + 1) + replace;
+				if (replace.length() == versionUpdate.length()) {
+					versionUpdate = replace;
+					resolved = true;
+					continue;
+				}
+				digit++;
+			} while(!resolved);
+			
+			System.out.println(versionUpdate);
+		}
 	}
 }
