@@ -3,6 +3,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+
 /**
  * Client - PJ05
  * Each user who has the app open also has a Client object that communicates with the Server class.
@@ -19,6 +22,8 @@ public class Client {
 	private Socket socket;
 	private ObjectOutputStream oos;
 	private ObjectInputStream ois;
+	
+	private static boolean serverConIssue = false;
 
 	public Client() {
 		try {
@@ -28,9 +33,21 @@ public class Client {
 			this.oos = new ObjectOutputStream(socket.getOutputStream());
 			this.ois = new ObjectInputStream(socket.getInputStream());
 
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			String msg = "Client has refused to connect!\n\n Has an instance of Server.java been run at " + 
+                    HOST + ":" + PORT + "?";
+			JOptionPane optionPane = new JOptionPane(msg, JOptionPane.INFORMATION_MESSAGE);    
+			JDialog dialog = optionPane.createDialog("A Problem Occurred");
+			dialog.setAlwaysOnTop(true);
+			dialog.setVisible(true);
+			serverConIssue = true;
+			//e.printStackTrace();
 		}
+	}
+	
+	//Returns true if there was some exception in connecting to the server
+	public boolean serverStatus() {
+		return serverConIssue;
 	}
 	
 	public String streamReader(String request) {

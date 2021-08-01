@@ -461,7 +461,7 @@ public class Pixie extends JComponent implements Runnable {
 
             //user is done editing the post and wants to save/create it
             if (e.getSource() == doneWritingPostButton) {
-                String post = "post[" + createNewPostTitleField.getText() + "," +
+                String post = "post[" + createNewPostTitleField.getText().replace(",", "123COMMA_REP321") + "," +
                         createNewPostContentField.getText() + "]";
                 String worked = CLIENT.streamReader(post);
 
@@ -590,7 +590,8 @@ public class Pixie extends JComponent implements Runnable {
                 Post selectedPost = postsTemp.get(postsChosenNum - 1);
 
                 //first check if this edit is valid; try to change the post title
-                String worked = CLIENT.streamReader("editTitle[" + selectedPost.getTitle() + "," +
+                String worked = CLIENT.streamReader("editTitle[" + 
+                        selectedPost.getTitle().replace(",", "123COMMA_REP321") + "," +
                         selectedPost.getAuthor() + "," + editPostTitleField.getText() + "]");
 
                 if (worked.equals("false")) { //edit is not valid
@@ -963,6 +964,8 @@ public class Pixie extends JComponent implements Runnable {
             //hardcoded -- incorporate nested JScrollPane, allowing user to see all of a post
             JScrollPane jsp = new JScrollPane(postLabel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                     JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            // Hacky way to scroll inside the pane without dragging anything
+            jsp.removeMouseWheelListener(jsp.getMouseWheelListeners()[0]);
             jsp.setPreferredSize(new Dimension(285, 170));
 
             viewPostsCommentsContainerPanel.add(jsp);
@@ -1018,6 +1021,10 @@ public class Pixie extends JComponent implements Runnable {
      * time in this program. Closing a frame means the user wants to quit entirely.
      */
     public void run() {
+    	if (CLIENT.serverStatus()) {
+    		//Stops thread execution
+    		return;
+    	}
 
         Color menuColor = new Color(53, 92, 125);
 
