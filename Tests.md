@@ -129,7 +129,7 @@ Expected Result:
 The application should confirm the creation of the comment through a JPane message
 and will then send the comment to the server to be stored in the system.
 
-Test Status: Failed
+Test Status: Passed
 
 ###Test 9: Export Post to CSV File
 
@@ -176,7 +176,7 @@ Expected Result:
 
 The application will update the post in the system and will notify the user through a JPane message.
 
-Test Status: Failed
+Test Status: Passed
 
 ###Test 12: Search for User
 
@@ -211,7 +211,6 @@ Test Status: Passed
 
 Steps:
 
-
 1. Ensure your IDE can run two instances of a program at the same time.
 2. Open the server by running Server.java's main function.
 3. Open two or more clients by running the Pixie.java main method multiple times.
@@ -239,4 +238,4 @@ Expected Result:
 The account that is on the "View All Posts" page should see the newly created post
 written to the page without physically refreshing the page/touching any buttons.
 
-Test Status: Failed-ish
+Test Status: Passed
