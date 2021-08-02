@@ -65,10 +65,11 @@ public class Client {
 		try {
 			oos.writeObject(request);
 			oos.flush();
-			returnedValue = ois.readObject().toString();
+			returnedValue = "" + ois.readObject();
 
 		} catch (IOException | ClassNotFoundException e) {
 			System.out.println("Client streamReader cannot connect to the server!");
+			e.printStackTrace();
 		}
 
 		return returnedValue;

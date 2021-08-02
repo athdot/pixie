@@ -108,7 +108,7 @@ public class Server implements Runnable {
 						if (!localVersion.equals(versionUpdate)) {
 							//Send a refresh code to the client
 							localVersion = versionUpdate;
-							oos.writeObject("1");
+							oos.writeObject("1111");
 							oos.flush();
 						}
 					} catch (Exception e) {
@@ -324,6 +324,8 @@ public class Server implements Runnable {
 			updateStream = true;
 		} else if (request.indexOf("getUsername") == 0) {
 			//Get what the server thinks the username currently is
+			System.out.println("I was called");
+			System.out.println("");
 			return loggedAccount.getUsername();
 		}
 		

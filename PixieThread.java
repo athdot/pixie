@@ -327,6 +327,7 @@ public class PixieThread extends JComponent implements Runnable {
                 activeSubmenuPanel = yourProfileSubmenuPanel;
 
                 String profile = userClient.streamReader("getProfile[" + activeUsername + "]");
+                System.out.println(activeUsername);
                 Account user = StreamParse.stringToAccount(profile);
                 yourProfileUsernameLabel.setText(activeUsername);
                 yourProfileBioLabel.setText("<html>" + user.getBio() + "</html>");
@@ -1030,21 +1031,21 @@ public class PixieThread extends JComponent implements Runnable {
     
     public void refreshPage() {
     	// Handle a changed username/password
-     	String foreignUsername = userClient.streamReader("getUsername");
-    	if (userClient.streamReader("getProfile[" + foreignUsername + "]").equals("false")) {
-    		JOptionPane.showMessageDialog(null, "Login Credentials Changed, Log Back In",
-                    "Search User", JOptionPane.INFORMATION_MESSAGE);
-    		changeFrame(appFrame, loginFrame);
-            userClient.streamReader("logout");
-            activeUsername = null;
+    	//System.out.println(userClient.streamReader("getProfile[" + activeUsername + "]"));
+    	//if (userClient.streamReader("getProfile[" + activeUsername + "]").equals("false")) {
+    	//	JOptionPane.showMessageDialog(null, "Login Credentials Changed, Log Back In",
+        //            "Search User", JOptionPane.INFORMATION_MESSAGE);
+    	//	changeFrame(appFrame, loginFrame);
+        //    userClient.streamReader("logout");
+        //    activeUsername = null;
 
-            switchPanel(appPanel, activeSubmenuPanel, blankSubmenuPanel, BorderLayout.WEST);
-            activeSubmenuPanel = blankSubmenuPanel;
+        //    switchPanel(appPanel, activeSubmenuPanel, blankSubmenuPanel, BorderLayout.WEST);
+        //    activeSubmenuPanel = blankSubmenuPanel;
 
-            switchPanel(appPanelContent, activeContentPanel, blankContentPanel, BorderLayout.CENTER);
-            activeContentPanel = blankContentPanel;
-    		return;
-    	}
+        //    switchPanel(appPanelContent, activeContentPanel, blankContentPanel, BorderLayout.CENTER);
+        //    activeContentPanel = blankContentPanel;
+    	//	return;
+    	//}
     	
     	if (currentPage.equals("yourProfileButton")) {
     		yourProfileButton.doClick();
