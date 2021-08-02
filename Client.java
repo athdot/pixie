@@ -24,6 +24,7 @@ public class Client {
 	private ObjectInputStream ois;
 	
 	private static boolean serverConIssue = false;
+	private static int outputtedError = 0;
 
 	public Client() {
 		try {
@@ -34,13 +35,16 @@ public class Client {
 			this.ois = new ObjectInputStream(socket.getInputStream());
 
 		} catch (Exception e) {
-			String msg = "Client has refused to connect!\n\n Has an instance of Server.java been run at " + 
-                    HOST + ":" + PORT + "?";
-			JOptionPane optionPane = new JOptionPane(msg, JOptionPane.INFORMATION_MESSAGE);    
-			JDialog dialog = optionPane.createDialog("A Problem Occurred");
-			dialog.setAlwaysOnTop(true);
-			dialog.setVisible(true);
-			serverConIssue = true;
+			if (outputtedError == 0) {
+				String msg = "Client has refused to connect!\n\n Has an instance of Server.java been run at " + 
+						HOST + ":" + PORT + "?";
+				JOptionPane optionPane = new JOptionPane(msg, JOptionPane.INFORMATION_MESSAGE);    
+				JDialog dialog = optionPane.createDialog("A Problem Occurred");
+				dialog.setAlwaysOnTop(true);
+				dialog.setVisible(true);
+				serverConIssue = true;
+				outputtedError = 1;
+			}
 			//e.printStackTrace();
 		}
 	}
@@ -48,6 +52,13 @@ public class Client {
 	//Returns true if there was some exception in connecting to the server
 	public boolean serverStatus() {
 		return serverConIssue;
+	}
+	
+	//For update thread exclusively
+	public String getUpdate() throws ClassNotFoundException, IOException {
+		String output = "";
+		output = ois.readObject().toString();
+		return output;
 	}
 	
 	public String streamReader(String request) {

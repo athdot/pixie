@@ -29,6 +29,7 @@ public class Server implements Runnable {
 	
 	private static String versionUpdate;
 	private String localVersion;
+	private boolean updateStream = false;
 
 	public static void main(String[] args) {
 
@@ -76,15 +77,26 @@ public class Server implements Runnable {
 			this.ois = new ObjectInputStream(connection.getInputStream());
 
 			while (true) { //if a client program is terminated, throws SocketException, a subclass of IOException
-				Object obj = ois.readObject();
-				if (obj instanceof String) {
+				if (!updateStream) {
+					//This thread is used to communicate back and forth as a client
+					Object obj = ois.readObject();
+					if (obj instanceof String) {
 
-					//obj is able to be passed into requestTree(String request) method
-					String request = obj.toString();
-					String output = requestTree(request);
+						//obj is able to be passed into requestTree(String request) method
+						String request = obj.toString();
+						String output = requestTree(request);
 					
-					oos.writeObject(output);
-					oos.flush();
+						oos.writeObject(output);
+						oos.flush();
+					}
+				} else {
+					//This thread is used to ping a client with any updates that may occur
+					if (!localVersion.equals(versionUpdate)) {
+						//Send a refresh code to the client
+						localVersion = versionUpdate;
+						oos.writeObject("1");
+						oos.flush();
+					}
 				}
 			}
 		} catch (IOException | ClassNotFoundException e) {
@@ -100,6 +112,7 @@ public class Server implements Runnable {
 
 	//Returns a return stream
 	private String requestTree(String request) {
+		System.out.println(request);
 		//Requests are
 		//login[dnsda,dansdnasn]
 		
@@ -292,12 +305,9 @@ public class Server implements Runnable {
 				returnValue += "," + temp.get(i);
 			}
 			return returnValue;
-		} else if (request.indexOf("getsync") == 0) {
-			//Returns 1 if synched, returns 0 if a refresh is needed
-			return "" + (localVersion.equals(versionUpdate) ? 1 : 0);
-		} else if (request.indexOf("resynched") == 0) {
-			//Updates our local version
-			this.localVersion = versionUpdate;
+		} else if (request.indexOf("updateStream") == 0) {
+			//Switches how the server thinks about this object, to sending something out if an update is needed
+			updateStream = true;
 		}
 		
 		return "false";
