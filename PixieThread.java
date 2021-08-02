@@ -922,7 +922,8 @@ public class PixieThread extends JComponent implements Runnable {
                     activeContentPanel = searchUserProfilePanel;
                 } catch (Exception e1) {
                 	// Other user changed account information, prompt then return
-                	JOptionPane optionPane = new JOptionPane("User has changed account information, search again", JOptionPane.INFORMATION_MESSAGE);
+                	JOptionPane optionPane = new JOptionPane(
+                			"User has changed account information, search again", JOptionPane.INFORMATION_MESSAGE);
                 	JDialog dialog = optionPane.createDialog("A Problem Occurred");
     				dialog.setVisible(true);
                 	searchUserButton.doClick();
@@ -1045,24 +1046,7 @@ public class PixieThread extends JComponent implements Runnable {
         frame.revalidate();
     }
     
-    public void refreshPage() {
-    	// Handle a changed username/password
-    	//System.out.println(userClient.streamReader("getProfile[" + activeUsername + "]"));
-    	//if (userClient.streamReader("getProfile[" + activeUsername + "]").equals("false")) {
-    	//	JOptionPane.showMessageDialog(null, "Login Credentials Changed, Log Back In",
-        //            "Search User", JOptionPane.INFORMATION_MESSAGE);
-    	//	changeFrame(appFrame, loginFrame);
-        //    userClient.streamReader("logout");
-        //    activeUsername = null;
-
-        //    switchPanel(appPanel, activeSubmenuPanel, blankSubmenuPanel, BorderLayout.WEST);
-        //    activeSubmenuPanel = blankSubmenuPanel;
-
-        //    switchPanel(appPanelContent, activeContentPanel, blankContentPanel, BorderLayout.CENTER);
-        //    activeContentPanel = blankContentPanel;
-    	//	return;
-    	//}
-    	
+    public void refreshPage() {  	
     	logoutButtonNoWarning.doClick();
     	
     	if (currentPage.equals("yourProfileButton")) {
