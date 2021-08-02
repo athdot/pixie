@@ -30,6 +30,7 @@ public class Server implements Runnable {
 	private static String versionUpdate;
 	private String localVersion;
 	private boolean updateStream = false;
+	private static boolean connect = false;
 
 	public static void main(String[] args) {
 
@@ -48,8 +49,13 @@ public class Server implements Runnable {
 			try {
 				Socket newConnection = serverSocket.accept(); //accept() waits until client connects
 				Server server = new Server(newConnection);
-				System.out.println("Client connected!");
-
+				connect = !connect;
+				
+				if (connect) {
+					//Two threads connect, handle this
+					System.out.println("Client connected!");
+				}
+				
 				//run a separate thread for each client to perform server operations (?)
 				new Thread(server).start();
 
@@ -99,7 +105,7 @@ public class Server implements Runnable {
 							oos.writeObject("1");
 							oos.flush();
 						}
-					} catch (InterruptedException e) {
+					} catch (Exception e) {
 						System.out.println("Refresh thread failed.");
 					}
 				}
@@ -291,7 +297,6 @@ public class Server implements Runnable {
 				Account acc = data.getAccount(unpack(request, "getProfile[").toLowerCase());
 				return StreamParse.accountToString(acc);
 			} catch (Exception e) {
-				e.printStackTrace();
 				return "false";
 			}
 		} else if (request.indexOf("postSearch[") == 0) {
@@ -311,6 +316,9 @@ public class Server implements Runnable {
 		} else if (request.indexOf("updateStream") == 0) {
 			//Switches how the server thinks about this object, to sending something out if an update is needed
 			updateStream = true;
+		} else if (request.indexOf("getUsername") == 0) {
+			//Get what the server thinks the username currently is
+			return loggedAccount.getUsername();
 		}
 		
 		return "false";
