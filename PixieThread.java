@@ -55,6 +55,7 @@ public class PixieThread extends JComponent implements Runnable {
     JButton allPostsButton;
     JButton searchUserButton;
     JButton logoutButton;
+    JButton logoutButtonNoWarning;
 
     /**
      * LOGIN FRAME: bring the panels and their components created for the login page from PixieLoginPage class
@@ -972,6 +973,21 @@ public class PixieThread extends JComponent implements Runnable {
                     activeContentPanel = blankContentPanel;
                 }
             }
+            
+            if (e.getSource() == logoutButtonNoWarning) {
+            	if (userClient.streamReader("getProfile[" + activeUsername + "]").equals("false")) {
+            		currentPage = "NO_REFRESH";
+            		changeFrame(appFrame, loginFrame);
+                    userClient.streamReader("logout");
+                    activeUsername = null;
+
+                    switchPanel(appPanel, activeSubmenuPanel, blankSubmenuPanel, BorderLayout.WEST);
+                    activeSubmenuPanel = blankSubmenuPanel;
+
+                    switchPanel(appPanelContent, activeContentPanel, blankContentPanel, BorderLayout.CENTER);
+                    activeContentPanel = blankContentPanel;
+                }
+            }
         }
     };
 
@@ -1046,6 +1062,8 @@ public class PixieThread extends JComponent implements Runnable {
         //    activeContentPanel = blankContentPanel;
     	//	return;
     	//}
+    	
+    	logoutButtonNoWarning.doClick();
     	
     	if (currentPage.equals("yourProfileButton")) {
     		yourProfileButton.doClick();
@@ -1197,6 +1215,7 @@ public class PixieThread extends JComponent implements Runnable {
         allPostsButton = new JButton("View All Posts");
         searchUserButton = new JButton("Search For User");
         logoutButton = new JButton("Logout");
+        logoutButtonNoWarning = new JButton("Hidden");
 
         // Add buttons to grid
         appFrameMenuGrid.add(mainMenuLabel);
@@ -1242,6 +1261,7 @@ public class PixieThread extends JComponent implements Runnable {
 
         //user can navigate to 6 different pages using the main menu (similar to Application.java from PJ04)
         logoutButton.addActionListener(actionListener);
+        logoutButtonNoWarning.addActionListener(actionListener);
 
         //YOUR PROFILE options if user goes to "Your Profile" submenu
         yourProfileButton.addActionListener(actionListener);
