@@ -923,7 +923,7 @@ public class PixieThread extends JComponent implements Runnable {
                 } catch (Exception e1) {
                 	// Other user changed account information, prompt then return
                 	JOptionPane optionPane = new JOptionPane(
-                			"User has changed account information, search again", JOptionPane.INFORMATION_MESSAGE);
+                			  "User has changed account information, search again", JOptionPane.INFORMATION_MESSAGE);
                 	JDialog dialog = optionPane.createDialog("A Problem Occurred");
     				dialog.setVisible(true);
                 	searchUserButton.doClick();
