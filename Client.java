@@ -37,7 +37,7 @@ public class Client {
 		} catch (Exception e) {
 			if (outputtedError == 0) {
 				String msg = "Client has refused to connect!\n\n Has an instance of Server.java been run at " + 
-						HOST + ":" + PORT + "?";
+						  HOST + ":" + PORT + "?";
 				JOptionPane optionPane = new JOptionPane(msg, JOptionPane.INFORMATION_MESSAGE);    
 				JDialog dialog = optionPane.createDialog("A Problem Occurred");
 				dialog.setAlwaysOnTop(true);

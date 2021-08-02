@@ -18,7 +18,7 @@ import java.util.ArrayList;
 public class PixieThread extends JComponent implements Runnable {
 
     //each user who has the app open also has a Client object that communicates with the Server class.
-    private final Client CLIENT = new Client();
+    private final Client userClient = new Client();
 
     String activeUsername; //for client communication with server: what username is currently logged in?
     JPanel activeSubmenuPanel; //the submenus of the main menu options: which one is currently shown?
@@ -240,14 +240,14 @@ public class PixieThread extends JComponent implements Runnable {
 
                 String worked = "login[" + signInUsernameField.getText().toLowerCase() + "," +
                         signInPasswordField.getText() + "]";
-                worked = CLIENT.streamReader(worked);
+                worked = userClient.streamReader(worked);
 
                 if (worked.equals("false")) {
                     JOptionPane.showMessageDialog(null, "Invalid Username or Password",
                             "Invalid", JOptionPane.ERROR_MESSAGE);
                 } else {
                     activeUsername = signInUsernameField.getText();
-                    String profile = CLIENT.streamReader("getProfile[" + activeUsername + "]");
+                    String profile = userClient.streamReader("getProfile[" + activeUsername + "]");
                     Account user = StreamParse.stringToAccount(profile);
                     yourProfileUsernameLabel.setText(activeUsername);
                     yourProfileBioLabel.setText("<html>" + user.getBio() + "</html>");
@@ -289,13 +289,13 @@ public class PixieThread extends JComponent implements Runnable {
 
                 String worked = "createAccount[" + createAccountUsernameField.getText().toLowerCase() + "," +
                         createAccountPasswordField.getText() + "]";
-                worked = CLIENT.streamReader(worked);
+                worked = userClient.streamReader(worked);
 
                 if (worked.equals("true")) {
                     JOptionPane.showMessageDialog(null, "New Account Created",
                             "Account Created", JOptionPane.INFORMATION_MESSAGE);
                     activeUsername = createAccountUsernameField.getText();
-                    String profile = CLIENT.streamReader("getProfile[" + activeUsername + "]");
+                    String profile = userClient.streamReader("getProfile[" + activeUsername + "]");
                     Account user = StreamParse.stringToAccount(profile);
                     yourProfileUsernameLabel.setText(activeUsername);
                     yourProfileBioLabel.setText("<html>" + user.getBio() + "</html>");
@@ -326,7 +326,7 @@ public class PixieThread extends JComponent implements Runnable {
                 switchPanel(appPanel, activeSubmenuPanel, yourProfileSubmenuPanel, BorderLayout.WEST);
                 activeSubmenuPanel = yourProfileSubmenuPanel;
 
-                String profile = CLIENT.streamReader("getProfile[" + activeUsername + "]");
+                String profile = userClient.streamReader("getProfile[" + activeUsername + "]");
                 Account user = StreamParse.stringToAccount(profile);
                 yourProfileUsernameLabel.setText(activeUsername);
                 yourProfileBioLabel.setText("<html>" + user.getBio() + "</html>");
@@ -348,7 +348,7 @@ public class PixieThread extends JComponent implements Runnable {
             if (e.getSource() == confirmChangeBioButton) {
             	currentPage = "NO_REFRESH";
                 String changeBio = "changeBio[" + changeBioField.getText() + "]";
-                changeBio = CLIENT.streamReader(changeBio);
+                changeBio = userClient.streamReader(changeBio);
 
                 if (changeBio.equalsIgnoreCase("false")) {
                     JOptionPane.showMessageDialog(null, "Something went wrong",
@@ -371,7 +371,7 @@ public class PixieThread extends JComponent implements Runnable {
             	currentPage = "NO_REFRESH";
                 String newUsername = "changeUsername[" + changeUsernameField.getText() + "]";
 
-                newUsername = CLIENT.streamReader(newUsername);
+                newUsername = userClient.streamReader(newUsername);
                 
                 if (changeUsernameField.getText().contains(" ")) {
                     JOptionPane.showMessageDialog(null, "No spaces should be in the username",
@@ -411,7 +411,7 @@ public class PixieThread extends JComponent implements Runnable {
                 String changePassword = "changePassword[" + oldPasswordField.getText() + ","
                         + newPasswordField.getText() + "]";
 
-                changePassword = CLIENT.streamReader(changePassword);
+                changePassword = userClient.streamReader(changePassword);
 
                 if (newPasswordField.getText().length() == 0) {
                     JOptionPane.showMessageDialog(null, "Password is too short",
@@ -443,7 +443,7 @@ public class PixieThread extends JComponent implements Runnable {
                             "Account Deleted", JOptionPane.INFORMATION_MESSAGE);
 
                     activeUsername = createAccountUsernameField.getText();
-                    CLIENT.streamReader("deleteAccount");
+                    userClient.streamReader("deleteAccount");
                     changeFrame(appFrame, loginFrame);
                 }
             }
@@ -470,10 +470,10 @@ public class PixieThread extends JComponent implements Runnable {
 
             //user is done editing the post and wants to save/create it
             if (e.getSource() == doneWritingPostButton) {
-                String post = "post[" + createNewPostTitleField.getText().
-                        replace(",", "123COMMA_REP321") + "," +
-                        createNewPostContentField.getText() + "]";
-                String worked = CLIENT.streamReader(post);
+                String post = "post[" + 
+                        createNewPostTitleField.getText().replace(",", "123COMMA_REP321") + 
+                        "," + createNewPostContentField.getText() + "]";
+                String worked = userClient.streamReader(post);
 
                 if (createNewPostTitleField.getText().length() == 0 ||
                         createNewPostContentField.getText().length() == 0) {
@@ -513,7 +513,7 @@ public class PixieThread extends JComponent implements Runnable {
 
                         String postTitle = importBlock.get(0)[1].split(",")[0];
                         String postContent = importBlock.get(0)[2].split(",")[2];
-                        String worked = CLIENT.streamReader("post[" + postTitle + "," + postContent + "]");
+                        String worked = userClient.streamReader("post[" + postTitle + "," + postContent + "]");
 
                         if (worked.equals("true")) {
                             JOptionPane.showMessageDialog(null,
@@ -550,7 +550,7 @@ public class PixieThread extends JComponent implements Runnable {
                 switchPanel(appPanel, activeSubmenuPanel, yourPostsSubmenuPanel, BorderLayout.WEST);
                 activeSubmenuPanel = yourPostsSubmenuPanel;
 
-                String getYourPosts = CLIENT.streamReader("getUserPosts[" + activeUsername + "]");
+                String getYourPosts = userClient.streamReader("getUserPosts[" + activeUsername + "]");
                 postsTemp = StreamParse.stringToPosts(getYourPosts);
                 displayPosts(postsTemp);
 
@@ -604,7 +604,7 @@ public class PixieThread extends JComponent implements Runnable {
                 Post selectedPost = postsTemp.get(postsChosenNum - 1);
 
                 //first check if this edit is valid; try to change the post title
-                String worked = CLIENT.streamReader("editTitle[" + 
+                String worked = userClient.streamReader("editTitle[" + 
                         selectedPost.getTitle().replace(",", "123COMMA_REP321") + "," +
                         selectedPost.getAuthor() + "," + 
                         editPostTitleField.getText().replace(",", "123COMMA_REP321") + "]");
@@ -615,7 +615,7 @@ public class PixieThread extends JComponent implements Runnable {
                     return;
                 }
 
-                CLIENT.streamReader("editPost[" + editPostTitleField.getText().replace(",", "123COMMA_REP321") + "," +
+                userClient.streamReader("editPost[" + editPostTitleField.getText().replace(",", "123COMMA_REP321") + "," +
                         selectedPost.getAuthor() + "," + editPostContentField.getText() + "]");
 
                 JOptionPane.showMessageDialog(null, "Post updated successfully!",
@@ -646,7 +646,7 @@ public class PixieThread extends JComponent implements Runnable {
 
                 Post selectedPost = postsTemp.get(postsChosenNum - 1); //post numbers are 1-based
 
-                CLIENT.streamReader("addComment[" + selectedPost.getTitle() +
+                userClient.streamReader("addComment[" + selectedPost.getTitle() +
                         "," + selectedPost.getAuthor() + "," + commentOnPostField.getText() + "]");
 
                 JOptionPane.showMessageDialog(null, "Comment written successfully!",
@@ -680,7 +680,7 @@ public class PixieThread extends JComponent implements Runnable {
 
                 Post selectedPost = postsTemp.get(postsChosenNum - 1); //post numbers are 1-based
 
-                CLIENT.streamReader("deletePost[" + selectedPost.getTitle().replace(",", "123COMMA_REP321") + "," +
+                userClient.streamReader("deletePost[" + selectedPost.getTitle().replace(",", "123COMMA_REP321") + "," +
                         selectedPost.getAuthor() + "]");
 
                 JOptionPane.showMessageDialog(null, "Post deleted successfully!",
@@ -699,7 +699,7 @@ public class PixieThread extends JComponent implements Runnable {
                 switchPanel(appPanel, activeSubmenuPanel, yourCommentsSubmenuPanel, BorderLayout.WEST);
                 activeSubmenuPanel = yourCommentsSubmenuPanel;
 
-                String getPostsYouCommented = CLIENT.streamReader("getUserComments[" + activeUsername + "]");
+                String getPostsYouCommented = userClient.streamReader("getUserComments[" + activeUsername + "]");
                 postsTemp = StreamParse.stringToPosts(getPostsYouCommented);
                 displayPosts(postsTemp);
 
@@ -780,13 +780,13 @@ public class PixieThread extends JComponent implements Runnable {
             //user wants to confirm edit of selected comment
             if (e.getSource() == confirmEditCommentButton) {
 
-                //get the post details required for editing comment with CLIENT.streamReader()
+                //get the post details required for editing comment with userClient.streamReader()
                 Post selectedPost = postsTemp.get(postsChosenNum - 1); //post numbers are 1-based
 
                 String postTitle = selectedPost.getTitle();
                 String postAuthor = selectedPost.getAuthor();
 
-                CLIENT.streamReader("editComment[" + postTitle + "," + postAuthor + "," +
+                userClient.streamReader("editComment[" + postTitle + "," + postAuthor + "," +
                         commentsChosenNum + "," + editCommentField.getText() + "]");
 
                 JOptionPane.showMessageDialog(null, "Comment updated successfully!",
@@ -802,13 +802,13 @@ public class PixieThread extends JComponent implements Runnable {
                         JOptionPane.YES_NO_OPTION);
 
                 if (choice == JOptionPane.YES_OPTION) {
-                    //get the post details required by CLIENT.streamReader() for deleting comment
+                    //get the post details required by userClient.streamReader() for deleting comment
                     Post selectedPost = postsTemp.get(postsChosenNum - 1); //post numbers are 1-based
                     String postTitle = selectedPost.getTitle();
                     String postAuthor = selectedPost.getAuthor();
 
                     //todo: THIS CRASHES THE APP -- CHARLES HELP
-                    CLIENT.streamReader("deleteComment[" + postTitle + "," + postAuthor + "," +
+                    userClient.streamReader("deleteComment[" + postTitle + "," + postAuthor + "," +
                             (commentsChosenNum - 1) + "]"); //comment # is 1-based
 
                     JOptionPane.showMessageDialog(null, "Comment deleted successfully!",
@@ -828,7 +828,7 @@ public class PixieThread extends JComponent implements Runnable {
                 switchPanel(appPanel, activeSubmenuPanel, allPostsSubmenuPanel, BorderLayout.WEST);
                 activeSubmenuPanel = allPostsSubmenuPanel;
 
-                String getAllPosts = CLIENT.streamReader("getAllPosts");
+                String getAllPosts = userClient.streamReader("getAllPosts");
                 postsTemp = StreamParse.stringToPosts(getAllPosts);
                 displayPosts(postsTemp);
 
@@ -886,7 +886,7 @@ public class PixieThread extends JComponent implements Runnable {
             //user clicks button to search for provided username -- case insensitive
             if (e.getSource() == searchUserConfirmButton) {
             	currentPage = "NO_REFRESH";
-                String searchReturn = CLIENT.streamReader("userSearch[" + searchUserField.getText() + "]");
+                String searchReturn = userClient.streamReader("userSearch[" + searchUserField.getText() + "]");
                 String[] relatedUsernames = searchReturn.split(",");
 
                 boolean found = false;
@@ -914,7 +914,7 @@ public class PixieThread extends JComponent implements Runnable {
             //you want to see the searched user's profile
             if (e.getSource() == searchUserViewProfileButton) {
                 currentPage = "searchUserViewProfileButton";
-                String searchedAccountString = CLIENT.streamReader("getProfile[" + searchedUser + "]");
+                String searchedAccountString = userClient.streamReader("getProfile[" + searchedUser + "]");
                 Account searchedAccount = StreamParse.stringToAccount(searchedAccountString);
                 searchUserUsernameLabel.setText(searchedAccount.getUsername());
                 searchUserBioLabel.setText("<html>" + searchedAccount.getBio() + "</html>");
@@ -931,7 +931,7 @@ public class PixieThread extends JComponent implements Runnable {
             if (e.getSource() == searchUserViewPostsButton) {
             	currentPage = "searchUserViewPostsButton";
 
-                String getUserPosts = CLIENT.streamReader("getUserPosts[" + searchedUser + "]");
+                String getUserPosts = userClient.streamReader("getUserPosts[" + searchedUser + "]");
                 postsTemp = StreamParse.stringToPosts(getUserPosts);
                 displayPosts(postsTemp);
 
@@ -943,7 +943,7 @@ public class PixieThread extends JComponent implements Runnable {
             if (e.getSource() == searchUserViewCommentsButton) {
             	currentPage = "searchUserViewCommentsButton";
 
-                String getUserPosts = CLIENT.streamReader("getUserComments[" + searchedUser + "]");
+                String getUserPosts = userClient.streamReader("getUserComments[" + searchedUser + "]");
                 postsTemp = StreamParse.stringToPosts(getUserPosts);
                 displayPosts(postsTemp);
 
@@ -960,7 +960,7 @@ public class PixieThread extends JComponent implements Runnable {
 
                 if (choice == JOptionPane.YES_OPTION) {
                     changeFrame(appFrame, loginFrame);
-                    CLIENT.streamReader("logout");
+                    userClient.streamReader("logout");
                     activeUsername = null;
 
                     switchPanel(appPanel, activeSubmenuPanel, blankSubmenuPanel, BorderLayout.WEST);
@@ -981,13 +981,13 @@ public class PixieThread extends JComponent implements Runnable {
         public void windowClosing(WindowEvent e) {
             loginFrame.dispose();
             appFrame.dispose();
-            CLIENT.streamReader("logout");
-            CLIENT.end();
+            userClient.streamReader("logout");
+            userClient.end();
         }
     };
 
     /**
-     * takes a formatted ArrayList of posts returned originally from CLIENT.streamReader
+     * takes a formatted ArrayList of posts returned originally from userClient.streamReader
      * @param posts - ArrayList of posts
      */
     public void displayPosts(ArrayList<Post> posts) {
@@ -1029,12 +1029,12 @@ public class PixieThread extends JComponent implements Runnable {
     
     public void refreshPage() {
     	// Handle a changed username/password
-     	String foreignUsername = CLIENT.streamReader("getUsername");
-    	if (CLIENT.streamReader("getProfile[" + foreignUsername + "]").equals("false")) {
+     	String foreignUsername = userClient.streamReader("getUsername");
+    	if (userClient.streamReader("getProfile[" + foreignUsername + "]").equals("false")) {
     		JOptionPane.showMessageDialog(null, "Login Credentials Changed, Log Back In",
                     "Search User", JOptionPane.INFORMATION_MESSAGE);
     		changeFrame(appFrame, loginFrame);
-            CLIENT.streamReader("logout");
+            userClient.streamReader("logout");
             activeUsername = null;
 
             switchPanel(appPanel, activeSubmenuPanel, blankSubmenuPanel, BorderLayout.WEST);
@@ -1098,7 +1098,7 @@ public class PixieThread extends JComponent implements Runnable {
     public void run() {
     	currentPage = "NO_REFRESH";
     	
-    	if (CLIENT.serverStatus()) {
+    	if (userClient.serverStatus()) {
     		//Stops thread execution
     		return;
     	}

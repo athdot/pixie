@@ -13,7 +13,7 @@ import javax.swing.SwingUtilities;
  */
 
 public class Pixie implements Runnable {
-	private final Client UPDATE_CLIENT = new Client();
+	private final Client updateClient = new Client();
 	private static PixieThread pixieApp;
 	
 	public static void main(String[] args) {
@@ -29,19 +29,19 @@ public class Pixie implements Runnable {
 
 	@Override
 	public void run() {
-		if (UPDATE_CLIENT.serverStatus()) {
+		if (updateClient.serverStatus()) {
     		//Stops thread execution
     		return;
     	}
 		
 		// Configure the server thread for this object appropriately
-		UPDATE_CLIENT.streamReader("updateStream");
+		updateClient.streamReader("updateStream");
 		
 		while (true) {
 			//Wait for new update requests
 			try {
 				// Refreshing page
-				UPDATE_CLIENT.getUpdate();
+				updateClient.getUpdate();
 				pixieApp.refreshPage();
 				Thread.sleep(1);
 			} catch (Exception e) {
