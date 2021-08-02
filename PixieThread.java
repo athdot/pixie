@@ -205,29 +205,33 @@ public class PixieThread extends JComponent implements Runnable {
     JLabel searchUserUsernameLabel = psu.searchUserUsernameLabel;
     JLabel searchUserBioLabel = psu.searchUserBioLabel;
 
+    private String currentPage;
+    
     /**
      * for the entire program: action listeners for every button on the GUI. Organized by main menu option
      */
     ActionListener actionListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-
+        	
             //█░░ █▀█ █▀▀ █ █▄░█
             //█▄▄ █▄█ █▄█ █ █░▀█
 
             //user chooses to navigate to the sign-in page
             if (e.getSource() == signInButton) {
+            	currentPage = "NO_REFRESH";
                 switchPanel(loginFrame, createAccountPanel, signInPanel);
             }
 
             //user chooses to navigate to the create account page
             if (e.getSource() == createAccountButton) {
+            	currentPage = "NO_REFRESH";
                 switchPanel(loginFrame, signInPanel, createAccountPanel);
             }
 
             //user chooses to sign into the account with provided username and password
             if (e.getSource() == signInConfirmButton) {
-
+            	currentPage = "NO_REFRESH";
                 if (signInUsernameField.getText().length() == 0 || signInPasswordField.getText().length() == 0) {
                     JOptionPane.showMessageDialog(null, "Password or Username too Short",
                             "Invalid", JOptionPane.ERROR_MESSAGE);
@@ -263,7 +267,7 @@ public class PixieThread extends JComponent implements Runnable {
 
             //user chooses to create a new account with given username, password, and confirm password
             if (e.getSource() == createAccountConfirmButton) {
-
+            	currentPage = "NO_REFRESH";
                 if (createAccountUsernameField.getText().contains(" ")) {
                     JOptionPane.showMessageDialog(null, "No Spaces Should be in the Username",
                             "Invalid", JOptionPane.ERROR_MESSAGE);
@@ -318,6 +322,7 @@ public class PixieThread extends JComponent implements Runnable {
 
             //user clicks main menu button to go to "your profile" page
             if (e.getSource() == yourProfileButton) {
+            	currentPage = "yourProfileButton";
                 switchPanel(appPanel, activeSubmenuPanel, yourProfileSubmenuPanel, BorderLayout.WEST);
                 activeSubmenuPanel = yourProfileSubmenuPanel;
 
@@ -335,11 +340,13 @@ public class PixieThread extends JComponent implements Runnable {
             }
 
             if (e.getSource() == changeBioButton) {
+            	currentPage = "NO_REFRESH";
                 switchPanel(appPanelContent, activeContentPanel, changeBioPanel, BorderLayout.CENTER);
                 activeContentPanel = changeBioPanel;
             }
 
             if (e.getSource() == confirmChangeBioButton) {
+            	currentPage = "NO_REFRESH";
                 String changeBio = "changeBio[" + changeBioField.getText() + "]";
                 changeBio = CLIENT.streamReader(changeBio);
 
@@ -355,11 +362,13 @@ public class PixieThread extends JComponent implements Runnable {
             
             // YOUR PROFILE: CHANGE USERNAME BUTTON -- user wants to go to change username page
             if (e.getSource() == changeUsernameButton) {
+            	currentPage = "NO_REFRESH";
                 switchPanel(appPanelContent, activeContentPanel, changeUsernamePanel, BorderLayout.CENTER);
                 activeContentPanel = changeUsernamePanel;
             }
 
             if (e.getSource() == confirmChangeUsernameButton) {
+            	currentPage = "NO_REFRESH";
                 String newUsername = "changeUsername[" + changeUsernameField.getText() + "]";
 
                 newUsername = CLIENT.streamReader(newUsername);
@@ -392,11 +401,13 @@ public class PixieThread extends JComponent implements Runnable {
             
             // YOUR PROFILE: CHANGE PASSWORD BUTTON -- user wants to go to change password page
             if (e.getSource() == changePasswordButton) {
+            	currentPage = "NO_REFRESH";
                 switchPanel(appPanelContent, activeContentPanel, changePasswordPanel, BorderLayout.CENTER);
                 activeContentPanel = changePasswordPanel;
             }
 
             if (e.getSource() == confirmChangePasswordButton) {
+            	currentPage = "NO_REFRESH";
                 String changePassword = "changePassword[" + oldPasswordField.getText() + ","
                         + newPasswordField.getText() + "]";
 
@@ -421,6 +432,7 @@ public class PixieThread extends JComponent implements Runnable {
             
             //user clicks "delete account" button on "your profile" menu
             if (e.getSource() == deleteAccountButton) {
+            	currentPage = "NO_REFRESH";
                 // Makes sure user didn't click delete button by accident
                 int choice = JOptionPane.showConfirmDialog(null,
                         "Are you sure you want to delete your account?", "Delete?",
@@ -441,6 +453,7 @@ public class PixieThread extends JComponent implements Runnable {
 
             //user goes to "create post" page submenu
             if (e.getSource() == createPostButton) {
+            	currentPage = "NO_REFRESH";
                 switchPanel(appPanel, activeSubmenuPanel, createPostSubmenuPanel, BorderLayout.WEST);
                 activeSubmenuPanel = createPostSubmenuPanel;
 
@@ -450,6 +463,7 @@ public class PixieThread extends JComponent implements Runnable {
 
             //create post: user wants to write a new post
             if (e.getSource() == createNewPostButton) {
+            	currentPage = "NO_REFRESH";
                 switchPanel(appPanelContent, activeContentPanel, createNewPostPanel, BorderLayout.CENTER);
                 activeContentPanel = createNewPostPanel;
             }
@@ -479,6 +493,7 @@ public class PixieThread extends JComponent implements Runnable {
 
             //create post: user wants to go to import post from CSV page
             if (e.getSource() == importPostButton) {
+            	currentPage = "NO_REFRESH";
                 switchPanel(appPanelContent, activeContentPanel, importFromCSVPanel, BorderLayout.CENTER);
                 activeContentPanel = importFromCSVPanel;
             }
@@ -530,6 +545,7 @@ public class PixieThread extends JComponent implements Runnable {
 
             //user clicks main menu button to go to "your posts" page
             if (e.getSource() == yourPostsButton) {
+            	currentPage = "yourPostsButton";
                 switchPanel(appPanel, activeSubmenuPanel, yourPostsSubmenuPanel, BorderLayout.WEST);
                 activeSubmenuPanel = yourPostsSubmenuPanel;
 
@@ -543,6 +559,7 @@ public class PixieThread extends JComponent implements Runnable {
 
             //user clicks button to select a post number
             if (e.getSource() == selectYourPostButton) {
+            	currentPage = "selectYourPostButton";
                 postsChosenNum = 0;
                 try {
                     postsChosenNum = Integer.parseInt(selectYourPostField.getText());
@@ -566,6 +583,7 @@ public class PixieThread extends JComponent implements Runnable {
 
             //user wants to edit the selected post
             if (e.getSource() == editYourPostButton) {
+            	currentPage = "NO_REFRESH";
                 switchPanel(appPanelContent, activeContentPanel, editPostPanel, BorderLayout.CENTER);
                 activeContentPanel = editPostPanel;
 
@@ -608,6 +626,7 @@ public class PixieThread extends JComponent implements Runnable {
 
             //user clicks button to comment on his/her post
             if (e.getSource() == commentOnYourPostButton) {
+            	currentPage = "NO_REFRESH";
                 switchPanel(appPanelContent, activeContentPanel, commentOnPostPanel, BorderLayout.CENTER);
                 activeContentPanel = commentOnPostPanel;
             }
@@ -673,6 +692,7 @@ public class PixieThread extends JComponent implements Runnable {
 
             //user clicks main menu button to go to "your comments" page
             if (e.getSource() == yourCommentsButton) {
+            	currentPage = "yourCommentsButton";
                 switchPanel(appPanel, activeSubmenuPanel, yourCommentsSubmenuPanel, BorderLayout.WEST);
                 activeSubmenuPanel = yourCommentsSubmenuPanel;
 
@@ -731,6 +751,7 @@ public class PixieThread extends JComponent implements Runnable {
                     activeSubmenuPanel = yourCommentOptionsPanel;
                     selectCommentPostField.setText("");
                     selectCommentField.setText("");
+                    currentPage = "commentsChosenNum";
                 } else {
                     JOptionPane.showMessageDialog(null, "Enter a valid comment number",
                             "Select comment", JOptionPane.ERROR_MESSAGE);
@@ -744,6 +765,8 @@ public class PixieThread extends JComponent implements Runnable {
             if (e.getSource() == editCommentButton) {
                 switchPanel(appPanelContent, activeContentPanel, editCommentPanel, BorderLayout.CENTER);
                 activeContentPanel = editCommentPanel;
+                
+                currentPage = "NO_REFRESH";
 
                 Post selectedPost = postsTemp.get(postsChosenNum - 1); //post numbers are 1-based
                 Comment selectedComment = selectedPost.getComments().get(commentsChosenNum - 1);
@@ -798,6 +821,7 @@ public class PixieThread extends JComponent implements Runnable {
 
             //user clicks main menu button to go to "view all posts" page
             if (e.getSource() == allPostsButton) {
+                currentPage = "allPostsButton";
                 switchPanel(appPanel, activeSubmenuPanel, allPostsSubmenuPanel, BorderLayout.WEST);
                 activeSubmenuPanel = allPostsSubmenuPanel;
 
@@ -811,6 +835,9 @@ public class PixieThread extends JComponent implements Runnable {
 
             //user tries to select a post from "view all posts"
             if (e.getSource() == selectPostButton) {
+            	currentPage = "NO_REFRESH";
+            	//Another grey area
+            	
                 try {
                     postsChosenNum = Integer.parseInt(selectPostField.getText());
                 } catch (Exception exception) {
@@ -835,6 +862,7 @@ public class PixieThread extends JComponent implements Runnable {
 
             //user wants to comment on a post in "all posts" page -- reuse logic from "your posts"
             if (e.getSource() == allPostsCommentButton) {
+                currentPage = "allPostsCommentButton";
                 switchPanel(appPanelContent, activeContentPanel, commentOnPostPanel, BorderLayout.CENTER);
                 activeContentPanel = commentOnPostPanel;
             }
@@ -844,6 +872,7 @@ public class PixieThread extends JComponent implements Runnable {
 
             //user clicks main menu button for search user
             if (e.getSource() == searchUserButton) {
+            	currentPage = "searchUserButton";
                 switchPanel(appPanel, activeSubmenuPanel, searchUserSubmenuPanel, BorderLayout.WEST);
                 activeSubmenuPanel = searchUserSubmenuPanel;
 
@@ -853,6 +882,7 @@ public class PixieThread extends JComponent implements Runnable {
 
             //user clicks button to search for provided username -- case insensitive
             if (e.getSource() == searchUserConfirmButton) {
+            	currentPage = "NO_REFRESH";
                 String searchReturn = CLIENT.streamReader("userSearch[" + searchUserField.getText() + "]");
                 String[] relatedUsernames = searchReturn.split(",");
 
@@ -880,7 +910,7 @@ public class PixieThread extends JComponent implements Runnable {
 
             //you want to see the searched user's profile
             if (e.getSource() == searchUserViewProfileButton) {
-
+                currentPage = "searchUserViewProfileButton";
                 String searchedAccountString = CLIENT.streamReader("getProfile[" + searchedUser + "]");
                 Account searchedAccount = StreamParse.stringToAccount(searchedAccountString);
                 searchUserUsernameLabel.setText(searchedAccount.getUsername());
@@ -890,12 +920,14 @@ public class PixieThread extends JComponent implements Runnable {
                     searchUserBioLabel.setText("[empty]");
                 }
 
+                
                 switchPanel(appPanelContent, activeContentPanel, searchUserProfilePanel, BorderLayout.CENTER);
                 activeContentPanel = searchUserProfilePanel;
             }
 
             //view the searched user's posts
             if (e.getSource() == searchUserViewPostsButton) {
+            	currentPage = "searchUserViewPostsButton";
                 switchPanel(appPanelContent, activeContentPanel, viewPostsCommentsOutlinePanel, BorderLayout.CENTER);
                 activeContentPanel = viewPostsCommentsOutlinePanel;
 
@@ -906,6 +938,7 @@ public class PixieThread extends JComponent implements Runnable {
 
             //view the searched user's comments
             if (e.getSource() == searchUserViewCommentsButton) {
+            	currentPage = "searchUserViewCommentsButton";
                 switchPanel(appPanelContent, activeContentPanel, viewPostsCommentsOutlinePanel, BorderLayout.CENTER);
                 activeContentPanel = viewPostsCommentsOutlinePanel;
 
@@ -916,6 +949,7 @@ public class PixieThread extends JComponent implements Runnable {
 
             //LOGOUT -- user clicks main menu logout button
             if (e.getSource() == logoutButton) {
+            	currentPage = "NO_REFRESH";
                 //make sure user didn't click by accident
                 int choice = JOptionPane.showConfirmDialog(null,
                         "Are you sure you want to log out?", "Logout?", JOptionPane.YES_NO_OPTION);
@@ -985,8 +1019,21 @@ public class PixieThread extends JComponent implements Runnable {
     
     public void refreshPage() {
     	System.out.println("Refresh found in main thread");
-    	appFrame.repaint();
-    	appFrame.revalidate();
+    	if (currentPage.equals("yourProfileButton")) {
+    		yourProfileButton.doClick();
+    	} else if (currentPage.equals("yourPostsButton")) {
+    		yourPostsButton.doClick();
+    	} else if (currentPage.equals("yourCommentsButton")) {
+    		yourCommentsButton.doClick();
+    	} else if (currentPage.equals("allPostsButton")) {
+    		allPostsButton.doClick();
+    	} else if (currentPage.equals("searchUserViewProfileButton")) {
+    		searchUserViewProfileButton.doClick();
+    	} else if (currentPage.equals("searchUserViewPostsButton")) {
+    		searchUserViewPostsButton.doClick();
+    	} else if (currentPage.equals("searchUserViewCommentsButton")) {
+    		searchUserViewCommentsButton.doClick();
+    	}
     }
 
     /**
@@ -1023,6 +1070,8 @@ public class PixieThread extends JComponent implements Runnable {
      * time in this program. Closing a frame means the user wants to quit entirely.
      */
     public void run() {
+    	currentPage = "NO_REFRESH";
+    	
     	if (CLIENT.serverStatus()) {
     		//Stops thread execution
     		return;
@@ -1094,7 +1143,7 @@ public class PixieThread extends JComponent implements Runnable {
         	ImageIcon img = new ImageIcon("images/ico.png");
         	appFrame.setIconImage(img.getImage());
         } catch (Exception e) {
-        	// Could not load image, move on
+        	// Could not load image, default java is fine
         }
 
         //side panel creation
