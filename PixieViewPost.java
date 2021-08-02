@@ -66,7 +66,8 @@ public class PixieViewPost extends JComponent {
         viewPostsCommentsContainerPanel = new JPanel(new GridLayout(0, 1));
         boundingBox.add(viewPostsCommentsContainerPanel, BorderLayout.CENTER);
 
-        //viewPostsCommentsOutlinePanel serves as a simple aesthetic empty border, added later to Pixie.java appPanelContent
+        //viewPostsCommentsOutlinePanel serves as a simple aesthetic empty border, 
+        //added later to Pixie.java appPanelContent
         viewPostsCommentsOutlinePanel = new JPanel(new BorderLayout());
         viewPostsCommentsOutlinePanel.add(jsp, BorderLayout.CENTER);
     }

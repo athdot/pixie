@@ -613,7 +613,7 @@ public class PixieThread extends JComponent implements Runnable {
                 }
 
                 userClient.streamReader("editPost[" + editPostTitleField.getText().replace(",", "123COMMA_REP321") + 
-                		"," + selectedPost.getAuthor() + "," + editPostContentField.getText() + "]");
+                		  "," + selectedPost.getAuthor() + "," + editPostContentField.getText() + "]");
 
                 JOptionPane.showMessageDialog(null, "Post updated successfully!",
                         "Edit post", JOptionPane.INFORMATION_MESSAGE);

@@ -351,9 +351,9 @@ public class Server implements Runnable {
 	}
 	
 	// This function takes the update sum and iterates it if the user does anything
-	private void iterateVersion () {
+	private void iterateVersion() {
 		// Handle race conditions
-		synchronized(versionUpdate) {
+		synchronized (versionUpdate) {
 			// Start by looking at the first digit
 			String replace = "";
 			boolean resolved = false;
@@ -361,7 +361,7 @@ public class Server implements Runnable {
 			int digit = 0;
 			do {	
 				String indChar = versionUpdate.substring(versionUpdate.length() - digit - 1, 
-						versionUpdate.length() - digit);
+						  versionUpdate.length() - digit);
 				int indexOfChar = V_ID.indexOf(indChar);
 				if (loopedOver) {
 					indexOfChar++;
