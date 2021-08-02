@@ -532,9 +532,6 @@ public class PixieThread extends JComponent implements Runnable {
                 }
             }
 
-            //█░█ █ █▀▀ █░█░█   █▄█ █▀█ █░█ █▀█   █▀█ █▀█ █▀ ▀█▀ █▀
-            //▀▄▀ █ ██▄ ▀▄▀▄▀   ░█░ █▄█ █▄█ █▀▄   █▀▀ █▄█ ▄█ ░█░ ▄█
-
             //remove any list of posts everytime you click a main menu option (except logout)
             if (e.getSource() == yourProfileButton || e.getSource() == createPostButton ||
                     e.getSource() == yourPostsButton || e.getSource() == yourCommentsButton ||
@@ -615,8 +612,8 @@ public class PixieThread extends JComponent implements Runnable {
                     return;
                 }
 
-                userClient.streamReader("editPost[" + editPostTitleField.getText().replace(",", "123COMMA_REP321") + "," +
-                        selectedPost.getAuthor() + "," + editPostContentField.getText() + "]");
+                userClient.streamReader("editPost[" + editPostTitleField.getText().replace(",", "123COMMA_REP321") + 
+                		"," + selectedPost.getAuthor() + "," + editPostContentField.getText() + "]");
 
                 JOptionPane.showMessageDialog(null, "Post updated successfully!",
                         "Edit post", JOptionPane.INFORMATION_MESSAGE);
@@ -689,9 +686,6 @@ public class PixieThread extends JComponent implements Runnable {
                 //post has been deleted. Return user to "view your posts" initial screen
                 yourPostsButton.doClick();
             }
-
-            //█░█ █ █▀▀ █░█░█   █▄█ █▀█ █░█ █▀█   █▀▀ █▀█ █▀▄▀█ █▀▄▀█ █▀▀ █▄░█ ▀█▀ █▀
-            //▀▄▀ █ ██▄ ▀▄▀▄▀   ░█░ █▄█ █▄█ █▀▄   █▄▄ █▄█ █░▀░█ █░▀░█ ██▄ █░▀█ ░█░ ▄█
 
             //user clicks main menu button to go to "your comments" page
             if (e.getSource() == yourCommentsButton) {
@@ -818,9 +812,6 @@ public class PixieThread extends JComponent implements Runnable {
                     yourCommentsButton.doClick();
                 }
             }
-
-            //█░█ █ █▀▀ █░█░█   ▄▀█ █░░ █░░   █▀█ █▀█ █▀ ▀█▀ █▀
-            //▀▄▀ █ ██▄ ▀▄▀▄▀   █▀█ █▄▄ █▄▄   █▀▀ █▄█ ▄█ ░█░ ▄█
 
             //user clicks main menu button to go to "view all posts" page
             if (e.getSource() == allPostsButton) {
