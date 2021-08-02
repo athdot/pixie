@@ -30,6 +30,7 @@ public class Server implements Runnable {
 	private static String versionUpdate;
 	private String localVersion;
 	private boolean updateStream = false;
+	private static boolean connect = false;
 
 	public static void main(String[] args) {
 
@@ -48,8 +49,13 @@ public class Server implements Runnable {
 			try {
 				Socket newConnection = serverSocket.accept(); //accept() waits until client connects
 				Server server = new Server(newConnection);
-				System.out.println("Client connected!");
-
+				connect = !connect;
+				
+				if (connect) {
+					//Two threads connect, handle this
+					System.out.println("Client connected!");
+				}
+				
 				//run a separate thread for each client to perform server operations (?)
 				new Thread(server).start();
 
