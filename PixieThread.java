@@ -989,6 +989,7 @@ public class PixieThread extends JComponent implements Runnable {
     }
     
     public void refreshPage() {
+    	System.out.println("Refresh found in main thread");
     	appFrame.repaint();
     	appFrame.revalidate();
     }
