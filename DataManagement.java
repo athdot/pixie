@@ -21,7 +21,8 @@ public class DataManagement {
     //This method deletes a post in the file system, if it exists
     public void deletePost(Post post) {
     	ArrayList<String[]> postList = readFile("post.csv");
-    	postList.remove(getPost(postList, post.getTitle(), post.getAuthor()));
+    	//System.out.println(post.getTitle() + " - " + post.getAuthor());
+    	postList.remove(getPost(postList, post.getTitle().replace(",", "123COMMA_REP321"), post.getAuthor()));
     	writeFile("post.csv", postList);
     }
 

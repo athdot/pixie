@@ -623,6 +623,8 @@ public class PixieThread extends JComponent implements Runnable {
 
                 editPostTitleField.setText("");
                 editPostContentField.setText("");
+                
+                yourPostsButton.doClick();
             }
 
             //user clicks button to comment on his/her post
@@ -678,7 +680,7 @@ public class PixieThread extends JComponent implements Runnable {
 
                 Post selectedPost = postsTemp.get(postsChosenNum - 1); //post numbers are 1-based
 
-                CLIENT.streamReader("deletePost[" + selectedPost.getTitle() + "," +
+                CLIENT.streamReader("deletePost[" + selectedPost.getTitle().replace(",", "123COMMA_REP321") + "," +
                         selectedPost.getAuthor() + "]");
 
                 JOptionPane.showMessageDialog(null, "Post deleted successfully!",
@@ -1027,15 +1029,21 @@ public class PixieThread extends JComponent implements Runnable {
     
     public void refreshPage() {
     	// Handle a changed username/password
-//    	String foreignUsername = CLIENT.streamReader("getUsername");
-//    	if (CLIENT.streamReader("getProfile[" + foreignUsername + "]").equals("false")) {
-//    		JOptionPane.showMessageDialog(null, "Login Credentials Changed, Log Back In",
-//                    "Search User", JOptionPane.INFORMATION_MESSAGE);
-//    		changeFrame(appFrame, loginFrame);
-//            CLIENT.streamReader("logout");
-//            activeUsername = null;
-//    		return;
-//    	}
+     	String foreignUsername = CLIENT.streamReader("getUsername");
+    	if (CLIENT.streamReader("getProfile[" + foreignUsername + "]").equals("false")) {
+    		JOptionPane.showMessageDialog(null, "Login Credentials Changed, Log Back In",
+                    "Search User", JOptionPane.INFORMATION_MESSAGE);
+    		changeFrame(appFrame, loginFrame);
+            CLIENT.streamReader("logout");
+            activeUsername = null;
+
+            switchPanel(appPanel, activeSubmenuPanel, blankSubmenuPanel, BorderLayout.WEST);
+            activeSubmenuPanel = blankSubmenuPanel;
+
+            switchPanel(appPanelContent, activeContentPanel, blankContentPanel, BorderLayout.CENTER);
+            activeContentPanel = blankContentPanel;
+    		return;
+    	}
     	
     	if (currentPage.equals("yourProfileButton")) {
     		yourProfileButton.doClick();

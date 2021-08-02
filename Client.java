@@ -68,8 +68,7 @@ public class Client {
 			returnedValue = ois.readObject().toString();
 
 		} catch (IOException | ClassNotFoundException e) {
-			System.out.println("Client streamReader method error!");
-			e.printStackTrace();
+			System.out.println("Client streamReader cannot connect to the server!");
 		}
 
 		return returnedValue;
@@ -82,7 +81,7 @@ public class Client {
 			System.out.println("A user has ended the program.");
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 }

@@ -42,7 +42,7 @@ public class Server implements Runnable {
 			serverSocket = new ServerSocket(PORT);
 			System.out.println("Waiting for the client to connect...");
 		} catch (IOException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		
 		while (true) {
@@ -60,12 +60,12 @@ public class Server implements Runnable {
 				new Thread(server).start();
 
 			} catch (IOException e) {
-				e.printStackTrace(); //connection failed
+				//e.printStackTrace(); //connection failed
 
 				try {
 					serverSocket.close();
 				} catch (IOException e1) {
-					e1.printStackTrace();
+					//e1.printStackTrace();
 				}
 			}
 		}
@@ -90,10 +90,15 @@ public class Server implements Runnable {
 
 						//obj is able to be passed into requestTree(String request) method
 						String request = obj.toString();
-						String output = requestTree(request);
+						try {
+							String output = requestTree(request);
 					
-						oos.writeObject(output);
-						oos.flush();
+							oos.writeObject(output);
+							oos.flush();
+						} catch (Exception e) {
+							System.out.println("Issue reading the files, do you have them open?");
+							//e.printStackTrace();
+						}
 					}
 				} else {
 					//This thread is used to ping a client with any updates that may occur
@@ -116,7 +121,7 @@ public class Server implements Runnable {
 				this.ois.close();
 				System.out.println("A client has disconnected.");
 			} catch (IOException e1) {
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 		}
 	}
