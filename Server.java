@@ -112,7 +112,6 @@ public class Server implements Runnable {
 
 	//Returns a return stream
 	private String requestTree(String request) {
-		System.out.println(request);
 		//Requests are
 		//login[dnsda,dansdnasn]
 		
