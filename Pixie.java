@@ -31,8 +31,7 @@ public class Pixie implements Runnable {
 				// Refreshing page
 				UPDATE_CLIENT.getUpdate();
 				pixieApp.refreshPage();
-				Thread.sleep(1000);
-				System.out.println("It called a refresh");
+				Thread.sleep(1);
 			} catch (Exception e) {
 				System.out.println("Refreshing system failed");
 				return;

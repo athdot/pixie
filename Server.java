@@ -67,12 +67,12 @@ public class Server implements Runnable {
 	
 	public Server(Socket newClient) {
 		this.connection = newClient;
+		localVersion = versionUpdate;
 	}
 	
 	@Override
 	public void run() {
 		try {
-			localVersion = versionUpdate;
 			this.oos = new ObjectOutputStream(connection.getOutputStream());
 			this.ois = new ObjectInputStream(connection.getInputStream());
 
@@ -91,11 +91,16 @@ public class Server implements Runnable {
 					}
 				} else {
 					//This thread is used to ping a client with any updates that may occur
-					if (!localVersion.equals(versionUpdate)) {
-						//Send a refresh code to the client
-						localVersion = versionUpdate;
-						oos.writeObject("1");
-						oos.flush();
+					try {
+						Thread.sleep(1);
+						if (!localVersion.equals(versionUpdate)) {
+							//Send a refresh code to the client
+							localVersion = versionUpdate;
+							oos.writeObject("1");
+							oos.flush();
+						}
+					} catch (InterruptedException e) {
+						System.out.println("Refresh thread failed.");
 					}
 				}
 			}
@@ -226,7 +231,6 @@ public class Server implements Runnable {
 			iterateVersion();
 		} else if (request.indexOf("editPost[") == 0) {
 			//editPost[postTitle, postAuthor, content]
-			System.out.println(request);
 			String[] textData = unpack(request, "editPost[").split(",");
 			for (int i = 3; i < textData.length; i++) {
 				textData[2] += "," + textData[i];
