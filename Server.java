@@ -229,9 +229,9 @@ public class Server implements Runnable {
 			}
 			Post post = data.getPost(textData[0], textData[1]);
 			ArrayList<Comment> comments = post.getComments();
-			Comment oldComment = comments.get(Integer.parseInt(textData[2]));
+			Comment oldComment = comments.get(Integer.parseInt(textData[2]) - 1);
 			Comment newComment = new Comment(loggedAccount.getUsername(), textData[3], oldComment.getTimestamp());
-			comments.set(Integer.parseInt(textData[2]), newComment);
+			comments.set(Integer.parseInt(textData[2]) - 1, newComment);
 			post.setComments(comments);
 			data.setPost(post);
 			iterateVersion();
