@@ -56,8 +56,7 @@ public class Client {
 	
 	//For update thread exclusively
 	public String getUpdate() throws ClassNotFoundException, IOException {
-		String output = "";
-		output = ois.readObject().toString();
+		String output = ois.readObject().toString();
 		return output;
 	}
 	

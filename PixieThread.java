@@ -470,7 +470,8 @@ public class PixieThread extends JComponent implements Runnable {
 
             //user is done editing the post and wants to save/create it
             if (e.getSource() == doneWritingPostButton) {
-                String post = "post[" + createNewPostTitleField.getText().replace(",", "123COMMA_REP321") + "," +
+                String post = "post[" + createNewPostTitleField.getText().
+                        replace(",", "123COMMA_REP321") + "," +
                         createNewPostContentField.getText() + "]";
                 String worked = CLIENT.streamReader(post);
 
@@ -549,12 +550,12 @@ public class PixieThread extends JComponent implements Runnable {
                 switchPanel(appPanel, activeSubmenuPanel, yourPostsSubmenuPanel, BorderLayout.WEST);
                 activeSubmenuPanel = yourPostsSubmenuPanel;
 
-                switchPanel(appPanelContent, activeContentPanel, viewPostsCommentsOutlinePanel, BorderLayout.CENTER);
-                activeContentPanel = viewPostsCommentsOutlinePanel;
-
                 String getYourPosts = CLIENT.streamReader("getUserPosts[" + activeUsername + "]");
                 postsTemp = StreamParse.stringToPosts(getYourPosts);
                 displayPosts(postsTemp);
+
+                switchPanel(appPanelContent, activeContentPanel, viewPostsCommentsOutlinePanel, BorderLayout.CENTER);
+                activeContentPanel = viewPostsCommentsOutlinePanel;
             }
 
             //user clicks button to select a post number
@@ -696,12 +697,12 @@ public class PixieThread extends JComponent implements Runnable {
                 switchPanel(appPanel, activeSubmenuPanel, yourCommentsSubmenuPanel, BorderLayout.WEST);
                 activeSubmenuPanel = yourCommentsSubmenuPanel;
 
-                switchPanel(appPanelContent, activeContentPanel, viewPostsCommentsOutlinePanel, BorderLayout.CENTER);
-                activeContentPanel = viewPostsCommentsOutlinePanel;
-
                 String getPostsYouCommented = CLIENT.streamReader("getUserComments[" + activeUsername + "]");
                 postsTemp = StreamParse.stringToPosts(getPostsYouCommented);
                 displayPosts(postsTemp);
+
+                switchPanel(appPanelContent, activeContentPanel, viewPostsCommentsOutlinePanel, BorderLayout.CENTER);
+                activeContentPanel = viewPostsCommentsOutlinePanel;
             }
 
             //user selects a post number and the comment number
@@ -920,7 +921,6 @@ public class PixieThread extends JComponent implements Runnable {
                     searchUserBioLabel.setText("[empty]");
                 }
 
-                
                 switchPanel(appPanelContent, activeContentPanel, searchUserProfilePanel, BorderLayout.CENTER);
                 activeContentPanel = searchUserProfilePanel;
             }
@@ -928,23 +928,25 @@ public class PixieThread extends JComponent implements Runnable {
             //view the searched user's posts
             if (e.getSource() == searchUserViewPostsButton) {
             	currentPage = "searchUserViewPostsButton";
-                switchPanel(appPanelContent, activeContentPanel, viewPostsCommentsOutlinePanel, BorderLayout.CENTER);
-                activeContentPanel = viewPostsCommentsOutlinePanel;
 
                 String getUserPosts = CLIENT.streamReader("getUserPosts[" + searchedUser + "]");
                 postsTemp = StreamParse.stringToPosts(getUserPosts);
                 displayPosts(postsTemp);
+
+                switchPanel(appPanelContent, activeContentPanel, viewPostsCommentsOutlinePanel, BorderLayout.CENTER);
+                activeContentPanel = viewPostsCommentsOutlinePanel;
             }
 
             //view the searched user's comments
             if (e.getSource() == searchUserViewCommentsButton) {
             	currentPage = "searchUserViewCommentsButton";
-                switchPanel(appPanelContent, activeContentPanel, viewPostsCommentsOutlinePanel, BorderLayout.CENTER);
-                activeContentPanel = viewPostsCommentsOutlinePanel;
 
                 String getUserPosts = CLIENT.streamReader("getUserComments[" + searchedUser + "]");
                 postsTemp = StreamParse.stringToPosts(getUserPosts);
                 displayPosts(postsTemp);
+
+                switchPanel(appPanelContent, activeContentPanel, viewPostsCommentsOutlinePanel, BorderLayout.CENTER);
+                activeContentPanel = viewPostsCommentsOutlinePanel;
             }
 
             //LOGOUT -- user clicks main menu logout button
