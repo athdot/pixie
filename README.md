@@ -54,7 +54,7 @@ server, run PixieThread, and update the application as changes are made to the s
 The PixieThread.java class is the main GUI class. It is where all the JPanels are brought together and user
 interactions with the program are tracked to change the page/save information/get information from the server.
 
-####PixieSubmenus.java, PixieLoginPage.java, PixieCreatePost.java, PixieSearchUser.java, PixieViewComment.java,
+#### PixieSubmenus.java, PixieLoginPage.java, PixieCreatePost.java, PixieSearchUser.java, PixieViewComment.java,
 PixieViewPost.java
 
 The PixieSubmenus.java, PixieLoginPage.java, PixieCreatePost.java, PixieSearchUser.java, PixieViewComment.java,
