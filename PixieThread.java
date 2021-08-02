@@ -4,13 +4,8 @@ import java.awt.event.*;
 import java.util.ArrayList;
 
 /**
- * Pixie.java - PJ05
- * Apparently our app is branded as "Pixie". Pixes are mythical creatures in folklore and children's stories.
- * This class ties the GUI together by allowing all panels of the application to work together. Panels are created
- * within different classes for organization. Pixie.java creates an instance of all these panels to call them from
- * their external classes. Also listens for all actions across the program.
- *
- * NOTE: DON'T FORGET TO RUN Server.java FIRST.
+ * PixieThread.java
+ * Brings all of the layouts of the GUI together and provides functionality for the application
  *
  * Large comments -- https://fsymbols.com/generators/tarty/ -- 2nd option down, replace all   character with " "
  * Don't overuse! Only use this if a section becomes annoying to navigate. Additional navigation tips: collapse all
