@@ -906,16 +906,26 @@ public class PixieThread extends JComponent implements Runnable {
             if (e.getSource() == searchUserViewProfileButton) {
                 currentPage = "searchUserViewProfileButton";
                 String searchedAccountString = userClient.streamReader("getProfile[" + searchedUser + "]");
-                Account searchedAccount = StreamParse.stringToAccount(searchedAccountString);
-                searchUserUsernameLabel.setText(searchedAccount.getUsername());
-                searchUserBioLabel.setText("<html>" + searchedAccount.getBio() + "</html>");
+                Account searchedAccount;
+                try {
+                	searchedAccount = StreamParse.stringToAccount(searchedAccountString);
+                	searchUserUsernameLabel.setText(searchedAccount.getUsername());
+                    searchUserBioLabel.setText("<html>" + searchedAccount.getBio() + "</html>");
 
-                if (searchedAccount.getBio().equals("")) { //if biography is empty
-                    searchUserBioLabel.setText("[empty]");
+                    if (searchedAccount.getBio().equals("")) { //if biography is empty
+                        searchUserBioLabel.setText("[empty]");
+                    }
+
+                    switchPanel(appPanelContent, activeContentPanel, searchUserProfilePanel, BorderLayout.CENTER);
+                    activeContentPanel = searchUserProfilePanel;
+                } catch (Exception e1) {
+                	// Other user changed account information, prompt then return
+                	JOptionPane optionPane = new JOptionPane("User has changed account information, search again", JOptionPane.INFORMATION_MESSAGE);
+                	JDialog dialog = optionPane.createDialog("A Problem Occurred");
+    				dialog.setVisible(true);
+                	searchUserButton.doClick();
                 }
-
-                switchPanel(appPanelContent, activeContentPanel, searchUserProfilePanel, BorderLayout.CENTER);
-                activeContentPanel = searchUserProfilePanel;
+                
             }
 
             //view the searched user's posts

@@ -59,14 +59,15 @@ public class Server implements Runnable {
 				//run a separate thread for each client to perform server operations (?)
 				new Thread(server).start();
 
-			} catch (IOException e) {
+			} catch (Exception e) {
 				//e.printStackTrace(); //connection failed
-
+				System.out.println("Only one instance of server can be running at one time...");
 				try {
 					serverSocket.close();
-				} catch (IOException e1) {
+				} catch (Exception e1) {
 					//e1.printStackTrace();
 				}
+				return;
 			}
 		}
 	}
