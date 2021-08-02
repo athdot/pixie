@@ -826,12 +826,12 @@ public class PixieThread extends JComponent implements Runnable {
                 switchPanel(appPanel, activeSubmenuPanel, allPostsSubmenuPanel, BorderLayout.WEST);
                 activeSubmenuPanel = allPostsSubmenuPanel;
 
-                switchPanel(appPanelContent, activeContentPanel, viewPostsCommentsOutlinePanel, BorderLayout.CENTER);
-                activeContentPanel = viewPostsCommentsOutlinePanel;
-
                 String getAllPosts = CLIENT.streamReader("getAllPosts");
                 postsTemp = StreamParse.stringToPosts(getAllPosts);
                 displayPosts(postsTemp);
+
+                switchPanel(appPanelContent, activeContentPanel, viewPostsCommentsOutlinePanel, BorderLayout.CENTER);
+                activeContentPanel = viewPostsCommentsOutlinePanel;
             }
 
             //user tries to select a post from "view all posts"
