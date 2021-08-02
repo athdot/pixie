@@ -87,9 +87,15 @@ Test Status: Passed
 
 Steps:
 
-1.
+1. Choose the "Create Post" button under the main menu.
+2. Choose the "Write New Post" button under the "Create Post" menu.
+3. Enter your desired post title and content.
+4. Choose "Create Post" under the text boxes to confirm creation.
 
 Expected Result:
+
+The post will be written to the system, and the program will produce a JPanel message
+confirming the creation of the post was successful.
 
 Test Status: Passed
 
@@ -97,9 +103,16 @@ Test Status: Passed
 
 Steps:
 
-1.
+1. Choose the "Create Post" button under the main menu.
+2. Choose the "Import CSV Post" button under the "Create Post" menu.
+3. Enter the name of the CSV file containing your post information.
+4. Choose "Confirm" under the text box to confirm creation of the post.
 
 Expected Result:
+
+If the name provided corresponds to a CSV file with the right information in it, the program
+will convert the file information to a post, storing this post in the system. If the file doesn't exist,
+or the information is not formatted correctly, the user will be notified via a JPanel error message.
 
 Test Status: Passed
 
@@ -107,7 +120,7 @@ Test Status: Passed
 
 Steps:
 
-1.
+1. Choose the "View All Posts" button under the main menu
 
 Expected Result:
 
@@ -162,3 +175,5 @@ Steps:
 Expected Result:
 
 Test Status: Failed
+
+###Test 14: 
