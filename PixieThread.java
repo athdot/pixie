@@ -1018,6 +1018,17 @@ public class PixieThread extends JComponent implements Runnable {
     }
     
     public void refreshPage() {
+    	// Handle a changed username/password
+    	String foreignUsername = CLIENT.streamReader("getUsername");
+    	if (CLIENT.streamReader("getProfile[" + foreignUsername + "]").equals("false")) {
+    		JOptionPane.showMessageDialog(null, "Login Credentials Changed, Log Back In",
+                    "Search User", JOptionPane.INFORMATION_MESSAGE);
+    		changeFrame(appFrame, loginFrame);
+            CLIENT.streamReader("logout");
+            activeUsername = null;
+    		return;
+    	}
+    	
     	if (currentPage.equals("yourProfileButton")) {
     		yourProfileButton.doClick();
     	} else if (currentPage.equals("yourPostsButton")) {
