@@ -1018,7 +1018,6 @@ public class PixieThread extends JComponent implements Runnable {
     }
     
     public void refreshPage() {
-    	System.out.println("Refresh found in main thread");
     	if (currentPage.equals("yourProfileButton")) {
     		yourProfileButton.doClick();
     	} else if (currentPage.equals("yourPostsButton")) {
@@ -1133,7 +1132,7 @@ public class PixieThread extends JComponent implements Runnable {
         Create the JFrame for the rest of the app (which will contain the main menu and all sub-menus)
         */
 
-        appFrame = new JFrame("Pixie App");
+        appFrame = new JFrame("Pixie");
         appFrame.setSize(815, 500); //we will probably want the actual app to be larger
         appFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         appFrame.addWindowListener(windowAdapter);

@@ -99,7 +99,7 @@ public class Server implements Runnable {
 							oos.writeObject("1");
 							oos.flush();
 						}
-					} catch (InterruptedException e) {
+					} catch (Exception e) {
 						System.out.println("Refresh thread failed.");
 					}
 				}
